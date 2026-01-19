@@ -1,0 +1,9 @@
+services:
+  web:  
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/web
+    ports:
+      - 3022:3000
