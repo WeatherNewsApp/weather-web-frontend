@@ -16,11 +16,15 @@ export function useGet<T>(
 ) {
   const key = endpoint ? (params ? [endpoint, params] : endpoint) : null;
 
-  const { data, error, isLoading, mutate: localMutate } = useSWR<T>(
-    key,
-    endpoint ? () => get<T>(endpoint, params) : null,
-    { ...defaultConfig, ...config }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: localMutate,
+  } = useSWR<T>(key, endpoint ? () => get<T>(endpoint, params) : null, {
+    ...defaultConfig,
+    ...config,
+  });
 
   return {
     data,
