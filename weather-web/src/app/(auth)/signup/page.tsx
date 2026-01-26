@@ -8,8 +8,7 @@ import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
 import { signupSchema, type SignupSchema } from "@/schemas/auth";
-import { apiCreate } from "@/hooks/useApi";
-import { SignupResponse } from "@/lib/api/auth";
+import { signup, type SignupResponse } from "@/lib/api/auth";
 import { SignupForm } from "@/components/feature/SignupForm/SignupForm";
 import { cookieManager } from "@/lib/cookies";
 
@@ -37,8 +36,8 @@ export default function Signup() {
     setApiError(undefined);
     setIsLoading(true);
     try {
-      const res = await apiCreate<SignupResponse>("/api/v1/auth/register", {
-        name: data.name,
+      const res = await signup({
+        username: data.name,
         email: data.email,
         password: data.password,
       });
