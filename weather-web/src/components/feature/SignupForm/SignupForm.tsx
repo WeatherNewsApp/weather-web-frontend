@@ -35,6 +35,7 @@ export const SignupForm = ({
     <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
       <div className="flex flex-col gap-7">
         <FormInput
+          ariaLabel="ユーザーネーム"
           placeholder="ユーザーネーム"
           type="text"
           icon={Icons.user}
@@ -42,6 +43,7 @@ export const SignupForm = ({
           error={errors.name?.message}
         />
         <FormInput
+          ariaLabel="メールアドレス"
           placeholder="メールアドレス"
           type="email"
           icon={Icons.mail}
@@ -49,6 +51,7 @@ export const SignupForm = ({
           error={errors.email?.message}
         />
         <FormInput
+          ariaLabel="パスワード"
           placeholder="パスワード"
           type="password"
           icon={Icons.lock}
@@ -56,6 +59,7 @@ export const SignupForm = ({
           error={errors.password?.message}
         />
         <FormInput
+          ariaLabel="パスワード確認"
           placeholder="パスワード確認"
           type="password"
           icon={Icons.lock}

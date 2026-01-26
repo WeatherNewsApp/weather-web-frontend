@@ -16,3 +16,9 @@ export const signupSchema = z
   });
 
 export type SignupSchema = z.infer<typeof signupSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email("※メールアドレスの形式が正しくありません"),
+  password: z.string().min(1, "※パスワードが入力されていません"),
+});
+export type LoginSchema = z.infer<typeof loginSchema>;

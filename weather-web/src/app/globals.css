@@ -2,6 +2,7 @@
 
 html {
   font-size: var(--font-size-md);
+  color: var(--color-black);
 }
 
 /* Chrome autofillのスタイルを上書き */
@@ -16,6 +17,12 @@ input:-webkit-autofill:active {
   caret-color: #2f3231 !important;
   transition: background-color 5000s ease-in-out 0s !important;
   -webkit-transition: background-color 5000s ease-in-out 0s !important;
+}
+
+@layer utilities {
+  .bg-radial {
+    background: radial-gradient(circle at center, var(--color-base), #ebdbc7);
+  }
 }
 
 @theme {
