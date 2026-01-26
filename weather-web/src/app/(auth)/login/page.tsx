@@ -8,8 +8,8 @@ import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
 import { cookieManager } from "@/lib/cookies";
-import { loginSchema, type LoginSchema} from "@/schemas/auth"
-import { login, type LoginResponse } from "@/lib/api/auth";
+import { loginSchema, type LoginSchema } from "@/schemas/auth";
+import { login } from "@/lib/api/auth";
 import { LoginForm } from "@/components/feature/LoginForm/LoginForm";
 
 export default function Login() {
@@ -30,7 +30,7 @@ export default function Login() {
     },
   });
 
-    const onSubmit = async (data: LoginSchema) => {
+  const onSubmit = async (data: LoginSchema) => {
     setApiError(undefined);
     setIsLoading(true);
     try {
@@ -63,9 +63,12 @@ export default function Login() {
         alt="design-asset2"
         width={400}
         height={427}
-        className="absolute top-5 -translate-y-1/2  right-11 translate-x-1/2 z-20"
+        className="absolute top-5 -translate-y-1/2  right-11 translate-x-1/2 z-40"
       />
-      <div className="bg-base h-full w-full rounded-xl py-5 flex flex-col between px-3 overflow-y-auto relative">
+      <div className="p-4 w-full rounded-xl h-full absolute z-10">
+        <div className="bg-radial w-full rounded-xl h-full"></div>
+      </div>
+      <div className="h-full w-full rounded-xl py-5 flex flex-col between px-3 overflow-y-auto relative z-30">
         <div className="sticky top-5 left-0 h-fit">
           <Link href="/" className="pl-3 flex items-center justify-start w-fit">
             <Icons.chevronLeft className="w-10 h-10" strokeWidth={1} />
@@ -73,11 +76,9 @@ export default function Login() {
         </div>
         <div className="flex flex-col gap-3 mt-13">
           <h1 className="font-medium text-2xl">ログイン</h1>
-          <p className="text-sm">
-            ログインしてどろ団子の様子を確認しよう！
-          </p>
+          <p className="text-sm">ログインしてどろ団子の様子を確認しよう！</p>
         </div>
-        <LoginForm 
+        <LoginForm
           onSubmit={onSubmit}
           isLoading={isLoading}
           errors={errors}
@@ -103,7 +104,31 @@ export default function Login() {
             <Icons.apple />
           </button>
         </div>
-        {/* <Image src={"/images/design-asset.svg"} alt="design-asset" width={240} height={240} className="absolute top-[48vh] -translate-y-1/2 right-[-27vw]  "/> */}
+      </div>
+      <div className="p-4 w-full rounded-xl h-full absolute z-20">
+        <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="right-[-171px] absolute top-[260px]"
+          />
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="left-[-207px] absolute top-[109px]"
+          />
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="left-[-109px] absolute bottom-[-191px]"
+          />
+        </div>
       </div>
     </main>
   );

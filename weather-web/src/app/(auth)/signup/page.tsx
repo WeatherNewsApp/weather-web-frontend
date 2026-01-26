@@ -8,7 +8,7 @@ import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
 import { signupSchema, type SignupSchema } from "@/schemas/auth";
-import { signup, type SignupResponse } from "@/lib/api/auth";
+import { signup } from "@/lib/api/auth";
 import { SignupForm } from "@/components/feature/SignupForm/SignupForm";
 import { cookieManager } from "@/lib/cookies";
 
@@ -66,9 +66,12 @@ export default function Signup() {
         alt="design-asset2"
         width={400}
         height={427}
-        className="absolute top-5 -translate-y-1/2  right-11 translate-x-1/2 z-20"
+        className="absolute top-5 -translate-y-1/2  right-11 translate-x-1/2 z-40"
       />
-      <div className="bg-base h-full w-full rounded-xl py-5 flex flex-col between px-3 overflow-y-auto relative">
+      <div className="p-4 w-full rounded-xl h-full absolute z-10">
+        <div className="bg-radial w-full rounded-xl h-full"></div>
+      </div>
+      <div className="h-full w-full rounded-xl py-5 flex flex-col between px-3 overflow-y-auto relative z-30">
         <div className="sticky top-5 left-0 h-fit">
           <Link href="/" className="pl-3 flex items-center justify-start w-fit">
             <Icons.chevronLeft className="w-10 h-10" strokeWidth={1} />
@@ -108,6 +111,31 @@ export default function Signup() {
           </button>
         </div>
         {/* <Image src={"/images/design-asset.svg"} alt="design-asset" width={240} height={240} className="absolute top-[48vh] -translate-y-1/2 right-[-27vw]  "/> */}
+      </div>
+      <div className="p-4 w-full rounded-xl h-full absolute z-20">
+        <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="right-[-171px] absolute top-[260px]"
+          />
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="left-[-207px] absolute top-[109px]"
+          />
+          <Image
+            src={"/images/design-asset.svg"}
+            alt="design-asset"
+            width={240}
+            height={240}
+            className="left-[-109px] absolute bottom-[-191px]"
+          />
+        </div>
       </div>
     </main>
   );

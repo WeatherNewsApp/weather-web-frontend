@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden`}
         style={{
-          fontFamily: 'var(--font-m-plus-1p), sans-serif'
+          fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}
       >
         {children}

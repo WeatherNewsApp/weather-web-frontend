@@ -31,7 +31,10 @@ export const LoginForm = ({
   apiError,
 }: LoginFormProps) => {
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-10 flex flex-col justify-between h-full">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-10 flex flex-col justify-between h-full"
+    >
       <div className="flex flex-col gap-7">
         <FormInput
           placeholder="メールアドレス"
