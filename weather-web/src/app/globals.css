@@ -4,21 +4,16 @@ html {
   font-size: var(--font-size-md);
 }
 
-body {
-  margin: 0;
-}
-
 /* Chrome autofillのスタイルを上書き */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px rgba(37, 37, 37, 1) inset !important;
-  -webkit-text-fill-color: rgba(243, 243, 243, 1) !important;
-  box-shadow: 0 0 0 1000px rgba(37, 37, 37, 1) inset !important;
-  background-color: rgba(37, 37, 37, 1) !important;
-  border: none !important;
-  caret-color: rgba(243, 243, 243, 1) !important;
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  -webkit-text-fill-color: #2F3231 !important;
+  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  background-color: #FFFFFF !important;
+  caret-color: #2F3231 !important;
   transition: background-color 5000s ease-in-out 0s !important;
   -webkit-transition: background-color 5000s ease-in-out 0s !important;
 }
@@ -72,19 +67,24 @@ input:-webkit-autofill:active {
 
   /* radius */
   --radius-full: 9999px;
+  --radius-xl: 40px;
   --radius-lg: 20px;
   --radius-md: 16px;
   --radius-sm: 12px;
-  
+
   /* font-size */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
-  --font-size-2xl: 28px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 28px;
+
+  /* font-family */
+  --font-m-plus: var(--font-m-plus-1p), sans-serif;
+  --font-sen: var(--font-sen), sans-serif;
 
   /* font-weight */
   --font-weight-normal: 300;
-  --font-weight-medium: 600;
+  --font-weight-medium: 500;
 }
