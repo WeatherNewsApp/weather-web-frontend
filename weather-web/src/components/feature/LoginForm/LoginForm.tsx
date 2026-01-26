@@ -42,6 +42,7 @@ export const LoginForm = ({
           icon={Icons.mail}
           register={register("email")}
           error={errors.email?.message}
+          ariaLabel="メールアドレス"
         />
         <FormInput
           placeholder="パスワード"
@@ -49,6 +50,7 @@ export const LoginForm = ({
           icon={Icons.lock}
           register={register("password")}
           error={errors.password?.message}
+          ariaLabel="パスワード"
         />
       </div>
       <div>

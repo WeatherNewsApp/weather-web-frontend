@@ -41,6 +41,8 @@ export default function Login() {
       if (res.success) {
         cookieManager.setToken(res.token);
         router.push("/home");
+      } else {
+        setApiError(res.messages.join(", "));
       }
     } catch (error) {
       if (error instanceof Error) {

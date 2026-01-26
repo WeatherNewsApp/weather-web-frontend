@@ -12,6 +12,7 @@ interface FormInputProps {
   icon: React.ComponentType<{ className?: string }>;
   error?: string;
   register: UseFormRegisterReturn;
+  ariaLabel: string;
 }
 
 export const FormInput = ({
@@ -20,6 +21,7 @@ export const FormInput = ({
   icon: Icon,
   error,
   register,
+  ariaLabel,
 }: FormInputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const inputType =
@@ -28,6 +30,7 @@ export const FormInput = ({
     <div className="flex flex-col">
       <div className="relative">
         <input
+          aria-label={ariaLabel}
           type={inputType}
           placeholder={placeholder}
           {...register}
