@@ -9,11 +9,11 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
-  -webkit-text-fill-color: #2F3231 !important;
-  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
-  background-color: #FFFFFF !important;
-  caret-color: #2F3231 !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #2f3231 !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  background-color: #ffffff !important;
+  caret-color: #2f3231 !important;
   transition: background-color 5000s ease-in-out 0s !important;
   -webkit-transition: background-color 5000s ease-in-out 0s !important;
 }
@@ -23,13 +23,13 @@ input:-webkit-autofill:active {
   --*: initial;
 
   /* color */
-  --color-base: #E5DCD1;
-  --color-main: #6E8366;
-  --color-accent: #765B40;
-  --color-black: #2F3231;
-  --color-white: #FFFFFF;
-  --color-gray: #AAAAAA;
-  --color-error: #F44336; 
+  --color-base: #e5dcd1;
+  --color-main: #6e8366;
+  --color-accent: #765b40;
+  --color-black: #2f3231;
+  --color-white: #ffffff;
+  --color-gray: #aaaaaa;
+  --color-error: #f44336;
 
   /* spacing */
   --spacing-0: 0px;

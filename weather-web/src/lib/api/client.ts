@@ -4,7 +4,7 @@
  */
 import { ApiErrorResponse } from "@/types/api";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3022';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3022";
 
 export class ApiError extends Error {
   constructor(
@@ -32,7 +32,7 @@ async function apiRequest<T>(
   config: RequestConfig = {}
 ): Promise<T> {
   const { params, ...fetchConfig } = config;
-  let url = `${API_BASE_URL}${endpoint}`
+  let url = `${API_BASE_URL}${endpoint}`;
 
   if (params) {
     const searchParams = new URLSearchParams(
@@ -44,32 +44,32 @@ async function apiRequest<T>(
   const res = await fetch(url, {
     ...fetchConfig,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...fetchConfig.headers,
     },
   });
 
   if (!res.ok) {
-    const contentType = res.headers.get('Content-Type');
+    const contentType = res.headers.get("Content-Type");
 
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType && contentType.includes("application/json")) {
       try {
         const errorData: ApiErrorResponse = await res.json();
 
-        if ('success' in errorData && 'messages' in errorData) {
+        if ("success" in errorData && "messages" in errorData) {
           throw new ApiError(
             res.status,
             res.statusText,
             errorData.messages,
-            errorData.messages[0] || 'Unknown error'
+            errorData.messages[0] || "Unknown error"
           );
         }
 
         throw new ApiError(
           res.status,
           res.statusText,
-          ['Unexpected error response'],
-          'Unexpected error response'
+          ["Unexpected error response"],
+          "Unexpected error response"
         );
       } catch (parseError) {
         if (parseError instanceof ApiError) {
@@ -79,12 +79,7 @@ async function apiRequest<T>(
     }
 
     const errorText = await res.text().catch(() => res.statusText);
-    throw new ApiError(
-      res.status,
-      res.statusText,
-      [errorText],
-      errorText
-    );
+    throw new ApiError(res.status, res.statusText, [errorText], errorText);
   }
 
   return res.json();
@@ -94,29 +89,23 @@ export async function get<T>(
   endpoint: string,
   params?: Record<string, string | number | boolean>
 ): Promise<T> {
-  return apiRequest<T>(endpoint, { params, method: 'GET' });
+  return apiRequest<T>(endpoint, { params, method: "GET" });
 }
 
-export async function post<T>(
-  endpoint: string,
-  data?: unknown
-): Promise<T> {
+export async function post<T>(endpoint: string, data?: unknown): Promise<T> {
   return apiRequest<T>(endpoint, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-export async function patch<T>(
-  endpoint: string,
-  data?: unknown
-): Promise<T> {
+export async function patch<T>(endpoint: string, data?: unknown): Promise<T> {
   return apiRequest<T>(endpoint, {
-    method: 'PATCH',
+    method: "PATCH",
     body: JSON.stringify(data),
   });
 }
 
 export async function del<T>(endpoint: string): Promise<T> {
-  return apiRequest<T>(endpoint, { method: 'DELETE' });
+  return apiRequest<T>(endpoint, { method: "DELETE" });
 }

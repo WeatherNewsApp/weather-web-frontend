@@ -1,11 +1,11 @@
 import Cookies from "js-cookie";
 
 const TOKEN_KEY = "token";
-const TOKEN_EXPIRY_TIME = 9999 * 60 * 60 * 24;
+const TOKEN_EXPIRY_TIME = 7;
 
 export const cookieManager = {
   setToken: (token: string) => {
-    Cookies.set(TOKEN_KEY,token, {
+    Cookies.set(TOKEN_KEY, token, {
       expires: TOKEN_EXPIRY_TIME,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -13,7 +13,7 @@ export const cookieManager = {
     });
   },
 
-  getToken: ():string | undefined => {
+  getToken: (): string | undefined => {
     return Cookies.get(TOKEN_KEY);
   },
 
@@ -23,5 +23,5 @@ export const cookieManager = {
 
   hasToken: (): boolean => {
     return !!Cookies.get(TOKEN_KEY);
-  }
+  },
 };
