@@ -56,6 +56,7 @@ export const LoginForm = ({
       <div>
         {apiError && <p className="text-error text-sm my-2">{apiError}</p>}
         <PrimaryButton
+          variant="accent"
           label="ログイン"
           type="submit"
           isLoading={isLoading}
