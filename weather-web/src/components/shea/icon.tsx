@@ -14,6 +14,8 @@ import {
   StickyNote,
   LogOut,
   Trash2,
+  ClipboardList,
+  Trophy,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -84,4 +86,6 @@ export const Icons = {
   delete: Trash2,
   google: GoogleIcon,
   apple: AppleIcon,
+  mission: ClipboardList,
+  achievement: Trophy,
 };

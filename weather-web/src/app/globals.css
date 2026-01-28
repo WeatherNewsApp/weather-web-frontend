@@ -47,6 +47,8 @@ input:-webkit-autofill:active {
   --color-main: #6e8366;
   --color-accent: #765b40;
   --color-accent-dark: #614932;
+  --color-points: #F5E277;
+  --color-points-dark: #E0BE50;
   --color-black: #2f3231;
   --color-white: #ffffff;
   --color-white-dark: #aaaaaa;
