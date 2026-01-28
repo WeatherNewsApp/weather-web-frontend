@@ -8,7 +8,15 @@ export interface UpdatePrefectureRequest {
   prefecture_id: number;
 }
 
-type UpdatePrefectureResponse = ApiErrorResponse | UpdatePrefectureRequest;
+export interface UpdatePrefectureSuccessResponse {
+  success: true;
+	prefecture: {
+    id: number;
+    name: string;
+	};
+}
+
+type UpdatePrefectureResponse = ApiErrorResponse | UpdatePrefectureSuccessResponse;
 
 export async function getUser(): Promise<UserResponse> {
   return await get<UserResponse>("/api/v1/users/me");

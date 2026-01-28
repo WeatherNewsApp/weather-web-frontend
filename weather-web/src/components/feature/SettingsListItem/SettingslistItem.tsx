@@ -42,7 +42,7 @@ export const SettingsListItem = ({
   ) : null;
 
   const itemClassName =
-    "flex items-center justify-between w-full border-b border-w-[0.5] py-4 px-3";
+    "flex items-center justify-between w-full border-b border-b-[0.5px] py-4 px-3";
 
   if (href) {
     return (

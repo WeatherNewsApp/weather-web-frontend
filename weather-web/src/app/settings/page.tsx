@@ -70,22 +70,22 @@ export default function Settings() {
   const handleLogout = async () => {
     try {
       await logout();
+      router.push("/login");
     } catch (error) {
       console.error(error);
-    } finally {
       setShowLogoutModal(false);
-      router.push("/login");
+      alert("ログアウトに失敗しました");
     }
   };
 
   const handleDeleteAccount = async () => {
     try {
       await deleteAccount();
+      router.push("/top");
     } catch (error) {
       console.error(error);
-    } finally {
       setShowDeleteAccountModal(false);
-      router.push("/top");
+      alert("アカウント削除に失敗しました");
     }
   };
 
