@@ -73,6 +73,7 @@ export const SignupForm = ({
       />
       {apiError && <p className="text-error text-sm my-2">{apiError}</p>}
       <PrimaryButton
+        variant="accent"
         label="新規登録"
         type="submit"
         isLoading={isLoading}

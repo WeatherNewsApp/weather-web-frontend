@@ -5,8 +5,15 @@ import {
   EyeOff,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   UserRound,
   Loader2,
+  History,
+  MapPinned,
+  Bell,
+  StickyNote,
+  LogOut,
+  Trash2,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -62,12 +69,19 @@ const GoogleIcon = () => {
 export const Icons = {
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  chevronDown: ChevronDown,
   eye: Eye,
   eyeOff: EyeOff,
   mail: Mail,
   lock: Lock,
   user: UserRound,
   loader: Loader2,
+  history: History,
+  prefecture: MapPinned,
+  notification: Bell,
+  privacy: StickyNote,
+  logout: LogOut,
+  delete: Trash2,
   google: GoogleIcon,
   apple: AppleIcon,
 };
