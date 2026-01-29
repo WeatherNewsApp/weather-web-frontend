@@ -186,10 +186,12 @@ export default function Missions() {
       const result = await apiCreate<ClaimMissionResponse>(
         `/api/v1/missions/${missionId}/claim`,
         {},
-        ["/api/v1/missions", "/api/v1/user/me"]
+        ["/api/v1/missions", "/api/v1/users/me"]
       );
       if (result.success) {
         console.log("ミッション報酬を受け取りました");
+      } else {
+        console.error(result.messages.join(" / "));
       }
     } catch (error) {
       console.error("ミッション報酬の受け取りに失敗しました", error);
@@ -201,11 +203,13 @@ export default function Missions() {
       const result = await apiCreate<ClaimAchievementResponse>(
         `/api/v1/achievements/${achievementId}/claim`,
         {},
-        ["/api/v1/achievements", "/api/v1/user/me"]
+        ["/api/v1/achievements", "/api/v1/users/me"]
       );
       if (result.success) {
         console.log("アチーブメント報酬を受け取りました");
-      } 
+      } else {
+        console.error(result.messages.join(" / "));
+      }
     } catch (error) {
       console.error("アチーブメント報酬の受け取りに失敗しました", error);
     }

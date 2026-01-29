@@ -28,7 +28,7 @@ export default function Settings() {
 
   // SWRでユーザー情報を取得
   const { data: user, isLoading: isLoadingUser, mutate: mutateUser } = useGet<UserResponse>(
-    "/api/v1/user/me"
+    "/api/v1/users/me"
   );
 
   // SWRで都道府県リストを取得（遅延ロード）

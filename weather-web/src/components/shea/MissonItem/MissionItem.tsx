@@ -43,6 +43,9 @@ export const MissionItem = ({
     dummy3: "/images/dummy-3.png",
   };
 
+  const progressRatio =
+    maxProgress > 0 ? Math.min(progress / maxProgress, 1) : 0;
+
   return (
     <>
       <div className="flex justify-between gap-5 px-2 py-5 rounded-md bg-radial shadow-md h-fit">
@@ -56,7 +59,7 @@ export const MissionItem = ({
                 <div
                   className="absolute left-0 top-0 z-10 h-full bg-points-dark"
                   style={{
-                    width: `${Math.min((progress / maxProgress) * 100, 100)}%`,
+                    width: `${progressRatio * 100}%`,
                   }}
                 />
               </div>
