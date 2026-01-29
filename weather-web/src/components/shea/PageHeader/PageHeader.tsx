@@ -17,7 +17,7 @@ interface PageHeaderProps {
   onTabChange?: (tabId: string) => void;
 }
 
-export const PageHeader = ({ 
+export const PageHeader = ({
   title,
   href,
   showPoints = false,
@@ -40,9 +40,14 @@ export const PageHeader = ({
             <div className="flex items-center gap-1 pr-3 bg-white rounded-full">
               <div className="pb-[2px] w-8 flex relative">
                 <div className="w-8 h-8 bg-points rounded-full relative z-10 p-1">
-                  <Image src="/images/dummy-image.png" alt="points" width={32} height={32} />
+                  <Image
+                    src="/images/dummy-image.png"
+                    alt="points"
+                    width={32}
+                    height={32}
+                  />
                 </div>
-                <span className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-points-dark z-0"/>
+                <span className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-points-dark z-0" />
               </div>
               <p className="text-accent font-sen">{points}</p>
             </div>
@@ -52,8 +57,8 @@ export const PageHeader = ({
       {tabs && tabs.length > 0 && (
         <div className="flex p-4 gap-5 bg-main">
           {tabs.map((tab) => (
-            <button 
-              key={tab.id} 
+            <button
+              key={tab.id}
               onClick={() => onTabChange?.(tab.id)}
               className={cn(
                 "flex items-center gap-1 text-main text-sm rounded-full w-full p-3 justify-center text-white",

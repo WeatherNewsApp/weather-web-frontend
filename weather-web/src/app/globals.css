@@ -47,8 +47,8 @@ input:-webkit-autofill:active {
   --color-main: #6e8366;
   --color-accent: #765b40;
   --color-accent-dark: #614932;
-  --color-points: #F5E277;
-  --color-points-dark: #E0BE50;
+  --color-points: #f5e277;
+  --color-points-dark: #e0be50;
   --color-black: #2f3231;
   --color-white: #ffffff;
   --color-white-dark: #aaaaaa;
@@ -97,6 +97,7 @@ input:-webkit-autofill:active {
   --radius-lg: 20px;
   --radius-md: 12px;
   --radius-sm: 8px;
+  --radius-xs: 6px;
 
   /* font-size */
   --text-xs: 12px;
