@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Icons } from "@/components/shea/icon";
@@ -11,60 +11,38 @@ import { SettingsListItem } from "@/components/feature/SettingsListItem/Settings
 import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
 import { logout, deleteAccount } from "@/lib/api/auth";
 import { Prefecture, User } from "@/types/api";
-import { getUser, updatePrefecture } from "@/lib/api/user";
-import { getPrefectures } from "@/lib/api/prefecture";
+import { updatePrefecture, UserResponse } from "@/lib/api/user";
+import { PrefecturesResponse } from "@/lib/api/prefecture";
 import { Loading } from "@/components/shea/Loading/Loading";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
 import { ComboBox } from "@/components/shea/ComboBox/ComboBox";
+import { useGet } from "@/hooks/useApi";
 
 export default function Settings() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showPrefectureModal, setShowPrefectureModal] = useState(false);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
-  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
-  const [selectedPrefectureId, setSelectedPrefectureId] = useState<
-    number | null
-  >(null);
-  const [isPrefecturesLoading, setIsPrefecturesLoading] = useState(false);
+  const [selectedPrefectureId, setSelectedPrefectureId] = useState<number | null>(null);
+  const [shouldFetchPrefectures, setShouldFetchPrefectures] = useState(false);
 
-  // 初期データ取得（ユーザー情報のみ）
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setIsLoadingUser(true);
-        const userData = await getUser();
-        setUser(userData);
-        setSelectedPrefectureId(userData.prefecture?.id ?? null);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoadingUser(false);
-      }
-    };
+  // SWRでユーザー情報を取得
+  const { data: user, isLoading: isLoadingUser, mutate: mutateUser } = useGet<UserResponse>(
+    "/api/v1/users/me"
+  );
 
-    fetchUserData();
-  }, []);
+  // SWRで都道府県リストを取得（遅延ロード）
+  const { data: prefecturesData, isLoading: isPrefecturesLoading } = useGet<PrefecturesResponse>(
+    shouldFetchPrefectures ? "/api/v1/prefectures" : null
+  );
+
+  const prefectures = prefecturesData || [];
 
   // モーダルを開いたときに都道府県リストを取得（遅延ロード）
-  const handleOpenPrefectureModal = async () => {
+  const handleOpenPrefectureModal = () => {
     setShowPrefectureModal(true);
     setSelectedPrefectureId(user?.prefecture?.id ?? null);
-
-    // すでに取得済みなら再取得しない
-    if (prefectures.length > 0) return;
-
-    try {
-      setIsPrefecturesLoading(true);
-      const prefectureData = await getPrefectures();
-      setPrefectures(prefectureData);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsPrefecturesLoading(false);
-    }
+    setShouldFetchPrefectures(true);
   };
 
   const handleLogout = async () => {
@@ -103,18 +81,20 @@ export default function Settings() {
         (p) => p.id === selectedPrefectureId
       );
       if (user && selectedPrefecture) {
-        setUser({
+        // SWRのキャッシュを更新（楽観的更新）
+        mutateUser({
           ...user,
           prefecture: {
             id: selectedPrefecture.id,
             name: selectedPrefecture.name,
           },
-        });
+        }, false);
       }
       setShowPrefectureModal(false);
     } catch (error) {
       console.error(error);
       alert("地域の更新に失敗しました");
+      mutateUser(); // エラー時は再取得
     }
   };
 
