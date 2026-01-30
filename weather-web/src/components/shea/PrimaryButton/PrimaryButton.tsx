@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Icons } from "../icon";
-import { div } from "framer-motion/client";
 
 export interface PrimaryButtonProps {
   label: string;
