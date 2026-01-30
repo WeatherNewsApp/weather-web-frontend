@@ -16,6 +16,7 @@ import {
   Trash2,
   ClipboardList,
   Trophy,
+  MoveRight,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -88,4 +89,5 @@ export const Icons = {
   apple: AppleIcon,
   mission: ClipboardList,
   achievement: Trophy,
+  ArrowRight: MoveRight,
 };

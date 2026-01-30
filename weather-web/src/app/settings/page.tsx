@@ -23,18 +23,23 @@ export default function Settings() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showPrefectureModal, setShowPrefectureModal] = useState(false);
-  const [selectedPrefectureId, setSelectedPrefectureId] = useState<number | null>(null);
+  const [selectedPrefectureId, setSelectedPrefectureId] = useState<
+    number | null
+  >(null);
   const [shouldFetchPrefectures, setShouldFetchPrefectures] = useState(false);
 
   // SWRでユーザー情報を取得
-  const { data: user, isLoading: isLoadingUser, mutate: mutateUser } = useGet<UserResponse>(
-    "/api/v1/users/me"
-  );
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    mutate: mutateUser,
+  } = useGet<UserResponse>("/api/v1/users/me");
 
   // SWRで都道府県リストを取得（遅延ロード）
-  const { data: prefecturesData, isLoading: isPrefecturesLoading } = useGet<PrefecturesResponse>(
-    shouldFetchPrefectures ? "/api/v1/prefectures" : null
-  );
+  const { data: prefecturesData, isLoading: isPrefecturesLoading } =
+    useGet<PrefecturesResponse>(
+      shouldFetchPrefectures ? "/api/v1/prefectures" : null
+    );
 
   const prefectures = prefecturesData || [];
 
@@ -82,13 +87,16 @@ export default function Settings() {
       );
       if (user && selectedPrefecture) {
         // SWRのキャッシュを更新（楽観的更新）
-        mutateUser({
-          ...user,
-          prefecture: {
-            id: selectedPrefecture.id,
-            name: selectedPrefecture.name,
+        mutateUser(
+          {
+            ...user,
+            prefecture: {
+              id: selectedPrefecture.id,
+              name: selectedPrefecture.name,
+            },
           },
-        }, false);
+          false
+        );
       }
       setShowPrefectureModal(false);
     } catch (error) {

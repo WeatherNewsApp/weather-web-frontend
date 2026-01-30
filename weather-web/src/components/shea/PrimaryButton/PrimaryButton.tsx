@@ -11,6 +11,9 @@ export interface PrimaryButtonProps {
   isLoading?: boolean;
   shadow?: boolean;
   variant?: "accent" | "secondary" | "danger";
+  icon?: React.ReactNode;
+  fontSize?: string;
+  fontFamily?: string;
 }
 
 export const PrimaryButton = ({
@@ -23,6 +26,9 @@ export const PrimaryButton = ({
   type = "button",
   shadow = false,
   variant = "accent",
+  icon,
+  fontSize = "text-md",
+  fontFamily = "font-m-plus-1p",
 }: PrimaryButtonProps) => {
   const variantStyles = {
     accent: {
@@ -44,6 +50,17 @@ export const PrimaryButton = ({
   const buttonContent = isLoading ? (
     <span className="flex items-center justify-center">
       <Icons.loader className="w-6 h-6 animate-spin" />
+    </span>
+  ) : icon ? (
+    <span
+      className={cn(
+        "flex items-center justify-center gap-1",
+        fontSize,
+        fontFamily
+      )}
+    >
+      {icon}
+      {label}
     </span>
   ) : (
     label

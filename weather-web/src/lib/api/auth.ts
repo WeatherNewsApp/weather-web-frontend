@@ -2,7 +2,7 @@ import { post, del } from "./client";
 import { ApiErrorResponse } from "@/types/api";
 
 export interface SignupRequest {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }

@@ -156,14 +156,20 @@ export default function Missions() {
   const router = useRouter();
   const [activeTabId, setActiveTabId] = useState("mission");
 
-  const { data: user, isLoading: isLoadingUser, error: userError } = useGet<UserResponse>("/api/v1/user/me");
-  
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    error: userError,
+  } = useGet<UserResponse>("/api/v1/user/me");
+
   // 開発用: ダミーデータを使用
   // 本番用: 以下のコメントを解除してダミーデータを削除
   // const { data: missionsData, isLoading: isLoadingMissions, error: missionsError } = useGet<MissionsResponse>("/api/v1/missions");
   // const { data: achievementsData, isLoading: isLoadingAchievements, error: achievementsError } = useGet<AchievementsResponse>("/api/v1/achievements");
   const missionsData: MissionsResponse = { missions: DUMMY_MISSIONS };
-  const achievementsData: AchievementsResponse = { achievements: DUMMY_ACHIEVEMENTS };
+  const achievementsData: AchievementsResponse = {
+    achievements: DUMMY_ACHIEVEMENTS,
+  };
   const isLoadingMissions = false;
   const isLoadingAchievements = false;
 
@@ -174,7 +180,8 @@ export default function Missions() {
     }
   }, [userError, router]);
 
-  const isLoading = isLoadingUser || 
+  const isLoading =
+    isLoadingUser ||
     (activeTabId === "mission" ? isLoadingMissions : isLoadingAchievements);
 
   // データがない場合は空のリストとして扱う
@@ -196,7 +203,7 @@ export default function Missions() {
     } catch (error) {
       console.error("ミッション報酬の受け取りに失敗しました", error);
     }
-  }
+  };
 
   const handleClaimAchievement = async (achievementId: number) => {
     try {
@@ -213,7 +220,7 @@ export default function Missions() {
     } catch (error) {
       console.error("アチーブメント報酬の受け取りに失敗しました", error);
     }
-  }
+  };
 
   return (
     <div className="h-screen flex flex-col">
