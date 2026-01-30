@@ -73,10 +73,8 @@ export const MissionItem = ({
             isCompleted ? "opacity-100" : "opacity-40"
           )}
         >
-          <div className="w-[66px] relative z-10 h-14 rounded-sm bg-accent flex items-center justify-center" >
-            <p className="text-white text-sm">
-              {isClaimed ? "表示" : "獲得"}
-            </p>
+          <div className="w-[66px] relative z-10 h-14 rounded-sm bg-accent flex items-center justify-center">
+            <p className="text-white text-sm">{isClaimed ? "表示" : "獲得"}</p>
           </div>
           <span className="absolute bottom-0 right-0 w-full h-14 bg-accent-dark rounded-sm z-0" />
         </button>
@@ -111,7 +109,12 @@ export const MissionItem = ({
           </div>
           {reward.type === "pointsAndSkin" && (
             <div className="flex flex-col items-center gap-1">
-              <Image src={reward.skinImage} alt={reward.skinName} width={80} height={80} />
+              <Image
+                src={reward.skinImage}
+                alt={reward.skinName}
+                width={80}
+                height={80}
+              />
               <p className="text-xs">{reward.skinName}</p>
             </div>
           )}

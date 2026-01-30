@@ -37,7 +37,7 @@ export default function Signup() {
     setIsLoading(true);
     try {
       const res = await signup({
-        username: data.name,
+        name: data.name,
         email: data.email,
         password: data.password,
       });

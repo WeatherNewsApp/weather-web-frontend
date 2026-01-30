@@ -62,7 +62,13 @@ export type AchievementType = "dummy1" | "dummy2" | "dummy3";
 
 export type AchievementRewardType =
   | { type: "points"; points: number }
-  | { type: "pointsAndSkin"; points: number; skinId: string; skinName: string; skinImage: string };
+  | {
+      type: "pointsAndSkin";
+      points: number;
+      skinId: string;
+      skinName: string;
+      skinImage: string;
+    };
 
 export interface Achievement {
   id: number;
