@@ -52,15 +52,19 @@ export const PrimaryButton = ({
     <span className="flex items-center justify-center">
       <Icons.loader className="w-6 h-6 animate-spin" />
     </span>
+  ) : icon ? (
+    <span
+      className={cn(
+        "flex items-center justify-center gap-1",
+        fontSize,
+        fontFamily
+      )}
+    >
+      {icon}
+      {label}
+    </span>
   ) : (
-    icon ? (
-      <span className={cn("flex items-center justify-center gap-1", fontSize, fontFamily)}>
-        {icon}
-        {label}
-      </span>
-    ) : (
-      label
-    )
+    label
   );
 
   if (!shadow) {
