@@ -69,20 +69,16 @@ export default function Ranking() {
         }}
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4">
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <div className="flex flex-col gap-5">
-            {currentRankingData.map((user) => (
-              <RankingItem
-                key={user.rank}
-                rank={user.rank}
-                name={user.name}
-                days={user.days}
-              />
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col gap-5">
+          {currentRankingData.map((user) => (
+            <RankingItem
+              key={user.rank}
+              rank={user.rank}
+              name={user.name}
+              days={user.days}
+            />
+          ))}
+        </div>
       </main>
       <div className="bg-main text-white rounded-t-xs py-4 px-4 flex items-center justify-between shadow-t">
         <div className="flex gap-3 items-center justify-center">
