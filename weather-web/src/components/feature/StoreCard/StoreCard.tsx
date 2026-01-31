@@ -9,7 +9,6 @@ import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
 export interface StoreCardProps {
   title: string;
   price: number;
-  image: string;
   onClick: () => void;
   currentPoint: number;
   isOwned: boolean;
@@ -18,7 +17,6 @@ export interface StoreCardProps {
 export const StoreCard = ({
   title,
   price,
-  image,
   currentPoint,
   isOwned,
 }: StoreCardProps) => {
