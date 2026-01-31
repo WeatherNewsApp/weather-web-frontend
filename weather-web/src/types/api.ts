@@ -94,3 +94,10 @@ export interface ClaimAchievementSuccessResponse {
 export type ClaimAchievementResponse =
   | ClaimAchievementSuccessResponse
   | ApiErrorResponse;
+
+// Ranking typs
+export interface RankingData {
+  rank: number;
+  name: string;
+  days: number;
+}

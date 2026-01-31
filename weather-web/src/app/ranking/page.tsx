@@ -38,7 +38,6 @@ const globalRankingData: RankingUser[] = [
 
 export default function Ranking() {
   const [activeTabId, setActiveTabId] = useState<string>("local");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // アクティブなタブに応じてデータを切り替え devのみ
   const currentRankingData =

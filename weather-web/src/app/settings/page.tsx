@@ -10,7 +10,6 @@ import { SettingsList } from "@/components/feature/SettingsList/SettingsList";
 import { SettingsListItem } from "@/components/feature/SettingsListItem/SettingslistItem";
 import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
 import { logout, deleteAccount } from "@/lib/api/auth";
-import { Prefecture, User } from "@/types/api";
 import { updatePrefecture, UserResponse } from "@/lib/api/user";
 import { PrefecturesResponse } from "@/lib/api/prefecture";
 import { Loading } from "@/components/shea/Loading/Loading";
@@ -102,7 +101,7 @@ export default function Settings() {
     } catch (error) {
       console.error(error);
       alert("地域の更新に失敗しました");
-      mutateUser(); // エラー時は再取得
+      mutateUser();
     }
   };
 
