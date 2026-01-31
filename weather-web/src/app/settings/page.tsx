@@ -17,6 +17,16 @@ import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
 import { ComboBox } from "@/components/shea/ComboBox/ComboBox";
 import { useGet } from "@/hooks/useApi";
 
+/**
+ * Render the Settings page that lets a signed-in user manage region, notifications, and account actions.
+ *
+ * Provides UI for:
+ * - Viewing/editing user-related settings.
+ * - Region selection via a modal that lazy-loads prefectures and applies changes (optimistic cache update).
+ * - Logout and account-deletion flows gated by confirmation modals that navigate on success.
+ *
+ * @returns The Settings page React element (JSX) for rendering the settings UI.
+ */
 export default function Settings() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);

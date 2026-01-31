@@ -36,6 +36,13 @@ const globalRankingData: RankingUser[] = [
   { rank: 10, name: "rookie", days: 85 },
 ];
 
+/**
+ * Render the Ranking page that displays regional and national leaderboards with a footer summary.
+ *
+ * The component shows a header with two tabs ("地域ランキング" and "全国ランキング"), switches the displayed ranking dataset based on the active tab, renders the list of users as ranking items, and includes a static footer panel with user summary and metrics.
+ *
+ * @returns The JSX element for the Ranking page containing the header, ranking list, and footer summary.
+ */
 export default function Ranking() {
   const [activeTabId, setActiveTabId] = useState<string>("local");
 
