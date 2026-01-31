@@ -17,6 +17,8 @@ import {
   ClipboardList,
   Trophy,
   MoveRight,
+  LandPlot,
+  Earth,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -90,4 +92,6 @@ export const Icons = {
   mission: ClipboardList,
   achievement: Trophy,
   ArrowRight: MoveRight,
+  local: LandPlot,
+  global: Earth,
 };
