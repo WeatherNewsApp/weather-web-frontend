@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
-import { Loading } from "@/components/shea/Loading/Loading";
 import { RankingUser } from "@/components/feature/RankingItem/RankingItem";
 import { RankingItem } from "@/components/feature/RankingItem/RankingItem";
 
