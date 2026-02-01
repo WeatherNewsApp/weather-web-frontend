@@ -17,6 +17,18 @@ export const HistoryDango = ({
   xCombo,
   totalPoints,
 }: HistoryDangoProps) => {
+  const formatDate = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${month}/${day}`;
+  };
+
+  const getWeekday = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("ja-JP", { weekday: "short" });
+  };
+
   return (
     <div className="flex flex-col gap-5 py-5 px-3 rounded-md bg-radial shadow-md w-full ">
       <div className="flex items-end pb-2 border-b-[0.5px] border-black justify-between">
@@ -45,28 +57,28 @@ export const HistoryDango = ({
         />
       </div>
       <div className="px-2 flex flex-col gap-4">
-        <div className="flex item-end justify-between">
+        <div className="flex items-end justify-between">
           <p className="">どろ団子を育て始めた日</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{startDate}</p>
-            <p>(金)</p>
+            <p className="font-sen text-lg leading-6">{formatDate(startDate)}</p>
+            <p>({getWeekday(startDate)})</p>
           </div>
         </div>
-        <div className="flex item-end justify-between">
+        <div className="flex items-end justify-between">
           <p className="">どろ団子が死んだ日</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{deathDate}</p>
-            <p>(土)</p>
+            <p className="font-sen text-lg leading-6">{formatDate(deathDate)}</p>
+            <p>({getWeekday(deathDate)})</p>
           </div>
         </div>
-        <div className="flex item-end justify-between">
+        <div className="flex items-end justify-between">
           <p className="">最大コンボ数</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">{xCombo}</p>
             <p>コンボ</p>
           </div>
         </div>
-        <div className="flex item-end justify-between">
+        <div className="flex items-end justify-between">
           <p className="">合計ポイント数</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">{totalPoints}</p>
