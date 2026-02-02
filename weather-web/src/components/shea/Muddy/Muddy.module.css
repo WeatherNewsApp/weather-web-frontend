@@ -250,7 +250,96 @@
 }
 
 /* =============== eye styles =============== */
-.muddyBodyEyeLeft {
+/* normal */
+.muddyBodyEyeLeftContainerNormal {
+  position: absolute;
+  top: 38%;
+  left: 15%;
+  width: 40px;
+  height: 32px;
+  z-index:12;
+  overflow: hidden;
+}
+
+.muddyBodyEyeLeftNormal {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: -12px;
+  background-color: #361c0c;
+  border-radius: 50%;
+} 
+
+.muddyBodyEyeLeftHighlightBigNormal {
+  position: absolute;
+  top: 38%;
+  left: 28%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  z-index: 13;
+}
+
+.muddyBodyEyeLeftHighlightSmallNormal {
+  position: absolute;
+  top: 57%;
+  left: 42%;
+  width: 6px;
+  height: 6px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  z-index: 13;
+}
+
+/* 右目 */
+.muddyBodyEyeRightContainerNormal {
+  position: absolute;
+  top: 38%;
+  right: 15%;
+  width: 40px;
+  height: 32px;
+  z-index:12;
+  overflow: hidden;
+}
+
+.muddyBodyEyeRightNormal {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: -12px;
+  background-color: #361c0c;
+  border-radius: 50%;
+} 
+
+.muddyBodyEyeRightHighlightBigNormal {
+  position: absolute;
+  top: 38%;
+  left: 28%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  z-index: 13;
+}
+
+.muddyBodyEyeRightHighlightSmallNormal {
+  position: absolute;
+  top: 57%;
+  left: 42%;
+  width: 6px;
+  height: 6px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  z-index: 13;
+}
+
+
+
+/* happy */
+.muddyBodyEyeLeftHappy {
   position: absolute;
   width: 45px;
   height: 5px;
@@ -261,7 +350,8 @@
   transform: rotate(160deg);
 }
 
-.muddyBodyEyeRight {
+/* 右目 */
+.muddyBodyEyeRightHappy {
   position: absolute;
   width: 45px;
   height: 5px;
@@ -272,8 +362,86 @@
   transform: rotate(200deg);
 }
 
+/* sad */
+.muddyBodyEyeLeftContainerSad {
+  position: absolute;
+  top: 38%;
+  left: 10%;
+  z-index: 12;
+  width: 46px;
+}
+
+.muddyBodyEyeLeftSad {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #361c0c;
+  transform: rotate(-25deg);
+  z-index: 15;
+}
+
+.muddyBodyEyeLeftTearsSad {
+  position: absolute;
+  background-color: #74bee1;
+  width: 60%;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  height: 52px;
+  clip-path: polygon(100% 13%, 100% 13%, 100% 100%, 0 100%, 0 36%);
+  z-index: 13;
+}
+
+/* 右目 */
+.muddyBodyEyeRightContainerSad {
+  position: absolute;
+  top: 38%;
+  right: 10%;
+  z-index: 12;
+  width: 46px;
+}
+
+.muddyBodyEyeRightSad {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #361c0c;
+  transform: rotate(25deg);
+  z-index: 15;
+}
+
+.muddyBodyEyeRightTearsSad {
+  position: absolute;
+  background-color: #85c3e0;
+  width: 60%;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  height: 52px;
+  clip-path: polygon(0 13%, 0 13%, 0 100%, 100% 100%, 100% 36%);
+  z-index: 13;
+}
+
 /* =============== mouth styles =============== */
-.muddyBodyMouth {
+/* normal */
+.muddyBodyMouthNormal {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 6px;
+  z-index: 12;
+  top: 55%;
+  background-color: #361c0c;
+  border-radius: 8px;
+}
+
+/* happy */
+.muddyBodyMouthHappy {
   position: absolute;
   top: 52%;
   left: 50%;
@@ -286,8 +454,82 @@
   border-top: none;
 }
 
+/* sad */
+.muddyBodyMouthSad {
+  position: absolute;
+  top: 56%;
+  height: 26px;
+  width: 45px;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  overflow: hidden;
+}
+
+.muddyBodyMouthBlackSad {
+  position: absolute;
+  top: 0;
+  height: 46px;
+  width: 100%;
+  border-radius: 50%;
+  background-color: #361c0c;
+  z-index:13 ;
+}
+
+.muddyBodyMouthPinkSad {
+  position: absolute;
+  bottom: 0;
+  background-color: #ed94e4;
+  width: 80%;
+  height: 26px;
+  left: 50%;
+  transform: translate(-50%, 15px);
+  border-radius: 50%;
+  z-index: 14;
+
+}
+
 /* =============== cheek styles =============== */
-.muddyBodyCheekLeft {
+/* normal */
+.muddyBodyCheekNormal {
+  position: absolute;
+  top: 57%;
+  width: 100%;
+}
+
+.muddyBodyCheekLeftNormal {
+  position: absolute;
+  left: 15%;
+  width: 36px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 182, 193, 0.85) 0%,
+    rgba(255, 160, 122, 0.7) 50%,
+    rgba(255, 182, 193, 0.4) 100%
+  );
+  filter: blur(1.5px);
+  z-index: 11;
+}
+
+.muddyBodyCheekRightNormal {
+  position: absolute;
+  right: 15%;
+  width: 36px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 182, 193, 0.85) 0%,
+    rgba(255, 160, 122, 0.7) 50%,
+    rgba(255, 182, 193, 0.4) 100%
+  );
+  filter: blur(1.5px);
+  z-index: 11;
+}
+
+/* happy */
+.muddyBodyCheekLeftHappy {
   position: absolute;
   width: 36px;
   height: 20px;
@@ -304,7 +546,7 @@
   left: 14%;
 }
 
-.muddyBodyCheekRight {
+.muddyBodyCheekRightHappy {
   position: absolute;
   width: 36px;
   height: 20px;

@@ -7,14 +7,14 @@ export default function Home() {
     <main className="bg-[#E5D2A1] flex flex-col items-center justify-center h-screen w-full mx-auto">
       <Muddy
         face="normal"
-        // headSkin="/images/head-skin.png"
-        // bodySkin="/images/body-skin.png"
-        // baseSkin="/images/base-skin.png"
+        headSkin="https://placehold.co/400x400.png?text=head-skin"
+        bodySkin="https://placehold.co/400x400.png?text=body-skin"
+        baseSkin="https://placehold.co/400x400.png?text=base-skin"
         growthLevel="1"
-        damageLevel="1"
-        scale="1"
-        width={260}
-        height={260}
+        damageLevel="5"
+        scale="scale-[1]"
+        width="w-[260px]"
+        height="h-[260px]"
       />
       <div className="flex gap-2 flex-col mt-10">
         <Link
