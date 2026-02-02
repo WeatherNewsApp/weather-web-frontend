@@ -1,12 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 export default function Home() {
   return (
     <main className="bg-[#E5D2A1] flex flex-col items-center justify-center h-screen w-full mx-auto">
-      <Image
-        src={"/images/dummy-image.png"}
-        alt="dummy"
+      <Muddy
+        face="normal"
+        // headSkin="/images/head-skin.png"
+        // bodySkin="/images/body-skin.png"
+        // baseSkin="/images/base-skin.png"
+        growthLevel="1"
+        damageLevel="1"
+        scale="1"
         width={260}
         height={260}
       />
