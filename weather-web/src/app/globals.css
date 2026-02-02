@@ -35,6 +35,39 @@ input:-webkit-autofill:active {
   );
 }
 
+.bg-dorodango-to-b {
+  background: linear-gradient(to bottom, #4b2910, #7a3a16);
+}
+
+.bg-dorodango-aura {
+  background: radial-gradient(
+    circle,
+    rgba(144, 238, 144, 0.3) 0%,
+    rgba(144, 238, 144, 0.15) 50%,
+    transparent 70%
+  );
+}
+
+.bg-dorodango {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 0, 0, 0.015) 1px,
+      rgba(0, 0, 0, 0.015) 2px
+    ),
+    radial-gradient(
+      ellipse at 25% 25%,
+      #d89a7a 0%,
+      #c17a4b 20%,
+      #b06a3d 40%,
+      #9d5a2f 60%,
+      #8a4a22 80%,
+      #7a3a16 100%
+    );
+}
+
 @theme {
   /* default initial values */
   --*: initial;

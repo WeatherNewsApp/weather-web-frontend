@@ -60,14 +60,18 @@ export const HistoryDango = ({
         <div className="flex items-end justify-between">
           <p className="">どろ団子を育て始めた日</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{formatDate(startDate)}</p>
+            <p className="font-sen text-lg leading-6">
+              {formatDate(startDate)}
+            </p>
             <p>({getWeekday(startDate)})</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">どろ団子が死んだ日</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{formatDate(deathDate)}</p>
+            <p className="font-sen text-lg leading-6">
+              {formatDate(deathDate)}
+            </p>
             <p>({getWeekday(deathDate)})</p>
           </div>
         </div>
