@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
-import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
 
 export default function Top() {
   return (
@@ -11,10 +10,10 @@ export default function Top() {
         <Image src={"/images/logo.png"} width={260} height={260} alt="logo" className="w-full h-auto" />
       </div>
       <div className="mt-15">
-        <Muddy face="normal" growthLevel="1" damageLevel="1" scale="scale-[1.25]" width="w-[200px]" height="h-[200px]" />
+        <Muddy face="normal" growthStage="1" damageLevel="1" scale="scale-[1.25]"/>
       </div>
       <div className="mt-20 flex flex-col items-center gap-6 w-full">
-        <Link href="/signup" className="bg-accent text-white text-lg font-medium rounded-full py-5 w-full text-center">
+        <Link href="/register" className="bg-accent text-white text-lg font-medium rounded-full py-5 w-full text-center">
           <p>新規登録</p>
         </Link>
         <Link href="/login" className="bg-white text-lg font-medium rounded-full py-5 w-full text-center">

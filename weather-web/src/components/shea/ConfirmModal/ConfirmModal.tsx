@@ -1,6 +1,9 @@
 "use client";
+import type { BestDango } from "@/types/dango";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 interface ConfirmModalProps {
+  dango: Omit<BestDango, "id">;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -12,6 +15,7 @@ interface ConfirmModalProps {
 }
 
 export const ConfirmModal = ({
+  dango,
   isOpen,
   onClose,
   onConfirm,
@@ -32,7 +36,11 @@ export const ConfirmModal = ({
 
       <div className="relative bg-radial-close rounded-lg pt-10 px-3 pb-4 flex flex-col items-center justify-center text-center max-w-[360px] w-full">
         {/* ここに本当はコンポーネント団子が入る予定 */}
-        <div className="w-[180px] h-[180px] bg-accent rounded-full"></div>
+        <Muddy 
+          face="sad"
+          scale="scale-[0.9]"
+          {...dango}
+        />
         <h3 className="text-lg text-center mt-6">{title}</h3>
         <p className="mt-3">{message}</p>
         <div className="flex gap-2 w-full mt-6">

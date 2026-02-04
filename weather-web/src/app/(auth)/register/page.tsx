@@ -8,15 +8,15 @@ import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
 import { signupSchema, type SignupSchema } from "@/schemas/auth";
-import { signup } from "@/lib/api/auth";
 import { SignupForm } from "@/components/feature/SignupForm/SignupForm";
-import { cookieManager } from "@/lib/cookies";
+import { useUserStore } from "@/store/user.store";
 
-export default function Signup() {
+export default function Register() {
   const router = useRouter();
-  const [apiError, setApiError] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const registerUser = useUserStore((state) => state.registerUser);
+  const isLoading = useUserStore((state) => state.isLoading);
+  const error = useUserStore((state) => state.error);
+  
   const {
     register,
     handleSubmit,
@@ -33,31 +33,19 @@ export default function Signup() {
   });
 
   const onSubmit = async (data: SignupSchema) => {
-    setApiError(undefined);
-    setIsLoading(true);
     try {
-      const res = await signup({
+      await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
       });
-      if (res.success) {
-        cookieManager.setToken(res.token);
-        router.push("/home");
-      } else {
-        setApiError(res.messages.join(", "));
-      }
+      router.push("/home");
     } catch (error) {
       if (error instanceof Error) {
-        setApiError(error.message);
-      } else if (typeof error === "string") {
-        setApiError(error);
+        console.error('Failed to sign in:', error);
       } else {
-        setApiError("予期しないエラーが発生しました");
+        console.error('Failed to sign in:', error);
       }
-      console.error("APIエラー:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -93,7 +81,7 @@ export default function Signup() {
           register={register}
           handleSubmit={handleSubmit}
           isValid={isValid}
-          apiError={apiError}
+          apiError={error ?? undefined}
         />
         <Link href="/login" className="text-sm text-center underline pt-4">
           すでにアカウントをお持ちの方はこちら

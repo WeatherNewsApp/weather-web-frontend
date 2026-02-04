@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
-import { useGet } from "@/hooks/useApi";
-import { UserResponse } from "@/lib/api/user";
 import { Loading } from "@/components/shea/Loading/Loading";
 import { StoreCard } from "@/components/feature/StoreCard/StoreCard";
 
@@ -97,94 +95,94 @@ const DUMMY3_ITEMS = [
 ];
 
 export default function Store() {
-  const router = useRouter();
-  const [activeTabId, setActiveTabId] = useState("dummy1");
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    error: userError,
-  } = useGet<UserResponse>("/api/v1/users/me");
+  // const router = useRouter();
+  // const [activeTabId, setActiveTabId] = useState("dummy1");
+  // const {
+  //   data: user,
+  //   isLoading: isLoadingUser,
+  //   error: userError,
+  // } = useGet<UserResponse>("/api/v1/users/me");
 
-  useEffect(() => {
-    if (userError && userError.status === 401) {
-      router.push("/login");
-    }
-  }, [userError, router]);
+  // useEffect(() => {
+  //   if (userError && userError.status === 401) {
+  //     router.push("/login");
+  //   }
+  // }, [userError, router]);
 
-  if (isLoadingUser) return <Loading />;
+  // if (isLoadingUser) return <Loading />;
 
-  return (
-    <div className="h-screen flex flex-col bg-main">
-      <PageHeader
-        title="ストア"
-        href="/"
-        showPoints={true}
-        points={user?.point ?? 0}
-        tabs={[
-          {
-            id: "dummy1",
-            label: "dummy",
-          },
-          {
-            id: "dummy2",
-            label: "dummy2",
-          },
-          {
-            id: "dummy3",
-            label: "dummy3",
-          },
-        ]}
-        activeTabId={activeTabId}
-        onTabChange={(tabId) => {
-          setActiveTabId(tabId);
-        }}
-      />
-      <main className="bg-white overflow-y-auto h-full py-5 px-4">
-        <div className="grid grid-cols-3 gap-x-3 gap-y-4">
-          {activeTabId === "dummy1" &&
-            DUMMY1_ITEMS.map((item) => (
-              <StoreCard
-                key={item.id}
-                title={item.title}
-                price={item.price}
-                image={item.image}
-                onClick={() => {
-                  //TODO: 購入処理を追加
-                }}
-                currentPoint={user?.point ?? 0}
-                isOwned={item.isOwned}
-              />
-            ))}
-          {activeTabId === "dummy2" &&
-            DUMMY2_ITEMS.map((item) => (
-              <StoreCard
-                key={item.id}
-                title={item.title}
-                price={item.price}
-                image={item.image}
-                onClick={() => {
-                  //TODO: 購入処理を追加
-                }}
-                currentPoint={user?.point ?? 0}
-                isOwned={item.isOwned}
-              />
-            ))}
-          {activeTabId === "dummy3" &&
-            DUMMY3_ITEMS.map((item) => (
-              <StoreCard
-                key={item.id}
-                title={item.title}
-                price={item.price}
-                image={item.image}
-                onClick={() => {
-                  //TODO: 購入処理を追加
-                }}
-                currentPoint={user?.point ?? 0}
-                isOwned={item.isOwned}
-              />
-            ))}
-        </div>
-      </main>
-    </div>
-  );
+  // return (
+  //   <div className="h-screen flex flex-col bg-main">
+  //     <PageHeader
+  //       title="ストア"
+  //       href="/"
+  //       showPoints={true}
+  //       // points={user?.point ?? 0}
+  //       tabs={[
+  //         {
+  //           id: "dummy1",
+  //           label: "dummy",
+  //         },
+  //         {
+  //           id: "dummy2",
+  //           label: "dummy2",
+  //         },
+  //         {
+  //           id: "dummy3",
+  //           label: "dummy3",
+  //         },
+  //       ]}
+  //       activeTabId={activeTabId}
+  //       onTabChange={(tabId) => {
+  //         setActiveTabId(tabId);
+  //       }}
+  //     />
+  //     <main className="bg-white overflow-y-auto h-full py-5 px-4">
+  //       <div className="grid grid-cols-3 gap-x-3 gap-y-4">
+  //         {activeTabId === "dummy1" &&
+  //           DUMMY1_ITEMS.map((item) => (
+  //             <StoreCard
+  //               key={item.id}
+  //               title={item.title}
+  //               price={item.price}
+  //               image={item.image}
+  //               onClick={() => {
+  //                 //TODO: 購入処理を追加
+  //               }}
+  //               currentPoint={user?.point ?? 0}
+  //               isOwned={item.isOwned}
+  //             />
+  //           ))}
+  //         {activeTabId === "dummy2" &&
+  //           DUMMY2_ITEMS.map((item) => (
+  //             <StoreCard
+  //               key={item.id}
+  //               title={item.title}
+  //               price={item.price}
+  //               image={item.image}
+  //               onClick={() => {
+  //                 //TODO: 購入処理を追加
+  //               }}
+  //               currentPoint={user?.point ?? 0}
+  //               isOwned={item.isOwned}
+  //             />
+  //           ))}
+  //         {activeTabId === "dummy3" &&
+  //           DUMMY3_ITEMS.map((item) => (
+  //             <StoreCard
+  //               key={item.id}
+  //               title={item.title}
+  //               price={item.price}
+  //               image={item.image}
+  //               onClick={() => {
+  //                 //TODO: 購入処理を追加
+  //               }}
+  //               currentPoint={user?.point ?? 0}
+  //               isOwned={item.isOwned}
+  //             />
+  //           ))}
+  //       </div>
+  //     </main>
+  //   </div>
+  // );
 }

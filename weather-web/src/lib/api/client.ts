@@ -1,119 +1,83 @@
-/**
- * 共通APIクライアント
- * fetchをラップしたHTTPクライアント
- */
-import { ApiErrorResponse } from "@/types/api";
-import { cookieManager } from "../cookies";
+import { cookieManager } from "@/lib/cookies";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3022";
-
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    public statusText: string,
-    public messages: string[],
-    message: string
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
-
-interface RequestConfig extends RequestInit {
-  params?: Record<string, string | number | boolean>;
-}
-
-/**
- * @param endpoint
- * @param config
- * @returns
- */
-async function apiRequest<T>(
-  endpoint: string,
-  config: RequestConfig = {}
-): Promise<T> {
-  const { params, ...fetchConfig } = config;
-  let url = `${API_BASE_URL}${endpoint}`;
-
-  if (params) {
-    const searchParams = new URLSearchParams(
-      Object.entries(params).map(([key, value]) => [key, String(value)])
-    );
-    url += `?${searchParams.toString()}`;
+class ApiClient {
+  private baseUrl: string;
+  
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
   }
 
-  const res = await fetch(url, {
-    ...fetchConfig,
-    headers: {
-      "Content-Type": "application/json",
-      ...fetchConfig.headers,
-    },
-  });
+  private getHeaders(): HeadersInit {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
 
-  if (!res.ok) {
-    const contentType = res.headers.get("Content-Type");
+    // クライアントサイドのみでトークン取得
+    const token = typeof window !== 'undefined'
+      ? cookieManager.getToken()
+      : null;
 
-    if (contentType && contentType.includes("application/json")) {
-      try {
-        const errorData: ApiErrorResponse = await res.json();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
-        if ("success" in errorData && "messages" in errorData) {
-          throw new ApiError(
-            res.status,
-            res.statusText,
-            errorData.messages,
-            errorData.messages[0] || "Unknown error"
-          );
-        }
+    return headers;
+  }
 
-        throw new ApiError(
-          res.status,
-          res.statusText,
-          ["Unexpected error response"],
-          "Unexpected error response"
-        );
-      } catch (parseError) {
-        if (parseError instanceof ApiError) {
-          throw parseError;
-        }
+  // 共通クエと
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit
+  ): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const config: RequestInit = {
+      ...options,
+      headers: {
+        ...this.getHeaders(),
+        ...options?.headers,
       }
     }
 
-    const errorText = await res.text().catch(() => res.statusText);
-    throw new ApiError(res.status, res.statusText, [errorText], errorText);
+    const res = await fetch(url, config);
+
+    if (!res.ok) {
+      // エラーハンドリング
+      const error = await res.json().catch(() => ({
+        message: 'An error occurred',
+      }));
+    }
+  
+    return res.json();
   }
 
-  return res.json();
+  // GET
+  async get<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET' });
+  }
+
+  // POST
+  async post<T>(endpoint: string, data?: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  // PATCH 
+  async patch<T>(endpoint: string, data?: unknown): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  }
+
+  // DELETE
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, { method: 'DELETE'});
+  }
 }
 
-export async function get<T>(
-  endpoint: string,
-  params?: Record<string, string | number | boolean>
-): Promise<T> {
-  return apiRequest<T>(endpoint, { 
-    params,
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${cookieManager.getToken() || ""}`,
-    }
-  });
-}
-
-export async function post<T>(endpoint: string, data?: unknown): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-}
-
-export async function patch<T>(endpoint: string, data?: unknown): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    method: "PATCH",
-    body: JSON.stringify(data),
-  });
-}
-
-export async function del<T>(endpoint: string): Promise<T> {
-  return apiRequest<T>(endpoint, { method: "DELETE" });
-}
+export const apiClient = new ApiClient(
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8022'
+);

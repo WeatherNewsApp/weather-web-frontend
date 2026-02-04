@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,103 +10,98 @@ import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { SettingsList } from "@/components/feature/SettingsList/SettingsList";
 import { SettingsListItem } from "@/components/feature/SettingsListItem/SettingslistItem";
 import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
-import { logout, deleteAccount } from "@/lib/api/auth";
-import { updatePrefecture, UserResponse } from "@/lib/api/user";
-import { PrefecturesResponse } from "@/lib/api/prefecture";
 import { Loading } from "@/components/shea/Loading/Loading";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
 import { ComboBox } from "@/components/shea/ComboBox/ComboBox";
-import { useGet } from "@/hooks/useApi";
+import { useBestDango, useDangos } from "@/hooks/useDangos";
+import { useUserStore } from "@/store/user.store";
+import { useAreas } from "@/hooks/useAreas";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
+import type { User } from "@/types/user";
 
 export default function Settings() {
   const router = useRouter();
+  const [showSelectBestDangoModal, setShowSelectBestDangoModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
-  const [showPrefectureModal, setShowPrefectureModal] = useState(false);
-  const [selectedPrefectureId, setSelectedPrefectureId] = useState<
-    number | null
-  >(null);
-  const [shouldFetchPrefectures, setShouldFetchPrefectures] = useState(false);
+  const [showAreaModal, setShowAreaModal] = useState(false);
+  const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
+  const [shouldFetchAreas, setShouldFetchAreas] = useState(false);
 
-  // SWRでユーザー情報を取得
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    mutate: mutateUser,
-  } = useGet<UserResponse>("/api/v1/users/me");
+  // ここから変更点
+  const user = useUserStore((state) => state.user);
+  const logout = useUserStore((state) => state.logout);
+  const deleteAccount = useUserStore((state) => state.deleteAccount);
+  
+  const { bestDango, isLoadingBestDango } = useBestDango();
 
-  // SWRで都道府県リストを取得（遅延ロード）
-  const { data: prefecturesData, isLoading: isPrefecturesLoading } =
-    useGet<PrefecturesResponse>(
-      shouldFetchPrefectures ? "/api/v1/prefectures" : null
-    );
-
-  const prefectures = prefecturesData || [];
-
-  // モーダルを開いたときに都道府県リストを取得（遅延ロード）
-  const handleOpenPrefectureModal = () => {
-    setShowPrefectureModal(true);
-    setSelectedPrefectureId(user?.prefecture?.id ?? null);
-    setShouldFetchPrefectures(true);
-  };
+  if (isLoadingBestDango) return <Loading />;
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      router.push("/login");
-    } catch (error) {
-      console.error(error);
-      setShowLogoutModal(false);
-      alert("ログアウトに失敗しました");
-    }
-  };
+    await logout();
+    router.push("/top");
+  }
 
   const handleDeleteAccount = async () => {
-    try {
-      await deleteAccount();
-      router.push("/top");
-    } catch (error) {
-      console.error(error);
-      setShowDeleteAccountModal(false);
-      alert("アカウント削除に失敗しました");
-    }
-  };
+    await deleteAccount();
+    router.push("/top");
+  }
 
-  // 地域変更の確定処理
-  const handleConfirmPrefecture = async () => {
-    if (!selectedPrefectureId) {
-      alert("地域を選択してください");
-      return;
-    }
+  const handleShowSelectBestDangoModal = () => {
+    const {dangos,isLoadingDangos} = useDangos();
+    if (isLoadingDangos) return <Loading />;
+    setShowSelectBestDangoModal(true);
+  }
 
-    try {
-      await updatePrefecture({ prefecture_id: Number(selectedPrefectureId) });
 
-      const selectedPrefecture = prefectures.find(
-        (p) => p.id === selectedPrefectureId
-      );
-      if (user && selectedPrefecture) {
-        // SWRのキャッシュを更新（楽観的更新）
-        mutateUser(
-          {
-            ...user,
-            prefecture: {
-              id: selectedPrefecture.id,
-              name: selectedPrefecture.name,
-            },
-          },
-          false
-        );
-      }
-      setShowPrefectureModal(false);
-    } catch (error) {
-      console.error(error);
-      alert("地域の更新に失敗しました");
-      mutateUser();
-    }
-  };
+  // SWRで都道府県リストを取得（遅延ロード）
+  // const { data: prefecturesData, isLoading: isPrefecturesLoading } =
+    // useGet<PrefecturesResponse>(
+    //   shouldFetchPrefectures ? "/api/v1/prefectures" : null
+    // );
 
-  if (isLoadingUser) return <Loading />;
+  // const prefectures = prefecturesData || [];
+
+  // // モーダルを開いたときに都道府県リストを取得（遅延ロード）
+  // const handleOpenPrefectureModal = () => {
+  //   setShowPrefectureModal(true);
+  //   // setSelectedPrefectureId(user?.prefecture?.id ?? null);
+  //   setShouldFetchPrefectures(true);
+  // };
+
+  // // 地域変更の確定処理
+  // const handleConfirmPrefecture = async () => {
+  //   if (!selectedPrefectureId) {
+  //     alert("地域を選択してください");
+  //     return;
+  //   }
+
+  //   try {
+  //     await updatePrefecture({ prefecture_id: Number(selectedPrefectureId) });
+
+  //     const selectedPrefecture = prefectures.find(
+  //       (p) => p.id === selectedPrefectureId
+  //     );
+  //     if (user && selectedPrefecture) {
+  //       // SWRのキャッシュを更新（楽観的更新）
+  //       mutateUser(
+  //         {
+  //           ...user,
+  //           prefecture: {
+  //             id: selectedPrefecture.id,
+  //             name: selectedPrefecture.name,
+  //           },
+  //         },
+  //         false
+  //       );
+  //     }
+  //     setShowPrefectureModal(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("地域の更新に失敗しました");
+  //     mutateUser();
+  //   }
+  // };
 
   return (
     <div className="h-screen flex flex-col bg-main">
@@ -132,7 +128,11 @@ export default function Settings() {
                 <span className="text-white text-xs">どろ団子を切り替える</span>
               </button>
             </div>
-            <div className="w-30 h-30 bg-accent rounded-full"></div>
+            <Muddy 
+              face="normal"
+              scale="scale-[0.6]"
+              {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+            />
           </div>
           <Link
             href="/settings/history"
@@ -148,8 +148,8 @@ export default function Settings() {
             {/* ユーザー情報 */}
             <SettingsListItem
               // ダミー値
-              title="ユーザー"
-              subtitle="example@example.com"
+              title={user?.name ?? ""}
+              subtitle={user?.email ?? ""}
               onClick={() => {
                 /* プロフィール編集 */
               }}
@@ -159,7 +159,7 @@ export default function Settings() {
             <SettingsListItem
               icon={<Icons.prefecture className="w-6 h-6" strokeWidth={1.2} />}
               title="地域設定"
-              onClick={handleOpenPrefectureModal}
+              onClick={() => setShowAreaModal(true)}
             />
 
             {/* 通知を許可 */}
@@ -196,6 +196,7 @@ export default function Settings() {
             />
           </SettingsList>
           <ConfirmModal
+            dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
             isOpen={showLogoutModal}
             onClose={() => setShowLogoutModal(false)}
             onConfirm={handleLogout}
@@ -210,6 +211,7 @@ export default function Settings() {
             confirmText="ログアウト"
           />
           <ConfirmModal
+            dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
             isOpen={showDeleteAccountModal}
             onClose={() => setShowDeleteAccountModal(false)}
             onConfirm={handleDeleteAccount}
@@ -225,33 +227,30 @@ export default function Settings() {
             cancelText="キャンセル"
           />
           <SelectModal
-            isOpen={showPrefectureModal}
-            onClose={() => setShowPrefectureModal(false)}
+            isOpen={showAreaModal}
+            onClose={() => setShowAreaModal(false)}
             title="地域設定"
             buttonProps={{
               label: "地域を設定する",
-              onClick: handleConfirmPrefecture,
-              disabled: !selectedPrefectureId,
+              onClick: () => setShowAreaModal(false),
+              disabled: !selectedAreaId,
               variant: "accent",
               shadow: true,
               py: "py-4",
             }}
           >
-            {isPrefecturesLoading ? (
-              <span>都道府県を読み込んでいます...</span>
-            ) : (
-              <ComboBox
-                items={prefectures}
-                selectedId={selectedPrefectureId}
-                onSelect={(prefecture) =>
-                  setSelectedPrefectureId(prefecture.id)
-                }
-                getItemLabel={(prefecture) => prefecture.name}
-                getItemKey={(prefecture) => prefecture.id}
-                searchPlaceholder="都道府県名で検索..."
-                emptyMessage="該当する都道府県が見つかりません"
-              />
-            )}
+            <p>テスト</p>
+          {/* <ComboBox
+            items={areas || []}
+            selectedId={selectedAreaId}
+            onSelect={(area) =>
+              setSelectedAreaId(area.id)
+            }
+            getItemLabel={(area) => area.name}
+            getItemKey={(area) => area.id}
+            searchPlaceholder="都道府県名で検索..."
+            emptyMessage="該当する都道府県が見つかりません"
+          /> */}
           </SelectModal>
         </div>
       </main>

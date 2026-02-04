@@ -9,13 +9,15 @@ import Image from "next/image";
 import { Icons } from "@/components/shea/icon";
 import { cookieManager } from "@/lib/cookies";
 import { loginSchema, type LoginSchema } from "@/schemas/auth";
-import { login } from "@/lib/api/auth";
 import { LoginForm } from "@/components/feature/LoginForm/LoginForm";
+import type { LoginRequest, LoginResponse } from "@/types/auth";
+import { useUserStore } from "@/store/user.store";
 
 export default function Login() {
   const router = useRouter();
-  const [apiError, setApiError] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
+  const login = useUserStore((state) => state.login);
+  const isLoading = useUserStore((state) => state.isLoading);
+  const error = useUserStore((state) => state.error);
 
   const {
     register,
@@ -31,30 +33,18 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    setApiError(undefined);
-    setIsLoading(true);
     try {
-      const res = await login({
+      await login({
         email: data.email,
         password: data.password,
       });
-      if (res.success) {
-        cookieManager.setToken(res.token);
-        router.push("/home");
-      } else {
-        setApiError(res.messages.join(", "));
-      }
+      router.push("/home");
     } catch (error) {
       if (error instanceof Error) {
-        setApiError(error.message);
-      } else if (typeof error === "string") {
-        setApiError(error);
+        console.error('Failed to login:', error);
       } else {
-        setApiError("予期しないエラーが発生しました");
+        console.error('Failed to login:', error);
       }
-      console.error("APIエラー:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -87,7 +77,7 @@ export default function Login() {
           register={register}
           handleSubmit={handleSubmit}
           isValid={isValid}
-          apiError={apiError}
+          apiError={error ?? undefined}
         />
         <Link href="/signup" className="text-sm text-center underline pt-4">
           アカウントをお持ちでない方はこちら

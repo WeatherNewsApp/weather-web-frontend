@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppProviders } from "./provider";
 import { M_PLUS_1p, Sen } from "next/font/google";
 import "./globals.css";
 
@@ -32,7 +33,9 @@ export default function RootLayout({
           fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}
       >
-        {children}
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

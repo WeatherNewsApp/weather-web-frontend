@@ -7,7 +7,7 @@ interface MuddyProps {
   headSkin?: string;
   bodySkin?: string;
   baseSkin?: string;
-  growthLevel: "1" | "2" | "3" | "4" | "5";
+  growthStage: "1" | "2" | "3" | "4" | "5";
   damageLevel: "1" | "2" | "3" | "4" | "5";
   scale?: string;
 }
@@ -17,9 +17,9 @@ export const Muddy = ({
   headSkin,
   bodySkin,
   baseSkin,
-  growthLevel,
+  growthStage,
   damageLevel,
-  scale = "scale-[1]",
+  scale = "scale-[0.9]",
 }: MuddyProps) => {
   const faceContent = {
     normal: (
@@ -139,7 +139,7 @@ export const Muddy = ({
           <div className={styles.muddyBodyShineSmall2}></div>
         </div>
         <div className={styles.muddyBodySprout}>
-          <Image src={sproutContent[growthLevel]} alt="sprout" width={20} height={20} />
+          <Image src={sproutContent[growthStage]} alt="sprout" width={20} height={20} />
         </div>
         {faceContent[face]}
       </div>
