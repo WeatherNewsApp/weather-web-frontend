@@ -1,7 +1,35 @@
+"use client";
+
+import { Muddy } from "../Muddy/Muddy";
+import { motion } from "framer-motion";
+import { Icons } from "../icon";
+
 export const Loading = () => {
   return (
-    <div className="fixed inset-0 bg-base flex items-center justify-center z-50">
-      <h1 className="text-2xl font-bold">Loading...</h1>
-    </div>
+    <main className="bg-radial-close flex flex-col items-center justify-center h-screen w-full mx-auto ">
+      <div className="relative flex items-center justify-center w-30 h-30">
+        <motion.div 
+          className="absolute inset-0" 
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        >
+          <Icons.loader />
+        </motion.div>
+        <Muddy  
+          face="happy"
+          growthLevel="1"
+          damageLevel="1"
+          scale="scale-[0.4]"
+        />
+      </div>
+
+      
+
+      <div className="flex gap-2 text-xl font-sen mt-5">
+        <p>Loading</p>
+        <p>...</p>
+      </div>
+    </main>
   );
 };

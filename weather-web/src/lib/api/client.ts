@@ -3,6 +3,7 @@
  * fetchをラップしたHTTPクライアント
  */
 import { ApiErrorResponse } from "@/types/api";
+import { cookieManager } from "../cookies";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3022";
 
@@ -89,7 +90,14 @@ export async function get<T>(
   endpoint: string,
   params?: Record<string, string | number | boolean>
 ): Promise<T> {
-  return apiRequest<T>(endpoint, { params, method: "GET" });
+  return apiRequest<T>(endpoint, { 
+    params,
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${cookieManager.getToken() || ""}`,
+    }
+  });
 }
 
 export async function post<T>(endpoint: string, data?: unknown): Promise<T> {

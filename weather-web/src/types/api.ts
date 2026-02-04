@@ -16,6 +16,11 @@ export interface Prefecture {
   lon: number;
 }
 
+export interface Area {
+  id: number;
+  name: string;
+}
+
 export interface User {
   id: number;
   email: string;
@@ -100,4 +105,21 @@ export interface RankingData {
   rank: number;
   name: string;
   days: number;
+}
+
+
+// History types
+export interface HistoryDangoResponse {
+  id: number,
+  headSkin: string,
+  bodySkin: string,
+  baseSkin: string,
+  damageLevel: "1" | "2" | "3" | "4" | "5",
+  growthLevel: "1" | "2" | "3" | "4" | "5",
+  totalDaysAlive: number,
+  caredAt: string,
+  diedAt: string | null,
+  successCareCount: number,
+  point: number,
+  maxConsecutive: number,
 }

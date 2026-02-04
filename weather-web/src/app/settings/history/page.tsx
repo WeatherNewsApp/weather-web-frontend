@@ -1,85 +1,63 @@
+"use client";
+
+import { Icons } from "@/components/shea/icon";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { HistoryDango } from "@/components/feature/HistoryDango/HistoryDango";
+import { useGet } from "@/hooks/useApi";
+import { HistoryDangoResponse } from "@/types/api";
+import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
+import { useRouter } from "next/navigation";
+import { Loading } from "@/components/shea/Loading/Loading";
 
 export default function history() {
-  // const {historyDango, isLoading, error} = useGet<HistoryDangoResponse>('api/history/dango');
-  const historyDangoData = [
-    {
-      survivalDays: 100,
-      successCareCount: 100,
-      startDate: "2024-02-04",
-      deathDate: "2024-05-14",
-      xCombo: 100,
-      totalPoints: 100,
-    },
-    {
-      survivalDays: 85,
-      successCareCount: 85,
-      startDate: "2023-11-10",
-      deathDate: "2024-02-03",
-      xCombo: 95,
-      totalPoints: 850,
-    },
-    {
-      survivalDays: 72,
-      successCareCount: 70,
-      startDate: "2023-08-20",
-      deathDate: "2023-10-31",
-      xCombo: 80,
-      totalPoints: 720,
-    },
-    {
-      survivalDays: 65,
-      successCareCount: 63,
-      startDate: "2023-06-01",
-      deathDate: "2023-08-05",
-      xCombo: 75,
-      totalPoints: 650,
-    },
-    {
-      survivalDays: 58,
-      successCareCount: 55,
-      startDate: "2023-03-15",
-      deathDate: "2023-05-12",
-      xCombo: 68,
-      totalPoints: 580,
-    },
-    {
-      survivalDays: 51,
-      successCareCount: 48,
-      startDate: "2023-01-01",
-      deathDate: "2023-02-21",
-      xCombo: 60,
-      totalPoints: 510,
-    },
-    {
-      survivalDays: 42,
-      successCareCount: 40,
-      startDate: "2022-11-10",
-      deathDate: "2022-12-22",
-      xCombo: 50,
-      totalPoints: 420,
-    },
-  ];
+  const {data: dangos, isLoading: isLoadingDangos, error} = useGet<HistoryDangoResponse[]>('/api/v1/dangos/me');
+  const router = useRouter();
+
+  if (isLoadingDangos) return <Loading />;
 
   return (
     <div className="h-screen flex flex-col">
       <PageHeader title="アーカイブ" href="/settings" />
-      <main className="flex-1 bg-white overflow-y-auto py-7 px-4">
-        <div className="flex flex-col gap-6 items-center justify-center w-full">
-          {historyDangoData.map((data, index) => (
-            <HistoryDango
-              key={index}
-              survivalDays={data.survivalDays}
-              successCareCount={data.successCareCount}
-              startDate={data.startDate}
-              deathDate={data.deathDate}
-              xCombo={data.xCombo}
-              totalPoints={data.totalPoints}
-            />
-          ))}
-        </div>
-      </main>
+        {error ? (
+          <main className="flex-1 bg-radial overflow-y-auto py-7 px-4">
+            <div className="flex flex-col h-full justify-center items-center">
+              <div className="flex gap-5 items-end">
+                <span className="bg-accent w-1 h-10 rounded-full origin-bottom -rotate-45"></span>
+                <span className="bg-accent w-1 h-10 rounded-full"></span>
+                <span className="bg-accent w-1 h-10 rounded-full origin-bottom rotate-45"></span>
+              </div>
+              <Icons.bookOpen />
+              <div className="flex flex-col items-center justify-center gap-1 mt-5">
+                <h2 className="text-lg">まだ記録がありません</h2>
+                <p>あなたの初めてのどろ団子を育てましょう！</p>
+              </div>
+              <PrimaryButton
+                label="どろ団子を育てにいく"
+                onClick={() => router.push('/settings')}
+                py="mt-15 py-[18px]"
+              />
+            </div>
+          </main>
+        ): (
+          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4">
+            {dangos && dangos.map((dango) => (
+              <HistoryDango
+                key={dango.id} 
+                headSkin={dango.headSkin}
+                bodySkin={dango.bodySkin}
+                baseSkin={dango.baseSkin}
+                damageLevel={dango.damageLevel}
+                growthLevel={dango.growthLevel}
+                totalDaysAlive={dango.totalDaysAlive}
+                successCareCount={dango.successCareCount}
+                caredAt={dango.caredAt}
+                diedAt={dango.diedAt || ""}
+                maxConsecutive={dango.maxConsecutive}
+                point={dango.point}
+              />
+            ))}
+          </main>
+        )}
     </div>
   );
 }

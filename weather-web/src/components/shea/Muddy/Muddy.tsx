@@ -9,9 +9,7 @@ interface MuddyProps {
   baseSkin?: string;
   growthLevel: "1" | "2" | "3" | "4" | "5";
   damageLevel: "1" | "2" | "3" | "4" | "5";
-  scale: string;
-  width: string;
-  height: string;
+  scale?: string;
 }
 
 export const Muddy = ({
@@ -21,9 +19,7 @@ export const Muddy = ({
   baseSkin,
   growthLevel,
   damageLevel,
-  scale,
-  width,
-  height,
+  scale = "scale-[1]",
 }: MuddyProps) => {
   const faceContent = {
     normal: (
@@ -119,15 +115,10 @@ export const Muddy = ({
     )
   }
 
-  const widthPx = `w-[${width}px]`;
-  const heightPx = `h-[${height}px]`;
-
   return (
     <div className={cn(
       styles.muddyContainer,
       scale,
-      widthPx,
-      heightPx,
     )}>
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
@@ -140,7 +131,7 @@ export const Muddy = ({
       <div className={styles.aura}></div>
       <div className={styles.muddyBody}>
         <div className={styles.muddyBodyBefore}></div>
-        <div className={styles.muddyBodyAffer}></div>
+        <div className={styles.muddyBodyAfter}></div>
         <div className={styles.muddyBodyShine}>
           <div className={styles.muddyBodyShineLeft}></div>
           <div className={styles.muddyBodyShineRight}></div>

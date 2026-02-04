@@ -1,22 +1,21 @@
-import Image from "next/image";
+import { HistoryDangoResponse } from "@/types/api";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
-interface HistoryDangoProps {
-  survivalDays: number;
-  successCareCount: number;
-  startDate: string;
-  deathDate: string;
-  xCombo: number;
-  totalPoints: number;
-}
+type HistoryDangProps = Omit<HistoryDangoResponse, 'id'>;
 
 export const HistoryDango = ({
-  survivalDays,
+  totalDaysAlive,
+  caredAt,
+  headSkin,
+  bodySkin,
+  baseSkin,
+  damageLevel,
+  growthLevel,
+  diedAt,
   successCareCount,
-  startDate,
-  deathDate,
-  xCombo,
-  totalPoints,
-}: HistoryDangoProps) => {
+  point,
+  maxConsecutive,
+}: HistoryDangProps) => {
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
@@ -36,7 +35,7 @@ export const HistoryDango = ({
           <div className="flex items-center justify-between">
             <p>生存日数</p>
             <div className="flex items-end gap-1">
-              <p className="font-sen text-lg">{survivalDays}</p>
+              <p className="font-sen text-lg">{totalDaysAlive}</p>
               <p className="text-sm">日</p>
             </div>
           </div>
@@ -49,11 +48,16 @@ export const HistoryDango = ({
           </div>
         </div>
         {/* ダミー */}
-        <Image
-          src="/images/dummy-image.png"
-          alt="dummy-image"
-          width={100}
-          height={100}
+        <Muddy
+          face="normal"
+          scale=""
+          width="w-[100px]"
+          height="h-[100px]"
+          headSkin={headSkin}
+          bodySkin={bodySkin}
+          baseSkin={baseSkin}
+          damageLevel={damageLevel}
+          growthLevel={growthLevel}
         />
       </div>
       <div className="px-2 flex flex-col gap-4">
@@ -61,31 +65,33 @@ export const HistoryDango = ({
           <p className="">どろ団子を育て始めた日</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">
-              {formatDate(startDate)}
+              {formatDate(caredAt)}
             </p>
-            <p>({getWeekday(startDate)})</p>
+            <p>({getWeekday(caredAt)})</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">どろ団子が死んだ日</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">
-              {formatDate(deathDate)}
+              {diedAt ? formatDate(diedAt) : ""}
             </p>
-            <p>({getWeekday(deathDate)})</p>
+            <p>
+              {diedAt ? `(${getWeekday(diedAt)})` : "生存中"}
+            </p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">最大コンボ数</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{xCombo}</p>
+            <p className="font-sen text-lg leading-6">{maxConsecutive}</p>
             <p>コンボ</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">合計ポイント数</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{totalPoints}</p>
+            <p className="font-sen text-lg leading-6">{point}</p>
             <p>ポイント</p>
           </div>
         </div>
