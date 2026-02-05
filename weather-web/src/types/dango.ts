@@ -12,5 +12,3 @@ export interface Dango {
   point: number;
   maxConsecutive: number;
 }
-
-export type BestDango = Pick<Dango, "id" | "headSkin" | "bodySkin" | "baseSkin" | "damageLevel" | "growthStage">;

@@ -94,7 +94,7 @@ const DUMMY3_ITEMS = [
   },
 ];
 
-export default function Store() {
+export default function Shop() {
   // const router = useRouter();
   // const [activeTabId, setActiveTabId] = useState("dummy1");
   // const {

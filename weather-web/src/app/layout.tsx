@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden`}
+        className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden bg-white`}
         style={{
           fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}

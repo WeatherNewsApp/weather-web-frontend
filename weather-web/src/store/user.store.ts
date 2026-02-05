@@ -17,6 +17,7 @@ interface UserState {
   fetchUser: () => Promise<void>;
   login: (data: LoginRequest ) => Promise<void>;
   registerUser: (data: RegisterRequest ) => Promise<void>;
+  updateUser: (data: Pick<User, "email" | "name">) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User) => void;
   clearError: () => void;
@@ -90,6 +91,23 @@ export const useUserStore = create<UserState>()(
         } catch (error) {
           console.error('Failed to sign in:', error); 
           cookieManager.removeToken();
+          set({
+            error: error instanceof Error ? error.message : 'Unknown error',
+            isInitialized: true,
+            isLoading: false,
+          });
+        }
+      },
+
+      updateUser: async (data: Pick<User, 'email' | 'name'>) => {
+        set({isLoading: true, error:null});
+        try {
+          const res = await userRepository.updateUser(data);
+          if (res.success) {
+            set({user: { ...get().user, ...data } as User, isInitialized: true, isLoading: false});
+          }
+        } catch (error) {
+          console.error('Failed to update user:', error);
           set({
             error: error instanceof Error ? error.message : 'Unknown error',
             isInitialized: true,

@@ -1,12 +1,12 @@
 import { apiClient } from "@/lib/api/client";
-import type { Dango, BestDango } from "@/types/dango";
+import type { Dango } from "@/types/dango";
 
 export const dangoRepository = {
   // 団子一覧取得
-  getDangos: () => apiClient.get<Dango[]>('/api/v1/dangos'),
+  getDangos: () => apiClient.get<Dango[]>('/api/v1/dangos/me'),
 
   // mybest団子
-  getBestDango: () => apiClient.get<BestDango>(
+  getBestDango: () => apiClient.get<Dango>(
     '/api/v1/dangos/me/best'
   ),
 
@@ -15,7 +15,7 @@ export const dangoRepository = {
 
   // now団子
   // api書き直す
-  getNowDango: () => apiClient.get<BestDango>(
+  getNowDango: () => apiClient.get< Dango >(
     '/api/v1/dangos/me/now'
   ),
 }

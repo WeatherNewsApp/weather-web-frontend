@@ -1,5 +1,8 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateUserSchema, type UpdateUserSchema } from "@/schemas/user";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,47 +15,96 @@ import { SettingsListItem } from "@/components/feature/SettingsListItem/Settings
 import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
 import { Loading } from "@/components/shea/Loading/Loading";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
-import { ComboBox } from "@/components/shea/ComboBox/ComboBox";
-import { useBestDango, useDangos } from "@/hooks/useDangos";
+import { useBestDango } from "@/hooks/useDangos";
 import { useUserStore } from "@/store/user.store";
-import { useAreas } from "@/hooks/useAreas";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
-import type { User } from "@/types/user";
+import { userRepository } from "@/repositories/user.repository";
+import { UpdateUserForm } from "@/components/feature/UpdateUserForm/UpdateUserForm";
+import { UpdateUserModal } from "@/components/feature/UpdateUserModal/UpdateUserModal";
+import { ShareModal } from "@/components/feature/ShareModal/ShareModal";
 
 export default function Settings() {
   const router = useRouter();
+  // モーダル
   const [showSelectBestDangoModal, setShowSelectBestDangoModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showAreaModal, setShowAreaModal] = useState(false);
+  const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
   const [shouldFetchAreas, setShouldFetchAreas] = useState(false);
 
-  // ここから変更点
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
   const deleteAccount = useUserStore((state) => state.deleteAccount);
+  const updateUser = useUserStore((state) => state.updateUser);
   
   const { bestDango, isLoadingBestDango } = useBestDango();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateUserSchema>({
+    resolver: zodResolver(updateUserSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+    },
+  });
+
+  const onSubmit = async (data: UpdateUserSchema) => {
+    try {
+      updateUser(data);
+      setShowUpdateUserModal(false);
+    } catch (error) {
+      console.error('Failed to update user:', error);
+    }
+  }
+
   if (isLoadingBestDango) return <Loading />;
 
+  // ログアウト
   const handleLogout = async () => {
     await logout();
     router.push("/top");
   }
 
+  // アカウント削除
   const handleDeleteAccount = async () => {
     await deleteAccount();
     router.push("/top");
   }
 
-  const handleShowSelectBestDangoModal = () => {
-    const {dangos,isLoadingDangos} = useDangos();
-    if (isLoadingDangos) return <Loading />;
-    setShowSelectBestDangoModal(true);
+  // ユーザー情報更新
+  const handleUpdateUser = async () => {
+    try {
+      await userRepository.updateUser({
+        email: user?.email ?? "",
+        name: user?.name ?? "",
+      });
+      setShowUpdateUserModal(false);
+    } catch (error) {
+      console.error(error);
+      alert("ユーザー情報の更新に失敗しました");
+    }
+  };
+
+  // 共有モーダルを開く
+  const handleShowShareModal = async () => {
+    if (isLoadingBestDango) return <Loading />;
+    if (!bestDango) return;
+    setShowShareModal(true);
   }
 
+  // const handleShowSelectBestDangoModal = () => {
+  //   const {dangos,isLoadingDangos} = useDangos();
+  //   if (isLoadingDangos) return <Loading />;
+  //   setShowSelectBestDangoModal(true);
+  // }
 
   // SWRで都道府県リストを取得（遅延ロード）
   // const { data: prefecturesData, isLoading: isPrefecturesLoading } =
@@ -104,17 +156,17 @@ export default function Settings() {
   // };
 
   return (
-    <div className="h-screen flex flex-col bg-main">
+    <div className="h-screen flex flex-col">
       {/* ヘッダー（固定） */}
       <PageHeader title="設定" href="/" />
 
       {/* メインコンテンツ（スクロール可能） */}
-      <main className="flex-1 bg-white overflow-y-auto py-7 px-4">
+      <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-26">
         <div className="flex flex-col items-center w-full gap-6">
-          <div className="flex justify-between w-full items-center p-3 bg-radial-close rounded-md shadow-md h-[150px]">
+          <div className="flex justify-between w-full items-center p-3 bg-radial-close rounded-md shadow-md h-[150px] relative">
             <div className="flex flex-col justify-between h-full">
               <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium text-accent">
+                <p className="text-xs font-medium">
                   マイベストどろ団子
                 </p>
                 <p>
@@ -124,7 +176,7 @@ export default function Settings() {
                 </p>
               </div>
               {/* ボタン */}
-              <button className="bg-accent rounded-full py-1 w-[180px]">
+              <button className="bg-accent rounded-full py-2 blockw-[180px]">
                 <span className="text-white text-xs">どろ団子を切り替える</span>
               </button>
             </div>
@@ -132,6 +184,11 @@ export default function Settings() {
               face="normal"
               scale="scale-[0.6]"
               {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+            />
+            <Icons.Share 
+              className="w-7 h-7 absolute bottom-[2px] right-[2px]"
+              strokeWidth={1.2} 
+              onClick={handleShowShareModal}
             />
           </div>
           <Link
@@ -150,9 +207,7 @@ export default function Settings() {
               // ダミー値
               title={user?.name ?? ""}
               subtitle={user?.email ?? ""}
-              onClick={() => {
-                /* プロフィール編集 */
-              }}
+              onClick={() => {setShowUpdateUserModal(true)}}
             />
 
             {/* 地域設定 */}
@@ -195,6 +250,15 @@ export default function Settings() {
               variant="danger"
             />
           </SettingsList>
+
+          {/* 共有モーダル */}
+          <ShareModal
+            isOpen={showShareModal}
+            onClose={() => setShowShareModal(false)}
+            bestDango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : undefined}
+          />
+
+          {/* ログアウトモーダル */}
           <ConfirmModal
             dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
             isOpen={showLogoutModal}
@@ -210,6 +274,8 @@ export default function Settings() {
             }
             confirmText="ログアウト"
           />
+
+          {/* アカウント削除モーダル */}
           <ConfirmModal
             dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
             isOpen={showDeleteAccountModal}
@@ -226,6 +292,20 @@ export default function Settings() {
             confirmText="アカウント削除"
             cancelText="キャンセル"
           />
+
+          {/* ユーザー情報変更モーダル */}
+          <UpdateUserModal
+            isOpen={showUpdateUserModal}
+            onClose={() => setShowUpdateUserModal(false)}
+            title="ユーザー情報変更"
+          >
+            <UpdateUserForm
+              onSubmit={onSubmit}
+              register={register}
+              handleSubmit={handleSubmit}
+            />
+          </UpdateUserModal>
+          {/* エリア変更モーダル */}
           <SelectModal
             isOpen={showAreaModal}
             onClose={() => setShowAreaModal(false)}

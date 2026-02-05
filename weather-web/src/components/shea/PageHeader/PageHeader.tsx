@@ -28,7 +28,12 @@ export const PageHeader = ({
 }: PageHeaderProps) => {
   return (
     <>
-      <header className="pt-6 pb-3 px-4 bg-main flex items-start justify-start relative">
+      <header className="pt-6 pb-3 px-4 flex items-start justify-start fixed top-0 left-0 w-full z-10">
+        {tabs ? (
+          <Image src="/images/page-head-bg.png" alt="page-head-bg" width={460} height={100} className="absolute bottom-0 left-0 w-full h-auto" />
+        ) : (
+          <Image src="/images/page-head-bg-normal.png" alt="page-head-bg-normal" width={460} height={100} className="absolute bottom-0 left-0 w-full h-auto" />
+        )}
         <div className="flex items-center justify-between w-full relative">
           <Link href={href} className="text-white w-10 h-10">
             <Icons.chevronLeft className="w-10 h-10" strokeWidth={1} />
@@ -55,7 +60,7 @@ export const PageHeader = ({
         </div>
       </header>
       {tabs && tabs.length > 0 && (
-        <div className="flex p-4 gap-5 bg-main">
+        <div className="flex p-4 gap-5">
           {tabs.map((tab) => (
             <button
               key={tab.id}

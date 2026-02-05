@@ -14,6 +14,7 @@ export interface PrimaryButtonProps {
   icon?: React.ReactNode;
   fontSize?: string;
   fontFamily?: string;
+  form?: string;
 }
 
 export const PrimaryButton = ({
@@ -49,7 +50,7 @@ export const PrimaryButton = ({
 
   const buttonContent = isLoading ? (
     <span className="flex items-center justify-center">
-      <Icons.loader className="w-6 h-6 animate-spin" />
+      <Icons.loader />
     </span>
   ) : icon ? (
     <span

@@ -18,6 +18,8 @@ import {
   MoveRight,
   LandPlot,
   Earth,
+  Expand,
+  Share,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -138,4 +140,6 @@ export const Icons = {
   local: LandPlot,
   global: Earth,
   bookOpen: BookOpen,
+  Share: Expand,
+  sns: Share,
 };

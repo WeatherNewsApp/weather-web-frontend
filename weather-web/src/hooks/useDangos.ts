@@ -1,10 +1,10 @@
 import useSWR from "swr";
 import { dangoRepository } from "@/repositories/dango.repository";
-import type { Dango, BestDango } from "@/types/dango";
+import type { Dango } from "@/types/dango";
 
 export const useDangos = () => {
-  const { data, isLoading, error } = useSWR<Dango[]>(
-    '/api/v1/dangos',
+  const { data, isLoading } = useSWR<Dango[]>(
+    '/api/v1/dangos/me',
     dangoRepository.getDangos,
     {
       revalidateOnFocus: false,
@@ -19,7 +19,7 @@ export const useDangos = () => {
 };
 
 export const useBestDango = () => {
-  const { data, isLoading, error } = useSWR<BestDango>(
+  const { data, isLoading } = useSWR<Dango, "id">(
     '/api/v1/dangos/me/best',
     dangoRepository.getBestDango,
     {
