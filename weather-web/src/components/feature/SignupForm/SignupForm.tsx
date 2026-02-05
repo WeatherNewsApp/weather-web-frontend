@@ -11,6 +11,9 @@ import { Icons } from "@/components/shea/icon";
 import { TermsAgreement } from "@/components/feature/TermsAgreement/TermsAgreement";
 import { FormInput } from "@/components/shea/FormInput/FormInput";
 import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
+import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
+import { Area } from "@/types/area";
+import { useUserStore } from "@/store/user.store";
 
 interface SignupFormProps {
   onSubmit: (data: SignupSchema) => void;
@@ -20,6 +23,8 @@ interface SignupFormProps {
   handleSubmit: UseFormHandleSubmit<SignupSchema>;
   isValid: boolean;
   apiError?: string;
+  areas: Area[];
+  handleSelectAreaId?: (areaId: number) => void;
 }
 
 export const SignupForm = ({
@@ -30,7 +35,10 @@ export const SignupForm = ({
   handleSubmit,
   isValid,
   apiError,
+  areas,
+  handleSelectAreaId,
 }: SignupFormProps) => {
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
       <div className="flex flex-col gap-7">
@@ -66,6 +74,7 @@ export const SignupForm = ({
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
+        <AreaComboBox />
       </div>
       <TermsAgreement
         register={register("isTermsAccepted")}

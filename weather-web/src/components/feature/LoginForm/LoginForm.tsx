@@ -33,7 +33,7 @@ export const LoginForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-10 flex flex-col justify-between h-full"
+      className="mt-10 flex flex-col justify-between"
     >
       <div className="flex flex-col gap-7">
         <FormInput
