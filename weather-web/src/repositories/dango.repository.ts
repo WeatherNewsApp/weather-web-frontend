@@ -15,7 +15,7 @@ export const dangoRepository = {
 
   // now団子
   // api書き直す
-  getNowDango: () => apiClient.get< Dango >(
+  getNowDango: () => apiClient.get<Dango>(
     '/api/v1/dangos/me/now'
   ),
 }

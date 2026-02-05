@@ -18,7 +18,7 @@ export default function history() {
     <div className="h-screen flex flex-col">
       <PageHeader title="アーカイブ" href="/settings" />
         {dangos && dangos.length === 0 ? (
-          <main className="flex-1 bg-radial overflow-y-auto py-7 px-4 pt-26">
+          <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-26">
             <div className="flex flex-col h-full justify-center items-center">
               <div className="flex gap-5 items-end">
                 <span className="bg-accent w-1 h-10 rounded-full origin-bottom -rotate-45"></span>
@@ -38,7 +38,7 @@ export default function history() {
             </div>
           </main>
         ): (
-          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 pt-26">
+          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 -26">
             {dangos && dangos.map((dango) => (
               <HistoryDango
                 key={dango.id} 

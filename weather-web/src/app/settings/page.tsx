@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { cn } from "@/lib/utils";
 import { Icons } from "@/components/shea/icon";
 import { ToggleSwitch } from "@/components/shea/ToggleSwitch/ToggleSwitch";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
@@ -15,7 +16,7 @@ import { SettingsListItem } from "@/components/feature/SettingsListItem/Settings
 import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
 import { Loading } from "@/components/shea/Loading/Loading";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
-import { useBestDango } from "@/hooks/useDangos";
+import { useBestDango, useDangos } from "@/hooks/useDangos";
 import { useUserStore } from "@/store/user.store";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { userRepository } from "@/repositories/user.repository";
@@ -32,9 +33,11 @@ export default function Settings() {
   const [showAreaModal, setShowAreaModal] = useState(false);
   const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showUpdateBestDangoModal, setShowUpdateBestDangoModal] = useState(false);
 
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
   const [shouldFetchAreas, setShouldFetchAreas] = useState(false);
+  const [selectedBestDangoId, setSelectedBestDangoId] = useState<number | null>(null);
 
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
@@ -42,6 +45,7 @@ export default function Settings() {
   const updateUser = useUserStore((state) => state.updateUser);
   
   const { bestDango, isLoadingBestDango } = useBestDango();
+  const { dangos, isLoadingDangos} = useDangos();
 
   const {
     register,
@@ -100,60 +104,29 @@ export default function Settings() {
     setShowShareModal(true);
   }
 
-  // const handleShowSelectBestDangoModal = () => {
-  //   const {dangos,isLoadingDangos} = useDangos();
-  //   if (isLoadingDangos) return <Loading />;
-  //   setShowSelectBestDangoModal(true);
-  // }
+  // ベスト団子変更モーダル
+  const handleShowUpdateBestDangoModal = async () => {
+    if (isLoadingDangos) return <Loading />;
+    if (!dangos) return;
+    setShowUpdateBestDangoModal(true);
+  }
 
-  // SWRで都道府県リストを取得（遅延ロード）
-  // const { data: prefecturesData, isLoading: isPrefecturesLoading } =
-    // useGet<PrefecturesResponse>(
-    //   shouldFetchPrefectures ? "/api/v1/prefectures" : null
-    // );
+  const handleSelectBestDango = async (dangoId: number) => {
+    setSelectedBestDangoId(dangoId);
+  }
 
-  // const prefectures = prefecturesData || [];
-
-  // // モーダルを開いたときに都道府県リストを取得（遅延ロード）
-  // const handleOpenPrefectureModal = () => {
-  //   setShowPrefectureModal(true);
-  //   // setSelectedPrefectureId(user?.prefecture?.id ?? null);
-  //   setShouldFetchPrefectures(true);
-  // };
-
-  // // 地域変更の確定処理
-  // const handleConfirmPrefecture = async () => {
-  //   if (!selectedPrefectureId) {
-  //     alert("地域を選択してください");
-  //     return;
-  //   }
-
-  //   try {
-  //     await updatePrefecture({ prefecture_id: Number(selectedPrefectureId) });
-
-  //     const selectedPrefecture = prefectures.find(
-  //       (p) => p.id === selectedPrefectureId
-  //     );
-  //     if (user && selectedPrefecture) {
-  //       // SWRのキャッシュを更新（楽観的更新）
-  //       mutateUser(
-  //         {
-  //           ...user,
-  //           prefecture: {
-  //             id: selectedPrefecture.id,
-  //             name: selectedPrefecture.name,
-  //           },
-  //         },
-  //         false
-  //       );
-  //     }
-  //     setShowPrefectureModal(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert("地域の更新に失敗しました");
-  //     mutateUser();
-  //   }
-  // };
+  const handleUpdateBestDango = async () => {
+    try {
+      await userRepository.updateBestDango({
+        dangoId: selectedBestDangoId ?? 0,
+      });
+      setShowUpdateBestDangoModal(false);
+      console.log("ベスト団子を更新しました");
+      setSelectedBestDangoId(null);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="h-screen flex flex-col">
@@ -176,7 +149,10 @@ export default function Settings() {
                 </p>
               </div>
               {/* ボタン */}
-              <button className="bg-accent rounded-full py-2 blockw-[180px]">
+              <button 
+                className="bg-accent rounded-full py-2 blockw-[180px]"
+                onClick={handleShowUpdateBestDangoModal}
+              >
                 <span className="text-white text-xs">どろ団子を切り替える</span>
               </button>
             </div>
@@ -258,6 +234,44 @@ export default function Settings() {
             bestDango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : undefined}
           />
 
+          {/* ベスト団子変更モーダル */}
+          <UpdateUserModal
+            isOpen={showUpdateBestDangoModal}
+            onClose={() => setShowUpdateBestDangoModal(false)}
+            title="どの団子にする"
+          >
+            {dangos && dangos.length === 0 ? (
+              <p className="text-lg text-center">まだどろだんごがありません</p>
+            ) : (
+              <>
+                <ul className="grid grid-cols-3 gap-y-4 gap-x-3 overflow-y-auto">
+                  {dangos && dangos.map((dango) => (
+                      <li 
+                        key={dango.id}
+                        className={cn(
+                          "flex justify-center items-center max-h-25",
+                          selectedBestDangoId === dango.id && "bg-white rounded-xs"
+                        )}
+                        onClick={() => handleSelectBestDango(dango.id)}
+                      >
+                        <Muddy
+                          face="normal"
+                          scale="scale-[0.35]"
+                          {...dango}
+                        />
+                      </li>
+                    ))}
+                </ul>
+                <button 
+                  className="h-15 w-full relative"
+                  onClick={handleUpdateBestDango}
+                >
+                  <span className="text-white flex justify-center items-center bg-accent w-full rounded-sm py-4 relative z-20">このどろ団子に決めた！</span>
+                  <span className="absolute bottom-0 right-0 w-full h-14 bg-accent-dark rounded-sm z-10" />
+                </button>
+              </>
+            )}
+          </UpdateUserModal>
           {/* ログアウトモーダル */}
           <ConfirmModal
             dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}

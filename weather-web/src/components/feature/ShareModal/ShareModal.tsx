@@ -6,7 +6,7 @@ import { Icons } from "@/components/shea/icon";
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
-  bestDango: Omit<Dango, "id">;
+  bestDango?: Omit<Dango, "id">;
 }
 
 export const ShareModal = ({
@@ -14,7 +14,7 @@ export const ShareModal = ({
   onClose,
   bestDango
 }: ShareModalProps) => {
-  if (!isOpen) return null;
+  if (!isOpen || !bestDango) return null;
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6">
       <div
