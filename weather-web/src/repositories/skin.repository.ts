@@ -42,7 +42,7 @@ export const skinRepository = {
   // スキン受け取り
   purchaseSkin: async (skinId: number) => {
     const res = await apiClient.post<ApiResponse>(
-      '/api/v1/skins/purchase',
+      `/api/v1/skins/${skinId}`,
       skinId
     );
     return res;
@@ -62,7 +62,6 @@ export const skinRepository = {
     const res = await apiClient.delete<ApiResponse>(
       `/api/v1/skins/${skinId}/favorite`,
     );
-
     return res;
   }
 }

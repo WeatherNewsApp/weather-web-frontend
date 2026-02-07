@@ -3,7 +3,7 @@ import { dangoRepository } from "@/repositories/dango.repository";
 import type { Dango } from "@/types/dango";
 
 export const useDangos = () => {
-  const { data, isLoading } = useSWR<Dango[]>(
+  const { data, isLoading, mutate } = useSWR<Dango[]>(
     '/api/v1/dangos/me',
     dangoRepository.getDangos,
     {
@@ -15,6 +15,7 @@ export const useDangos = () => {
   return {
     dangos: data,
     isLoadingDangos: isLoading,
+    mutateDangos: mutate,
   };
 };
 

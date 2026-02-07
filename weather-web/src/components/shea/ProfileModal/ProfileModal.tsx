@@ -44,6 +44,7 @@ export const ProfileModal = ({
             transition={{
               type: "spring",
               stiffness: 300,
+              duration: 0.4,
               damping: 30,
             }}
             onClick={(e) => e.stopPropagation()}

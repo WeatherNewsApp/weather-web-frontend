@@ -15,6 +15,7 @@ interface UserState {
   error: string | null;
   // actions
   fetchUser: () => Promise<void>;
+  refreshUser: () => Promise<void>;
   login: (data: LoginRequest ) => Promise<void>;
   registerUser: (data: RegisterRequest ) => Promise<void>;
   updateUser: (data: Pick<User, "email" | "name">) => Promise<void>;
@@ -53,6 +54,15 @@ export const useUserStore = create<UserState>()(
             isInitialized: true,
             isLoading: false,
           });
+        }
+      },
+
+      refreshUser: async () => {
+        try {
+          const user = await userRepository.getMe();
+          set({ user, isLoading: false});
+        } catch (error) {
+          console.error('Failed to refresh user:', error);
         }
       },
 
@@ -126,7 +136,7 @@ export const useUserStore = create<UserState>()(
           cookieManager.removeToken();
           set({ 
             user: null, 
-            isInitialized: false, 
+            isInitialized: true, 
             isLoading: false,
             error: null 
           });

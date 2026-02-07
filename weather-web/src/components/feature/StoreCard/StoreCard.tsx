@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
 
+import { useState } from "react";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { Icons } from "@/components/shea/icon";
 import Image from "next/image";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
@@ -12,6 +13,8 @@ export interface StoreCardProps {
   onClick: () => void;
   currentPoint: number;
   isOwned: boolean;
+  imageUrl: string;
+  category: "head" | "body" | "base";
 }
 
 export const StoreCard = ({
@@ -19,24 +22,35 @@ export const StoreCard = ({
   price,
   currentPoint,
   isOwned,
+  onClick,
+  imageUrl,
+  category,
 }: StoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handlePurchase = () => {
+    onClick();
+    setIsOpen(false);
+  }
 
   return (
     <>
       <div className="bg-radial rounded-md py-3 px-1 flex flex-col justify-center items-center">
-        {/* ダミー  API疎通後に変更 */}
-        <Image
-          src="/images/dummy-image.png"
-          alt="dummy"
-          width={80}
-          height={80}
-        />
+        <div className="flex items-center justify-center w-20 h-20 relative">
+          <Muddy
+            face="normal"
+            growthStage="1"
+            damageLevel="1"
+            scale="scale-[0.4]"
+            headSkin={category === "head" ? imageUrl : undefined}
+            bodySkin={category === "body" ? imageUrl : undefined}
+            baseSkin={category === "base" ? imageUrl : undefined}
+          />
+        </div>
         <p className="text-xs mt-5 mb-2">{title}</p>
         <PrimaryButton
           label={isOwned ? "所持済み" : `${price}P`}
           onClick={() => setIsOpen(true)}
-          // isOwendがtrueの場合はiconを表示しない
           icon={
             isOwned ? undefined : (
               <div className="h-4 w-[15px] relative">
@@ -64,9 +78,7 @@ export const StoreCard = ({
         onClose={() => setIsOpen(false)}
         buttonProps={{
           label: "OK",
-          onClick: () => {
-            //TODO: 購入処理を追加
-          },
+          onClick: () => {handlePurchase();},
           shadow: true,
           variant: "accent",
         }}

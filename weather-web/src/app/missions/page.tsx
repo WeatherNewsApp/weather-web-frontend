@@ -13,7 +13,7 @@ import { useUserStore } from "@/store/user.store";
 export default function Missions() {
   const [activeTabId, setActiveTabId] = useState("mission");
 
-  const { user, fetchUser } = useUserStore();
+  const { user, refreshUser } = useUserStore();
   const { missions, isLoadingMissions, refetchMissions } = useMissions();
   console.log(missions);
   const { achievements, isLoadingAchievements ,refetchAchievements} = useAchievements();
@@ -25,7 +25,7 @@ export default function Missions() {
     try {
       await missionRepository.claimMission(missionId);
       await refetchMissions();
-      await fetchUser();
+      await refreshUser();
     } catch (error) {
       console.error("報酬の受け取りに失敗しました:", error);
     }
@@ -36,7 +36,7 @@ export default function Missions() {
     try {
       await achievementRepository.claimAchievement(achievementId);
       await refetchAchievements();
-      await fetchUser();
+      await refreshUser();
     } catch (error) {
       console.error("報酬の受け取りに失敗しました:", error);
     }

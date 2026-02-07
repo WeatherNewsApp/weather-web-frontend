@@ -158,11 +158,13 @@ export default function Settings() {
                 <span className="text-white text-xs">どろ団子を切り替える</span>
               </button>
             </div>
-            <Muddy 
-              face="normal"
-              scale="scale-[0.6]"
-              {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
-            />
+            <div className="w-30 h-30 flex items-center justify-center">
+              <Muddy 
+                face="normal"
+                scale="scale-[0.6]"
+                {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+              />
+            </div>
             <Icons.Share 
               className="w-7 h-7 absolute bottom-[2px] right-[2px]"
               strokeWidth={1.2} 

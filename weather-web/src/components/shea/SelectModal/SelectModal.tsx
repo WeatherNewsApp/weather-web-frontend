@@ -34,10 +34,10 @@ export const SelectModal = ({
         >
           {/* オーバーレイ */}
           <motion.div
-            className="absolute inset-0 bg-black opacity-60"
+            className="absolute inset-0 bg-black opacity-80"
             onClick={onClose}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
+            animate={{ opacity: 0.8 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           />
@@ -51,6 +51,7 @@ export const SelectModal = ({
             transition={{
               type: "spring",
               stiffness: 300,
+              duration: 0.4,
               damping: 30,
             }}
             onClick={(e) => e.stopPropagation()}

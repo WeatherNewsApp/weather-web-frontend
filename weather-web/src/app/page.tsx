@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+
+import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/user.store";
 import { SideMenu } from "@/components/feature/SideMenu/SideMenu";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { useOwnedSkinsHead, useOwnedSkinsBody, useOwnedSkinsBase } from "@/hooks/useSkins";
+import { useDangos } from "@/hooks/useDangos";
 import { CustomModal } from "@/components/feature/CustomModal/CustomModal";
-import { CareModal } from "@/components/feature/CareModal/CareModal";
+import { CareCardSelectModal } from "@/components/feature/CareCardSelectModal/CareCardSelectModal";
 import { CountdownTimer } from "@/components/feature/CountdownTimer/CountdownTimer"
 
 type Care = "cloudy" | "rainy" | "sunny";
@@ -32,6 +35,7 @@ export default function Home() {
   const { ownedSkinsHead, isLoadingOwnedSkinsHead, mutateOwnedSkinsHead } = useOwnedSkinsHead(showCustomModal);
   const { ownedSkinsBody, isLoadingOwnedSkinsBody, mutateOwnedSkinsBody } = useOwnedSkinsBody(showCustomModal);
   const { ownedSkinsBase, isLoadingOwnedSkinsBase, mutateOwnedSkinsBase } = useOwnedSkinsBase(showCustomModal);
+  const { mutateDangos } = useDangos();
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -62,7 +66,6 @@ export default function Home() {
   }
 
   const targetTime = getTargetDate();
-  const shouldShowTimer = targetTime !== null;
 
   const isCountdownActive = () => {
     const hour = new Date().getHours();
@@ -79,8 +82,8 @@ export default function Home() {
       />
       <div className="absolute -bottom-[970px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full bg-radial"></div>
       <div className="w-full px-4 pt-7 pb-10 h-screen flex flex-col justify-between">
-        <div className="w-full flex flex-col items-end gap-4 ">
-          <div className="flex items-center gap-1 pr-3 bg-white rounded-full">
+        <div className="w-full flex flex-col items-end gap-4 relative ">
+          <div className="flex items-center gap-1 pr-3 bg-white rounded-full shadow-md">
             <div className="pb-[2px] w-8 flex relative">
               <div className="w-8 h-8 bg-points rounded-full relative z-10 p-1">
                 <Image
@@ -94,6 +97,17 @@ export default function Home() {
             </div>
             <p className="text-accent font-sen">{user?.point}</p>
           </div>
+          {/* ここにくもここは実際の天気を取得するAPIを元に画像を変更
+           */}
+          <div className="absolute bottom-0 right-[165px] ">
+            <Image
+              src="/images/sunny-morning.png"
+              alt="cloud"
+              width={320}
+              height={240}
+              className="min-w-[320px] h-[240px]"
+            />
+          </div>
           <div 
             className="w-16 h-[66px] relative"
             onClick={ () => setIsSideMenuOpen(true)}
@@ -106,7 +120,11 @@ export default function Home() {
             <span className="absolute bottom-0 left-0 w-16 h-16 bg-main-dark rounded-full z-10"/>
           </div>
         </div>
-        <div className="pt-7 flex flex-col justify-between items-center h-full ">
+        <div className={cn(
+          "pt-7 flex flex-col items-center h-full",
+          countdownActive ? "justify-between" : "justify-end"
+        )}>
+        
           {countdownActive && targetTime && (
             <CountdownTimer
             targetDate={targetTime}
@@ -130,7 +148,7 @@ export default function Home() {
               </div>
               <button
                 className="relative h-[70px] w-full mt-15"
-                onClick={() => {}}
+                onClick={() => setShowCareModal(true)}
               >
                 <div className="absolute top-0 left-0 w-full h-[66px] flex items-center justify-center bg-accent rounded-full z-30">
                   <p className="text-white text-center text-lg">今日のケアはどうする？</p>
@@ -161,6 +179,13 @@ export default function Home() {
         mutateOwnedSkinsHead={mutateOwnedSkinsHead}
         mutateOwnedSkinsBody={mutateOwnedSkinsBody}
         mutateOwnedSkinsBase={mutateOwnedSkinsBase}
+        mutateDangos={mutateDangos}
+      />
+      <CareCardSelectModal
+        isOpen={showCareModal}
+        onClose={() => setShowCareModal(false)}
+        onSelect={(value: "sunny" | "cloudy" | "rainy") => setCare(value)}
+        initialIndex={care === "sunny" ? 1 : care === "cloudy" ? 2 : 3}
       />
     </main>
   );

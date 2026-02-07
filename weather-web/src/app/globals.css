@@ -195,8 +195,8 @@ input:-webkit-autofill:active {
   --text-2xl: 28px;
 
   /* font-family */
-  --font-m-plus: var(--font-m-plus-1p), sans-serif;
-  --font-sen: var(--font-sen), sans-serif;
+  /* --font-m-plus: var(--font-m-plus-1p), sans-serif;
+  --font-sen: var(--font-sen), sans-serif; */
 
   /* font-weight */
   --font-weight-normal: 300;

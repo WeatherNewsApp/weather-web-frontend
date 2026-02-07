@@ -27,8 +27,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const { fetchUser, isInitialized, isLoading, error } = useUserStore();
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    if (!isInitialized) {
+      fetchUser();
+    }
+  }, [fetchUser, isInitialized]);
 
   if (isLoading || !isInitialized) {
     return <Loading />;

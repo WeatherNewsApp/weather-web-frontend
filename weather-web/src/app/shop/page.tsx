@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Loading } from "@/components/shea/Loading/Loading";
@@ -11,23 +10,33 @@ import { useSkinsHead, useSkinsBody, useSkinsBase } from "@/hooks/useSkins";
 import { skinRepository } from "@/repositories/skin.repository";
 
 export default function Shop() {
-  const router = useRouter();
-  const { user } = useUserStore();
+  const { user, refreshUser } = useUserStore();
   const [activeTabId, setActiveTabId] = useState("head");
 
   const { skinsHead, isLoadingHead, mutateHead } = useSkinsHead();
   const { skinsBody, isLoadingBody, mutateBody } = useSkinsBody();
   const { skinsBase, isLoadingBase, mutateBase } = useSkinsBase();
 
-  if (isLoadingHead || isLoadingBody || isLoadingBase) return <Loading />;
+  // 初回ロード時のみローディング表示
+  const isInitialLoading = (isLoadingHead && !skinsHead) || (isLoadingBody && !skinsBody) || (isLoadingBase && !skinsBase);
 
-  const handlePurchaseSkin = async (skinId: number) => {
+  if (isInitialLoading) return <Loading />;
+
+  const handlePurchaseSkin = async (skinId: number, category: "head" | "body" | "base") => {
     try {
       const res = await skinRepository.purchaseSkin(skinId);
       if (res.success) {
-        mutateHead();
-        mutateBody();
-        mutateBase();
+        // 購入したカテゴリーのみ再取得
+        if (category === "head") {
+          await mutateHead();
+        } else if (category === "body") {
+          await mutateBody();
+        } else {
+          await mutateBase();
+        }
+        
+        // ユーザー情報を強制的に再取得
+        await refreshUser();
       }
     } catch (error) {
       console.error(error);
@@ -68,9 +77,11 @@ export default function Shop() {
                 key={item.id}
                 title={item.name}
                 price={item.price}
-                onClick={() => handlePurchaseSkin(item.id)}
+                onClick={() => handlePurchaseSkin(item.id, "head")}
                 currentPoint={user?.point ?? 0}
                 isOwned={item.isOwned}
+                imageUrl={item.imageUrl}
+                category="head"
               />
             ))}
           {activeTabId === "body" &&
@@ -79,9 +90,11 @@ export default function Shop() {
                 key={item.id}
                 title={item.name}
                 price={item.price}
-                onClick={() => handlePurchaseSkin(item.id)}
+                onClick={() => handlePurchaseSkin(item.id, "body")}
                 currentPoint={user?.point ?? 0}
                 isOwned={item.isOwned}
+                imageUrl={item.imageUrl}
+                category="body"
               />
             ))}
           {activeTabId === "base" &&
@@ -90,9 +103,11 @@ export default function Shop() {
                 key={item.id}
                 title={item.name}
                 price={item.price}
-                onClick={() => handlePurchaseSkin(item.id)}
+                onClick={() => handlePurchaseSkin(item.id, "base")}
                 currentPoint={user?.point ?? 0}
                 isOwned={item.isOwned}
+                imageUrl={item.imageUrl}
+                category="base"
               />
             ))}
         </div>
