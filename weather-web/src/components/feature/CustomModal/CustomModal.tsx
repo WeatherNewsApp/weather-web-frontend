@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/shea/icon";
@@ -40,6 +40,23 @@ export const CustomModal = ({
 }: CustomModalProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const [cardWidth, setCardWidth] = useState(0);
+
+  // カードの幅を取得
+  useEffect(() => {
+    if (cardRef.current && containerRef.current) {
+      const width = cardRef.current.offsetWidth;
+      setCardWidth(width);
+    }
+  }, [props.isOpen]);
+
+  // カード移動距離を計算
+  const getCardOffset = () => {
+    if (!cardWidth) return 0;
+    return cardWidth + 16; // カード幅 + gap(16px)
+  };
   
 
   // 団子スキン変更
@@ -156,62 +173,74 @@ export const CustomModal = ({
               </button>
             </div>
             <div className="pt-7 pb-10">
-              <div ref={containerRef} className="overflow-hidden px-[calc(10%+14px)]">
-                <motion.div
-                  className="flex gap-4"
-                  drag="x"
-                  dragConstraints={{
-                    left: -(categories.length - 1) * (containerRef.current?.clientWidth || 0),
-                    right: 0,
-                  }}
-                  dragElastic={0.2}
-                  onDragEnd={(e, info) => {
-                    const containerWidth = containerRef.current?.clientWidth || 0;
-                    const cardWidth = containerWidth * 0.8 + 16; // 80% + gap
-                    
-                    // ドラッグの速度と距離から次のインデックスを決定
-                    const offset = info.offset.x;
-                    const velocity = info.velocity.x;
-                    
-                    let newIndex = currentIndex;
-                    
-                    if (velocity > 500 || offset > cardWidth / 3) {
-                      // 左にスワイプ（前のカードへ）
-                      newIndex = Math.max(0, currentIndex - 1);
-                    } else if (velocity < -500 || offset < -cardWidth / 3) {
-                      // 右にスワイプ（次のカードへ）
-                      newIndex = Math.min(categories.length - 1, currentIndex + 1);
-                    }
-                    
-                    setCurrentIndex(newIndex);
-                  }}
-                  animate={{
-                    x: -currentIndex * ((containerRef.current?.clientWidth || 0) * 0.8 + 16),
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                >
-                  {categories.map((category, index) => (
-                    <motion.div
-                      className="min-w-[80%] max-w-[80%]"
-                      key={category.id}
-                      animate={{
-                        scale: currentIndex === index ? 1 : 0.95,
-                        opacity: currentIndex === index ? 1 : 0.7,
-                      }}
-                      transition={{
+              <div ref={containerRef} className="relative overflow-hidden">
+                <div className="px-[calc(10%+14px)]">
+                  <motion.div
+                    className="flex gap-4 cursor-grab active:cursor-grabbing"
+                    drag="x"
+                    dragConstraints={{ 
+                      left: -((categories.length - 1) * getCardOffset()),
+                      right: 0 
+                    }}
+                    dragElastic={0.2}
+                    onDragStart={() => {
+                      isDragging.current = true;
+                    }}
+                    onDragEnd={(e, info) => {
+                      setTimeout(() => {
+                        isDragging.current = false;
+                      }, 100);
+                      
+                      const threshold = 30;
+                      const velocity = info.velocity.x;
+                      const offset = info.offset.x;
+                      
+                      let newIndex = currentIndex;
+                      
+                      // 速度ベースの判定を優先
+                      if (Math.abs(velocity) > 500) {
+                        if (velocity > 0) {
+                          newIndex = Math.max(0, currentIndex - 1);
+                        } else {
+                          newIndex = Math.min(categories.length - 1, currentIndex + 1);
+                        }
+                      } else if (Math.abs(offset) > threshold) {
+                        // オフセットベースの判定
+                        if (offset > 0) {
+                          newIndex = Math.max(0, currentIndex - 1);
+                        } else {
+                          newIndex = Math.min(categories.length - 1, currentIndex + 1);
+                        }
+                      }
+                      
+                      setCurrentIndex(newIndex);
+                    }}
+                    animate={{
+                      x: -currentIndex * getCardOffset(),
+                      transition: {
                         type: "spring",
                         stiffness: 300,
                         damping: 30,
+                      }
+                    }}
+                  >
+                  {categories.map((category, index) => (
+                    <motion.div
+                      ref={index === 0 ? cardRef : null}
+                      className="min-w-[80%] flex-shrink-0"
+                      key={category.id}
+                      animate={{
+                        scale: currentIndex === index ? 1 : 0.95,
+                        opacity: currentIndex === index ? 1 : 0.6,
+                      }}
+                      transition={{
+                        duration: 0.3,
                       }}
                     >
                       <div className="grid grid-cols-3 grid-rows-4 gap-3 max-h-[400px] min-h-[400px] overflow-y-auto bg-white rounded-lg p-3 h-full">
                         {category.skins.map((skin) => (
                           <div 
-                            className="relative" 
+                            className="relative max-w-14" 
                             key={skin.id}
                           >
                             <div
@@ -221,7 +250,13 @@ export const CustomModal = ({
                                 (category.id === "body" && props.selectedSkinBodyId === skin.id) && "bg-radial",
                                 (category.id === "base" && props.selectedSkinBaseId === skin.id) && "bg-radial",
                               )}
-                              onClick={() => {
+                              onClick={(e) => {
+                                // ドラッグ中はクリックイベントを無効化
+                                if (isDragging.current) {
+                                  e.preventDefault();
+                                  return;
+                                }
+                                
                                 if (category.id === "head") {
                                   props.selectedSkinHeadId !== skin.id ? props.onSkinSelectHead(skin.id) : props.onSkinSelectHead(null);
                                 } 
@@ -251,7 +286,7 @@ export const CustomModal = ({
                               className="absolute top-0 right-0 w-7 h-7 z-20"
                             >
                               {skin.isFavorite ? (
-                                <Icons.favorite className="w-7 h-7 bg-error"/>
+                                <Icons.trueHeart/>
                               ) : (
                                 <Icons.favorite className="w-7 h-7"/>
                               )}
@@ -261,7 +296,8 @@ export const CustomModal = ({
                       </div>
                     </motion.div>
                   ))}
-                </motion.div>
+                  </motion.div>
+                </div>
               </div>
             </div>
             <div className="px-4">
