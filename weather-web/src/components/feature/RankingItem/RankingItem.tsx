@@ -3,14 +3,22 @@ import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ProfileModal } from "@/components/shea/ProfileModal/ProfileModal";
+import type { Dango } from "@/types/dango";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 export interface RankingUser {
   rank: number;
   name: string;
   days: number;
+  dango: Pick<Dango, 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>;
 }
 
-export const RankingItem = ({ rank, name, days }: RankingUser) => {
+export const RankingItem = ({
+  rank,
+  name,
+  days,
+  dango,
+}: RankingUser) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -21,12 +29,19 @@ export const RankingItem = ({ rank, name, days }: RankingUser) => {
         className="flex items-center justify-between shadow-md rounded-md p-2 bg-radial"
       >
         <div className="flex gap-3">
-          <Image
+          {/* <Image
             src="/images/dummy-image.png"
             alt="dummy-avatar"
             width={52}
             height={52}
-          />
+          /> */}
+          <div className="w-13 h-13 flex items-center justify-center">
+            <Muddy
+              {...dango}
+              face="normal"
+              scale="scale-[0.25]"
+            />
+          </div>
           <div className="flex flex-col ">
             <p className="text-sm font-sen">{name}</p>
             <p className="text-lg font-sen">
@@ -49,12 +64,13 @@ export const RankingItem = ({ rank, name, days }: RankingUser) => {
         title="プロフィール"
       >
         <div className="flex flex-col gap-3 items-center justify-center">
-          <Image
-            src="/images/dummy-image.png"
-            alt="dummy-avatar"
-            width={80}
-            height={80}
-          />
+          <div className="w-20 h-20 flex items-center justify-center">
+            <Muddy 
+              {...dango}
+              face="normal"
+              scale="scale-[0.4]"
+            />
+          </div>
           <p className="text-lg font-sen">{name}</p>
           <div className="flex gap-2 items-end justify-center">
             <p className="text-2xl font-sen ">{days}</p>

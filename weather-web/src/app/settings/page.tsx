@@ -23,11 +23,11 @@ import { userRepository } from "@/repositories/user.repository";
 import { UpdateUserForm } from "@/components/feature/UpdateUserForm/UpdateUserForm";
 import { UpdateUserModal } from "@/components/feature/UpdateUserModal/UpdateUserModal";
 import { ShareModal } from "@/components/feature/ShareModal/ShareModal";
+import { Dango } from "@/types/dango";
 
 export default function Settings() {
   const router = useRouter();
   // モーダル
-  const [showSelectBestDangoModal, setShowSelectBestDangoModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showAreaModal, setShowAreaModal] = useState(false);
@@ -36,7 +36,6 @@ export default function Settings() {
   const [showUpdateBestDangoModal, setShowUpdateBestDangoModal] = useState(false);
 
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
-  const [shouldFetchAreas, setShouldFetchAreas] = useState(false);
   const [selectedBestDangoId, setSelectedBestDangoId] = useState<number | null>(null);
 
   const user = useUserStore((state) => state.user);
@@ -44,7 +43,7 @@ export default function Settings() {
   const deleteAccount = useUserStore((state) => state.deleteAccount);
   const updateUser = useUserStore((state) => state.updateUser);
   
-  const { bestDango, isLoadingBestDango } = useBestDango();
+  const { bestDango, isLoadingBestDango, mutateBestDango } = useBestDango();
   const { dangos, isLoadingDangos} = useDangos();
 
   const {
@@ -111,15 +110,18 @@ export default function Settings() {
     setShowUpdateBestDangoModal(true);
   }
 
+  // ベスト団子選択
   const handleSelectBestDango = async (dangoId: number) => {
     setSelectedBestDangoId(dangoId);
   }
 
+  // ベスト団子更新
   const handleUpdateBestDango = async () => {
     try {
       await userRepository.updateBestDango({
         dangoId: selectedBestDangoId ?? 0,
       });
+      mutateBestDango();
       setShowUpdateBestDangoModal(false);
       console.log("ベスト団子を更新しました");
       setSelectedBestDangoId(null);
@@ -274,7 +276,19 @@ export default function Settings() {
           </UpdateUserModal>
           {/* ログアウトモーダル */}
           <ConfirmModal
-            dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+            dango={bestDango ? (({ id: _id, ...rest}) => rest)(bestDango) as Omit<Dango, "id"> : {
+              headSkin: "",
+              bodySkin: "",
+              baseSkin: "",
+              damageLevel: "1",
+              growthStage: "1",
+              totalDaysAlive: 0,
+              caredAt: "",
+              diedAt: null,
+              successCareCount: 0,
+              point: 0,
+              maxConsecutive: 0,
+            }}
             isOpen={showLogoutModal}
             onClose={() => setShowLogoutModal(false)}
             onConfirm={handleLogout}
@@ -291,7 +305,19 @@ export default function Settings() {
 
           {/* アカウント削除モーダル */}
           <ConfirmModal
-            dango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+            dango={bestDango ? (({ id: _id, ...rest}) => rest)(bestDango) as Omit<Dango, "id"> : {
+              headSkin: "",
+              bodySkin: "",
+              baseSkin: "",
+              damageLevel: "1",
+              growthStage: "1",
+              totalDaysAlive: 0,
+              caredAt: "",
+              diedAt: null,
+              successCareCount: 0,
+              point: 0,
+              maxConsecutive: 0,
+            }}
             isOpen={showDeleteAccountModal}
             onClose={() => setShowDeleteAccountModal(false)}
             onConfirm={handleDeleteAccount}

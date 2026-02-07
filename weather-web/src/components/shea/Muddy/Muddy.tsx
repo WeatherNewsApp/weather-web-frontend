@@ -74,11 +74,29 @@ export const Muddy = ({
   const scaleValue = scale.toString();
 
   const sproutContent = {
-    "1": "/images/dummy-image.png",
-    "2": "/images/dummy-image.png",
-    "3": "/images/dummy-image.png",
-    "4": "/images/dummy-image.png",
-    "5": "/images/dummy-image.png",
+    1: (
+      <></>
+    ),
+    2: (
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-1.svg" alt="sprout" width={25} height={40} />
+      </div>
+    ),
+    3: (
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-2.svg" alt="sprout" width={68} height={56} />
+      </div>
+    ),
+    4: (
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-3.svg" alt="sprout" width={124} height={80} />
+      </div>
+    ),
+    5: (
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-4.svg" alt="sprout" width={110} height={90} />
+      </div>
+    )
   }
 
   const damageLevelContent = {
@@ -86,32 +104,22 @@ export const Muddy = ({
       <></>
     ),
     2: (
-      <div className="inset-0">
-        <div className="absolute top-0 left-0">
-          <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-        </div>
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20">
+        <Image src="/images/damage-2.svg" alt="damage-level" width={164} height={137} />
       </div>
     ),
     3: (
-      <div className="absolute top-0 left-0">
-        <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-        <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20">
+        <Image src="/images/damage-2.svg" alt="damage-level" width={182} height={163} />
       </div>
     ),
     4: (
-      <div className="absolute top-0 left-0">
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-    </div>
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20 ">
+        <Image src="/images/damage-3.svg" alt="damage-level" width={182} height={180} />
+      </div>
     ),
     5: (
-      <div className="absolute top-0 left-0">
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-    </div>
+      <></>
     )
   }
 
@@ -138,9 +146,7 @@ export const Muddy = ({
           <div className={styles.muddyBodyShineSmall1}></div>
           <div className={styles.muddyBodyShineSmall2}></div>
         </div>
-        <div className={styles.muddyBodySprout}>
-          <Image src={sproutContent[growthStage]} alt="sprout" width={20} height={20} />
-        </div>
+        {sproutContent[growthStage]}
         {faceContent[face]}
       </div>
     </div>

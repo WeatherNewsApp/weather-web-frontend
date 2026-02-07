@@ -22,9 +22,6 @@ export const StoreCard = ({
 }: StoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 一旦ここまで
-  // const { data: user } = useGet<UserResponse>()
-
   return (
     <>
       <div className="bg-radial rounded-md py-3 px-1 flex flex-col justify-center items-center">

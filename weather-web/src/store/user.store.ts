@@ -117,13 +117,20 @@ export const useUserStore = create<UserState>()(
       },
 
       logout: async () => {
+        set({isLoading: true,});
         try {
           await authRepository.logout();
-          cookieManager.removeToken();
-          set({user: null});
         } catch (error) {
           console.error('Failed to logout:', error);
-        } 
+        } finally {
+          cookieManager.removeToken();
+          set({ 
+            user: null, 
+            isInitialized: false, 
+            isLoading: false,
+            error: null 
+          });
+        }
       },
 
       clearError: () => {set({error: null});},

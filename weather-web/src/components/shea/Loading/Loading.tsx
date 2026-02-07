@@ -18,9 +18,9 @@ export const Loading = () => {
         </motion.div>
         <Muddy  
           face="happy"
-          growthLevel="1"
-          damageLevel="1"
           scale="scale-[0.4]"
+          growthStage="5"
+          damageLevel="4"
         />
       </div>
 

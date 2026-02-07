@@ -38,7 +38,7 @@ export default function history() {
             </div>
           </main>
         ): (
-          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 -26">
+          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 pt-26">
             {dangos && dangos.map((dango) => (
               <HistoryDango
                 key={dango.id} 

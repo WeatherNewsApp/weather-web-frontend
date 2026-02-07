@@ -20,6 +20,12 @@ import {
   Earth,
   Expand,
   Share,
+  BookCheck,
+  Store,
+  Medal,
+  Settings,
+  Paintbrush,
+  Heart,
 } from "lucide-react";
 
 const AppleIcon = () => {
@@ -142,4 +148,10 @@ export const Icons = {
   bookOpen: BookOpen,
   Share: Expand,
   sns: Share,
+  missionBook: BookCheck,
+  shop: Store,
+  ranking: Medal,
+  settings: Settings,
+  custom: Paintbrush,
+  favorite: Heart,
 };

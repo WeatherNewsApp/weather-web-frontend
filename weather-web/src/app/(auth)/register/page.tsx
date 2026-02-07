@@ -43,7 +43,7 @@ export default function Register() {
         email: data.email,
         password: data.password,
       });
-      router.push("/home");
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         console.error('Failed to sign in:', error);
@@ -88,7 +88,10 @@ export default function Register() {
           className="left-[-109px] absolute bottom-[-191px]"
         />
       </div>
-      <div className="max-h-[82vh] h-full w-full mx-auto px-4 py-10 rounded-t-xl overflow-y-auto z-20">
+      <div className="max-h-[82vh] h-full w-full rounded-t-xl absolute z-30 bottom-0 left-0 overflow-hidden pointer-events-none">
+        <span className="bg-home-layer absolute top-0 left-0 w-full h-full z-10"/>
+      </div>
+      <div className="max-h-[82vh] h-full w-full mx-auto px-4 py-10 rounded-t-xl overflow-y-auto z-20 relative">
         <div className="flex flex-col gap-3">
           <h1 className="font-medium text-2xl">新規アカウント作成</h1>
           <p className="text-sm text-gray-500">
@@ -106,30 +109,22 @@ export default function Register() {
           areas={areas ?? []}
           handleSelectAreaId={handleSelectAreaId}
         />
-        <div className="p-4 w-full rounded-xl h-full absolute z-20">
-          <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
-            <Image
-              src={"/images/design-asset.svg"}
-              alt="design-asset"
-              width={240}
-              height={240}
-              className="right-[-171px] absolute top-[260px]"
-            />
-            <Image
-              src={"/images/design-asset.svg"}
-              alt="design-asset"
-              width={240}
-              height={240}
-              className="left-[-207px] absolute top-[109px]"
-            />
-            <Image
-              src={"/images/design-asset.svg"}
-              alt="design-asset"
-              width={240}
-              height={240}
-              className="left-[-109px] absolute bottom-[-191px]"
-            />
-          </div>
+        <Link href="/login" className="text-sm underline w-full text-center mt-4 block">
+          すでにアカウントをお持ちの方はこちら
+        </Link>
+        <div className="flex gap-10 items-center justify-center pt-15">
+          <button
+            type="button"
+            className="flex items-center justify-center w-15 h-15 border border-accent rounded-full"
+          >
+            <Icons.google />
+          </button>
+          <button
+            type="button"
+            className="flex items-center justify-center w-15 h-15 border border-accent rounded-full"
+          >
+            <Icons.apple />
+          </button>
         </div>
       </div>
     </main>
