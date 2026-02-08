@@ -42,7 +42,7 @@ export const PageHeader = ({
             {title}
           </h2>
           {showPoints && (
-            <div className="flex items-center gap-1 pr-3 bg-white rounded-full">
+            <div className="flex items-center justify-between gap-1 pr-3 bg-white rounded-full w-25">
               <div className="pb-[2px] w-8 flex relative">
                 <div className="w-8 h-8 bg-points rounded-full relative z-10 p-1">
                   <Image

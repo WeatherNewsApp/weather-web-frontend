@@ -4,6 +4,8 @@ import {
   FieldErrors,
   UseFormRegister,
   UseFormHandleSubmit,
+  Controller,
+  Control,
 } from "react-hook-form";
 
 import { type SignupSchema } from "@/schemas/auth";
@@ -12,8 +14,6 @@ import { TermsAgreement } from "@/components/feature/TermsAgreement/TermsAgreeme
 import { FormInput } from "@/components/shea/FormInput/FormInput";
 import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
 import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
-import { Area } from "@/types/area";
-import { useUserStore } from "@/store/user.store";
 
 interface SignupFormProps {
   onSubmit: (data: SignupSchema) => void;
@@ -21,10 +21,9 @@ interface SignupFormProps {
   errors: FieldErrors<SignupSchema>;
   register: UseFormRegister<SignupSchema>;
   handleSubmit: UseFormHandleSubmit<SignupSchema>;
+  control: Control<SignupSchema>;
   isValid: boolean;
   apiError?: string;
-  areas: Area[];
-  handleSelectAreaId?: (areaId: number) => void;
 }
 
 export const SignupForm = ({
@@ -33,10 +32,9 @@ export const SignupForm = ({
   errors,
   register,
   handleSubmit,
+  control,
   isValid,
   apiError,
-  areas,
-  handleSelectAreaId,
 }: SignupFormProps) => {
 
   return (
@@ -74,12 +72,27 @@ export const SignupForm = ({
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
-        <AreaComboBox />
+        <div>
+          <Controller
+            name="areaId"
+            control={control}
+            render={({ field }) => (
+              <AreaComboBox
+                selectedAreaId={field.value}
+                onChangeSelectedAreaId={field.onChange}
+                hasIcon={true}
+              />
+            )}
+          />
+          {errors.areaId && (
+            <p className="text-error text-sm mt-1">{errors.areaId.message}</p>
+          )}
+        </div>
       </div>
       <TermsAgreement
-        register={register("isTermsAccepted")}
-        error={errors.isTermsAccepted?.message}
-      />
+          register={register("isTermsAccepted")}
+          error={errors.isTermsAccepted?.message}
+        />
       {apiError && <p className="text-error text-sm my-2">{apiError}</p>}
       <PrimaryButton
         variant="accent"

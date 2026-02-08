@@ -1,9 +1,14 @@
 "use client";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
+
+// Swiper styles
+import "swiper/css";
+import "swiper/css/effect-coverflow";
 
 interface CareCardSelectModalProps {
   isOpen: boolean;
@@ -18,45 +23,18 @@ export const CareCardSelectModal = ({
   onSelect,
   initialIndex = 1,
 }: CareCardSelectModalProps) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-
   const cards = [
-    {id: 1, value: "sunny"},
-    {id: 2, value: "cloudy"},
-    {id: 3, value: "rainy"},
+    {id: 1, value: "sunny", name: "お水をあげる"},
+    {id: 2, value: "cloudy", name: "拭いてあげる"},
+    {id: 3, value: "rainy", name: "傘を刺してあげる"},
   ];
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            const index = Number(entry.target.getAttribute("data-index"));
-            setActiveIndex(index);
-          }
-        });
-      },
-      {
-        root: container,
-        threshold: [0.5],
-      }
-    );
-
-    const cards = container.querySelectorAll("[data-index]");
-    cards.forEach((card) => observer.observe(card));
-
-    return () => observer.disconnect();
-  }, [isOpen]);
 
   return (
     <AnimatePresence>
       {isOpen && (
       <motion.div 
-        className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6"
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -86,32 +64,44 @@ export const CareCardSelectModal = ({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="relative">
-            <div 
-              ref={scrollContainerRef}
-              className="flex gap-4 overflow-x-scroll scroll-smooth snap-x snap-mandatory scrollbar-hide"
-            >
-              {cards.map((card, index) => (
-                <motion.div 
-                  key={card.id}
-                  data-index={index}
-                  className={cn(
-                    "snap-center min-w-[80%] bg-radial flex p-6 flex-col items-center justify-center rounded-lg gap-20 h-[400px]",
-                    activeIndex !== index && "scale-[0.9]",
-                  )}
-                >
+          <Swiper
+            modules={[EffectCoverflow]}
+            effect="coverflow"
+            centeredSlides={true}
+            slidesPerView="auto"
+            initialSlide={initialIndex}
+            spaceBetween={40}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 0,
+              depth: 100,
+              modifier: 2,
+              slideShadows: false,
+            }}
+            onSlideChange={(swiper) => {
+              setActiveIndex(swiper.activeIndex);
+            }}
+            className="w-full px-6"
+          >
+            {cards.map((card) => (
+              <SwiperSlide key={card.id} className="!w-auto">
+                <div className="bg-radial flex p-6 w-fit flex-col items-center justify-center rounded-lg gap-20 h-[400px]">
                   <div className="flex flex-col p-2 border-4 border-border-main rounded-full items-center justify-center">
-                    <Image 
-                      src="/images/dummy-image.png"
-                      alt="dummy-iamge"
-                      width={200}
-                      height={200}
-                    />
+                    <div className="rounded-full bg-white w-[200px] h-[200px] flex items-center justify-center">
+                      <Image 
+                        src={`/images/${card.value}-trace.png`}
+                        alt={card.name}
+                        width={150}
+                        height={200}
+                        className="h-auto"
+                      />
+                    </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+                  <p className="text-lg ">{card.name}</p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
           
           <button
             onClick={() => {

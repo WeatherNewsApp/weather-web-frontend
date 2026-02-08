@@ -1,7 +1,9 @@
 "use client";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/shea/icon";
@@ -39,27 +41,8 @@ export const CustomModal = ({
   ...props
 }: CustomModalProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
-  const [cardWidth, setCardWidth] = useState(0);
 
-  // カードの幅を取得
-  useEffect(() => {
-    if (cardRef.current && containerRef.current) {
-      const width = cardRef.current.offsetWidth;
-      setCardWidth(width);
-    }
-  }, [props.isOpen]);
-
-  // カード移動距離を計算
-  const getCardOffset = () => {
-    if (!cardWidth) return 0;
-    return cardWidth + 16; // カード幅 + gap(16px)
-  };
-  
-
-  // 団子スキン変更
   const handleApplySkin = async (head_skin_id: number | null, body_skin_id: number | null, base_skin_id: number | null) => {
     try {
       await dangoRepository.changeDangoSkin(head_skin_id, body_skin_id, base_skin_id);
@@ -68,9 +51,8 @@ export const CustomModal = ({
     } finally {
       props.mutateDangos();
     }
-  }
+  };
 
-  // お気に入りの更新
   const handleFavoriteClick = async (skinId: number, categoryId: "head" | "body" | "base") => {
     try {
       const skins = categoryId === "head" 
@@ -97,7 +79,30 @@ export const CustomModal = ({
     } catch (error) {
       console.error("お気に入りの更新に失敗しました:", error);
     }
-  }
+  };
+
+  const handleSkinClick = (categoryId: string, skinId: number) => {
+    if (isDragging.current) return;
+
+    const handlers = {
+      head: { current: props.selectedSkinHeadId, handler: props.onSkinSelectHead },
+      body: { current: props.selectedSkinBodyId, handler: props.onSkinSelectBody },
+      base: { current: props.selectedSkinBaseId, handler: props.onSkinSelectBase },
+    };
+
+    const { current, handler } = handlers[categoryId as keyof typeof handlers];
+    handler(current !== skinId ? skinId : null);
+  };
+
+  // スキンが選択されているかチェック
+  const isSkinSelected = (categoryId: string, skinId: number) => {
+    const selectedIds = {
+      head: props.selectedSkinHeadId,
+      body: props.selectedSkinBodyId,
+      base: props.selectedSkinBaseId,
+    };
+    return selectedIds[categoryId as keyof typeof selectedIds] === skinId;
+  };
 
   const categories = [
     {
@@ -173,132 +178,67 @@ export const CustomModal = ({
               </button>
             </div>
             <div className="pt-7 pb-10">
-              <div ref={containerRef} className="relative overflow-hidden">
-                <div className="px-[calc(10%+14px)]">
-                  <motion.div
-                    className="flex gap-4 cursor-grab active:cursor-grabbing"
-                    drag="x"
-                    dragConstraints={{ 
-                      left: -((categories.length - 1) * getCardOffset()),
-                      right: 0 
-                    }}
-                    dragElastic={0.2}
-                    onDragStart={() => {
-                      isDragging.current = true;
-                    }}
-                    onDragEnd={(e, info) => {
-                      setTimeout(() => {
-                        isDragging.current = false;
-                      }, 100);
-                      
-                      const threshold = 30;
-                      const velocity = info.velocity.x;
-                      const offset = info.offset.x;
-                      
-                      let newIndex = currentIndex;
-                      
-                      // 速度ベースの判定を優先
-                      if (Math.abs(velocity) > 500) {
-                        if (velocity > 0) {
-                          newIndex = Math.max(0, currentIndex - 1);
-                        } else {
-                          newIndex = Math.min(categories.length - 1, currentIndex + 1);
-                        }
-                      } else if (Math.abs(offset) > threshold) {
-                        // オフセットベースの判定
-                        if (offset > 0) {
-                          newIndex = Math.max(0, currentIndex - 1);
-                        } else {
-                          newIndex = Math.min(categories.length - 1, currentIndex + 1);
-                        }
-                      }
-                      
-                      setCurrentIndex(newIndex);
-                    }}
-                    animate={{
-                      x: -currentIndex * getCardOffset(),
-                      transition: {
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                      }
-                    }}
-                  >
-                  {categories.map((category, index) => (
-                    <motion.div
-                      ref={index === 0 ? cardRef : null}
-                      className="min-w-[80%] flex-shrink-0"
-                      key={category.id}
-                      animate={{
-                        scale: currentIndex === index ? 1 : 0.95,
-                        opacity: currentIndex === index ? 1 : 0.6,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                      }}
-                    >
-                      <div className="grid grid-cols-3 grid-rows-4 gap-3 max-h-[400px] min-h-[400px] overflow-y-auto bg-white rounded-lg p-3 h-full">
-                        {category.skins.map((skin) => (
-                          <div 
-                            className="relative max-w-14" 
-                            key={skin.id}
-                          >
-                            <div
-                              className={cn(
-                                "relative flex items-center justify-center aspect-square h-auto overflow-hidden rounded-sm z-10",
-                                (category.id === "head" && props.selectedSkinHeadId === skin.id) && "bg-radial",
-                                (category.id === "body" && props.selectedSkinBodyId === skin.id) && "bg-radial",
-                                (category.id === "base" && props.selectedSkinBaseId === skin.id) && "bg-radial",
-                              )}
-                              onClick={(e) => {
-                                // ドラッグ中はクリックイベントを無効化
-                                if (isDragging.current) {
-                                  e.preventDefault();
-                                  return;
-                                }
-                                
-                                if (category.id === "head") {
-                                  props.selectedSkinHeadId !== skin.id ? props.onSkinSelectHead(skin.id) : props.onSkinSelectHead(null);
-                                } 
-                                if (category.id === "body") {
-                                  props.selectedSkinBodyId !== skin.id ? props.onSkinSelectBody(skin.id) : props.onSkinSelectBody(null);
-                                }
-                                if (category.id === "base") {
-                                  props.selectedSkinBaseId !== skin.id ? props.onSkinSelectBase(skin.id) : props.onSkinSelectBase(null);
-                                }
-                              }}
-                            >
-                              <Muddy
-                                face="normal"
-                                scale="scale-[0.3]"
-                                headSkin={category.id === "head" ? skin.imageUrl : undefined}
-                                bodySkin={category.id === "body" ? skin.imageUrl : undefined}
-                                baseSkin={category.id === "base" ? skin.imageUrl : undefined}
-                                growthStage="1"
-                                damageLevel="1"
-                              />
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleFavoriteClick(skin.id, category.id as "head" | "body" | "base");
-                              }}
-                              className="absolute top-0 right-0 w-7 h-7 z-20"
-                            >
-                              {skin.isFavorite ? (
-                                <Icons.trueHeart/>
-                              ) : (
-                                <Icons.favorite className="w-7 h-7"/>
-                              )}
-                            </button>
+              <Swiper
+                modules={[EffectCoverflow]}
+                effect="coverflow"
+                centeredSlides={true}
+                slidesPerView="auto"
+                initialSlide={0}
+                spaceBetween={40}
+                coverflowEffect={{
+                  rotate: 0,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 2,
+                  slideShadows: false,
+                }}
+                onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
+                className="w-full px-6"
+              >
+                {categories.map((category) => (
+                  <SwiperSlide key={category.id} className="!w-auto">
+                    <div className="bg-white rounded-lg p-3 grid grid-cols-3 gap-2 min-w-[312px] min-h-[320px]">
+                      {category.skins.map((skin) => (
+                        <div
+                          key={skin.id}
+                          className={cn(
+                            "relative flex items-center justify-center aspect-square overflow-hidden rounded-sm w-24 h-24 cursor-pointer transition-all duration-200",
+                            isSkinSelected(category.id, skin.id) && "bg-radial ring-2 ring-accent"
+                          )}
+                          onClick={() => handleSkinClick(category.id, skin.id)}
+                        >
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Muddy
+                              face="normal"
+                              scale="scale-[0.3]"
+                              headSkin={category.id === "head" ? skin.imageUrl : undefined}
+                              bodySkin={category.id === "body" ? skin.imageUrl : undefined}
+                              baseSkin={category.id === "base" ? skin.imageUrl : undefined}
+                              growthStage="1"
+                              damageLevel="1"
+                            />
                           </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                  </motion.div>
-                </div>
-              </div>
+                          
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleFavoriteClick(skin.id, category.id as "head" | "body" | "base");
+                            }}
+                            className="absolute top-1 right-1 w-7 h-7 z-20 transition-transform hover:scale-110"
+                            aria-label={skin.isFavorite ? "お気に入りから削除" : "お気に入りに追加"}
+                          >
+                            {skin.isFavorite ? (
+                              <Icons.trueHeart />
+                            ) : (
+                              <Icons.favorite className="w-7 h-7" strokeWidth={1.2} />
+                            )}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
             <div className="px-4">
               <PrimaryButton

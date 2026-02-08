@@ -3,14 +3,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
 import { signupSchema, type SignupSchema } from "@/schemas/auth";
 import { SignupForm } from "@/components/feature/SignupForm/SignupForm";
 import { useUserStore } from "@/store/user.store";
-import { useAreas } from "@/hooks/useAreas";
 
 export default function Register() {
   const router = useRouter();
@@ -18,12 +16,10 @@ export default function Register() {
   const isLoading = useUserStore((state) => state.isLoading);
   const error = useUserStore((state) => state.error);
 
-  const { areas, isLoadingAreas } = useAreas();
-  const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
-
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
   } = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
@@ -42,6 +38,7 @@ export default function Register() {
         name: data.name,
         email: data.email,
         password: data.password,
+        areaId: data.areaId,
       });
       router.push("/");
     } catch (error) {
@@ -52,10 +49,6 @@ export default function Register() {
       }
     }
   };
-
-  const handleSelectAreaId = (areaId: number) => {
-    setSelectedAreaId(areaId);
-  }
 
   return (
     <main className="bg-white h-screen flex flex-col items-center justify-between relative overflow-hidden">
@@ -104,10 +97,9 @@ export default function Register() {
           errors={errors}
           register={register}
           handleSubmit={handleSubmit}
+          control={control}
           isValid={isValid}
           apiError={error ?? undefined}
-          areas={areas ?? []}
-          handleSelectAreaId={handleSelectAreaId}
         />
         <Link href="/login" className="text-sm underline w-full text-center mt-4 block">
           すでにアカウントをお持ちの方はこちら

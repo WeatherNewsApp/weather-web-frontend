@@ -3,6 +3,7 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
+  areaId: number;
 }
 
 export interface RegisterResponse {

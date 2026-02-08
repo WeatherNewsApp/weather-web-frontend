@@ -12,6 +12,9 @@ import { useDangos } from "@/hooks/useDangos";
 import { CustomModal } from "@/components/feature/CustomModal/CustomModal";
 import { CareCardSelectModal } from "@/components/feature/CareCardSelectModal/CareCardSelectModal";
 import { CountdownTimer } from "@/components/feature/CountdownTimer/CountdownTimer"
+import { careRepository } from "@/repositories/care.repository";
+import { CareAnimationModal } from "@/components/shea/CareAnimationModal/CareAnimationModal";
+import { useCare } from "@/hooks/useCare";
 
 type Care = "cloudy" | "rainy" | "sunny";
 
@@ -31,10 +34,15 @@ export default function Home() {
   // モーダル
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [showCareModal, setShowCareModal] = useState(false);
+  const [showCareMovieModal, setShowCareMovieModal] = useState(false);
 
   const { ownedSkinsHead, isLoadingOwnedSkinsHead, mutateOwnedSkinsHead } = useOwnedSkinsHead(showCustomModal);
   const { ownedSkinsBody, isLoadingOwnedSkinsBody, mutateOwnedSkinsBody } = useOwnedSkinsBody(showCustomModal);
   const { ownedSkinsBase, isLoadingOwnedSkinsBase, mutateOwnedSkinsBase } = useOwnedSkinsBase(showCustomModal);
+
+
+  const { currentCare, careLoading, mutateCurrentCare } = useCare();
+  console.log(currentCare);
   const { mutateDangos } = useDangos();
 
   useEffect(() => {
@@ -73,6 +81,24 @@ export default function Home() {
   }
   
   const countdownActive = isCountdownActive();
+
+  const handleCareSelect = async (value: "sunny" | "cloudy" | "rainy" ) => {
+    setCare(value);
+    setShowCareModal(false);
+    setTimeout(() => {
+      setShowCareMovieModal(true);
+    }, 400);
+
+    try {
+      await careRepository.executeCare(value);
+      console.log("ケア実行に成功しました");
+    } catch (error) {
+      console.error("ケア実行に失敗しました:", error);
+    } finally {
+      mutateCurrentCare();
+    }
+
+  }
   
   return (
     <main className={`${backgroundColor} w-full h-screen relative overflow-hidden`}>
@@ -83,7 +109,7 @@ export default function Home() {
       <div className="absolute -bottom-[970px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full bg-radial"></div>
       <div className="w-full px-4 pt-7 pb-10 h-screen flex flex-col justify-between">
         <div className="w-full flex flex-col items-end gap-4 relative ">
-          <div className="flex items-center gap-1 pr-3 bg-white rounded-full shadow-md">
+          <div className="flex items-center justify-between gap-1 pr-3 bg-white rounded-full shadow-md w-25">
             <div className="pb-[2px] w-8 flex relative">
               <div className="w-8 h-8 bg-points rounded-full relative z-10 p-1">
                 <Image
@@ -133,7 +159,24 @@ export default function Home() {
           )}
           <div className="w-full flex flex-col items-center justify-center">
             <div className="flex flex-col gap-2 w-fit bg-[#fff] rounded-sm shadow-speech py-3 px-6 speech-bubble relative z-10">
-              <p>朝のお世話をしよう！</p>
+              {currentCare === "sunny" ? (
+                <div className="flex gap-3 items-center justify-center">
+                  <Image src="/images/sunny-trace.png" alt="sunny" width={32} height={32} />
+                  <p>水をかけてもらったよ</p>
+                </div>
+              ) : currentCare === "cloudy" ? (
+                <div className="flex gap-3 items-center justify-center">
+                  <Image src="/images/cloudy-trace.png" alt="cloudy" width={32} height={32} />
+                  <p>拭いてもらったよ</p>
+                </div>
+              ) : currentCare === "rainy" ? (
+                <div className="flex gap-3 items-center justify-center">
+                  <Image src="/images/rainy-trace.png" alt="rainy" width={32} height={32} />
+                  <p>傘をさしてもらったよ</p>
+                </div>
+              ) : (
+                <p>今日もいい天気だね</p>
+              )}
             </div>
             <div className="w-full flex flex-col items-center">
               <div 
@@ -147,7 +190,12 @@ export default function Home() {
                 />
               </div>
               <button
-                className="relative h-[70px] w-full mt-15"
+                className={cn(
+                  "relative h-[70px] w-full mt-15",
+                  // !isCountdownActive() ? "opacity-50 cursor-not-allowed" : ""
+                )}
+                // 一旦true
+                // disabled={!isCountdownActive()}
                 onClick={() => setShowCareModal(true)}
               >
                 <div className="absolute top-0 left-0 w-full h-[66px] flex items-center justify-center bg-accent rounded-full z-30">
@@ -184,8 +232,14 @@ export default function Home() {
       <CareCardSelectModal
         isOpen={showCareModal}
         onClose={() => setShowCareModal(false)}
-        onSelect={(value: "sunny" | "cloudy" | "rainy") => setCare(value)}
+        onSelect={handleCareSelect}
         initialIndex={care === "sunny" ? 1 : care === "cloudy" ? 2 : 3}
+      />
+      <CareAnimationModal
+        isOpen={showCareMovieModal}
+        onClose={() => setShowCareMovieModal(false)}
+        careType={care}
+        title="ケア中"
       />
     </main>
   );
