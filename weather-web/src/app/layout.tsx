@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" className="bg-accent-dark">
       <body
         className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden bg-white`}
         style={{

@@ -22,7 +22,7 @@ export const skinImageMap: Record<string, string> = {
 
   // Base skins
   base_beam: "/skins/base/beam.png",
-  base_cushon: "/skins/base/cushon.png",
+  base_cushon: "/skins/base/cushion.png",
   base_pedestal: "/skins/base/pedestal.png",
   base_stall: "/skins/base/stall.png",
   base_tray: "/skins/base/tray.png",

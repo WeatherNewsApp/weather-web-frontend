@@ -326,14 +326,14 @@ export default function Home() {
             </div>
             <p className="text-accent font-sen">{user?.point}</p>
           </div>
-          <div className="absolute bottom-0 right-[165px] ">
+          <div className="absolute bottom-0 right-[165px] w-[80vw] max-w-[320px]">
             {weatherType === "sunny" ? (
               <Image
                 src="/images/sunny-morning.png"
                 alt="cloud"
                 width={320}
                 height={240}
-                className="min-w-[320px] h-auto w-full object-cover"
+                className="max-w-[320px] h-auto w-full object-cover w-[80vw]"
               />
             ) : weatherType === "rainy" ? (
               <Image
@@ -341,7 +341,7 @@ export default function Home() {
                 alt="rainy"
                 width={320}
                 height={240}
-                className="min-w-[320px] h-auto w-full object-cover"
+                className="max-w-[320px] h-auto w-full object-cover w-[80vw]"
               />
             ) : (
               <Image
@@ -349,7 +349,7 @@ export default function Home() {
                 alt="cloudy"
                 width={320}
                 height={240}
-                className="min-w-[320px] h-auto w-full object-cover"
+                className="max-w-[320px] h-auto w-full object-cover w-[80vw]"
               />
             )}
           </div>
@@ -415,7 +415,7 @@ export default function Home() {
             </div>
             <div className="w-full flex flex-col items-center mt-10">
               <div
-                className="w-[200px] h-[200px] mt-5"
+                className="w-[200px] h-[200px]"
                 onClick={() => setShowCustomModal(true)}
               >
                 <Muddy

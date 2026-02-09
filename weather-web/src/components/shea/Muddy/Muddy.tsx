@@ -39,18 +39,16 @@ export const Muddy = ({
     }
   };
 
-  // 引っ張られた距離に応じて表情を決定
   const getCurrentFace = (): "normal" | "happy" | "sad" => {
     if (!isDragging) return face;
-    if (dragDistance > 80) return "sad"; // 驚き顔（sadを使用）
-    if (dragDistance > 40) return "sad"; // 困り顔
+    if (dragDistance > 80) return "sad";
+    if (dragDistance > 40) return "sad";
     return "normal";
   };
 
-  // 目線の移動量を計算（引っ張る方向に目が動く）
   const getEyeOffset = () => {
     if (!isDragging) return { x: 0, y: 0 };
-    const maxOffset = 3; // 最大移動量（px）
+    const maxOffset = 3;
     const normalizedX = (dragDirection.x / 100) * maxOffset;
     const normalizedY = (dragDirection.y / 100) * maxOffset;
     return { x: normalizedX, y: normalizedY };
@@ -151,12 +149,24 @@ export const Muddy = ({
     1: <></>,
     2: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-1.svg" alt="sprout" width={25} height={40} />
+        <Image
+          src="/images/sprout-1.svg"
+          alt="sprout"
+          width={25}
+          height={40}
+          draggable={false}
+        />
       </div>
     ),
     3: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-2.svg" alt="sprout" width={68} height={56} />
+        <Image
+          src="/images/sprout-2.svg"
+          alt="sprout"
+          width={68}
+          height={56}
+          draggable={false}
+        />
       </div>
     ),
     4: (
@@ -166,6 +176,7 @@ export const Muddy = ({
           alt="sprout"
           width={124}
           height={80}
+          draggable={false}
         />
       </div>
     ),
@@ -176,6 +187,7 @@ export const Muddy = ({
           alt="sprout"
           width={110}
           height={90}
+          draggable={false}
         />
       </div>
     ),
@@ -191,6 +203,7 @@ export const Muddy = ({
           width={164}
           height={137}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -202,6 +215,7 @@ export const Muddy = ({
           width={182}
           height={163}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -213,6 +227,7 @@ export const Muddy = ({
           width={182}
           height={180}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -224,7 +239,7 @@ export const Muddy = ({
       className={cn(
         styles.muddyContainer,
         scale,
-        "cursor-grab active:cursor-grabbing"
+        "cursor-grab active:cursor-grabbing select-none"
       )}
       onClick={handleClick}
       drag={enableAnimation}
@@ -295,6 +310,7 @@ export const Muddy = ({
               height={200}
               className="object-contain"
               unoptimized
+              draggable={false}
             />
           </div>
         )}
@@ -308,19 +324,21 @@ export const Muddy = ({
               height={200}
               className="object-contain"
               unoptimized
+              draggable={false}
             />
           </div>
         )}
 
         {baseSkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute top-0 left-1/1 -translate-x-1/2 flex items-center justify-center">
             <Image
               src={getSkinImagePath(baseSkin)}
               alt="base"
-              width={200}
-              height={200}
+              width={300}
+              height={300}
               className="object-contain"
               unoptimized
+              draggable={false}
             />
           </div>
         )}
