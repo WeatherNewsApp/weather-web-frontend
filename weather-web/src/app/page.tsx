@@ -429,10 +429,10 @@ export default function Home() {
               </div>
               <button
                 className={cn(
-                  "relative h-[70px] w-full mt-15"
-                  // !isCountdownActive() ? "opacity-50 cursor-not-allowed" : ""
+                  "relative h-[70px] w-full mt-15",
+                  !isCountdownActive() ? "opacity-50 cursor-not-allowed" : ""
                 )}
-                // disabled={!isCountdownActive()}
+                disabled={!isCountdownActive()}
                 onClick={() => setShowCareModal(true)}
               >
                 <div className="absolute top-0 left-0 w-full h-[66px] flex items-center justify-center bg-accent rounded-full z-30">

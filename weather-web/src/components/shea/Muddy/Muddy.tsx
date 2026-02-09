@@ -1,7 +1,11 @@
+"use client";
+
 import styles from "./Muddy.module.css";
 import { getSkinImagePath } from "@/lib/imageMapping";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface MuddyProps {
   face: "normal" | "happy" | "sad";
@@ -11,6 +15,7 @@ interface MuddyProps {
   growthStage: "1" | "2" | "3" | "4" | "5";
   damageLevel: "1" | "2" | "3" | "4" | "5";
   scale?: string;
+  enableAnimation?: boolean;
 }
 
 export const Muddy = ({
@@ -21,11 +26,48 @@ export const Muddy = ({
   growthStage,
   damageLevel,
   scale = "scale-[0.9]",
+  enableAnimation = true,
 }: MuddyProps) => {
+  const [isJumping, setIsJumping] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragDistance, setDragDistance] = useState(0);
+  const [dragDirection, setDragDirection] = useState({ x: 0, y: 0 });
+
+  const handleClick = () => {
+    if (enableAnimation && !isDragging) {
+      setIsJumping(true);
+    }
+  };
+
+  // 引っ張られた距離に応じて表情を決定
+  const getCurrentFace = (): "normal" | "happy" | "sad" => {
+    if (!isDragging) return face;
+    if (dragDistance > 80) return "sad"; // 驚き顔（sadを使用）
+    if (dragDistance > 40) return "sad"; // 困り顔
+    return "normal";
+  };
+
+  // 目線の移動量を計算（引っ張る方向に目が動く）
+  const getEyeOffset = () => {
+    if (!isDragging) return { x: 0, y: 0 };
+    const maxOffset = 3; // 最大移動量（px）
+    const normalizedX = (dragDirection.x / 100) * maxOffset;
+    const normalizedY = (dragDirection.y / 100) * maxOffset;
+    return { x: normalizedX, y: normalizedY };
+  };
+
+  const eyeOffset = getEyeOffset();
+  const currentFace = getCurrentFace();
   const faceContent = {
     normal: (
       <>
-        <div className={styles.muddyBodyEyeLeftContainerNormal}>
+        <div
+          className={styles.muddyBodyEyeLeftContainerNormal}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeLeftNormal}>
             <span className={styles.muddyBodyEyeLeftHighlightBigNormal}></span>
             <span
@@ -33,7 +75,13 @@ export const Muddy = ({
             ></span>
           </div>
         </div>
-        <div className={styles.muddyBodyEyeRightContainerNormal}>
+        <div
+          className={styles.muddyBodyEyeRightContainerNormal}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeRightNormal}>
             <span className={styles.muddyBodyEyeRightHighlightBigNormal}></span>
             <span
@@ -50,8 +98,20 @@ export const Muddy = ({
     ),
     happy: (
       <>
-        <div className={styles.muddyBodyEyeLeftHappy}></div>
-        <div className={styles.muddyBodyEyeRightHappy}></div>
+        <div
+          className={styles.muddyBodyEyeLeftHappy}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        ></div>
+        <div
+          className={styles.muddyBodyEyeRightHappy}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        ></div>
         <div className={styles.muddyBodyMouthHappy}></div>
         <div className={styles.muddyBodyCheekLeftHappy}></div>
         <div className={styles.muddyBodyCheekRightHappy}></div>
@@ -59,11 +119,23 @@ export const Muddy = ({
     ),
     sad: (
       <>
-        <div className={styles.muddyBodyEyeLeftContainerSad}>
+        <div
+          className={styles.muddyBodyEyeLeftContainerSad}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeLeftSad}></div>
           <div className={styles.muddyBodyEyeLeftTearsSad}></div>
         </div>
-        <div className={styles.muddyBodyEyeRightContainerSad}>
+        <div
+          className={styles.muddyBodyEyeRightContainerSad}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeRightSad}></div>
           <div className={styles.muddyBodyEyeRightTearsSad}></div>
         </div>
@@ -148,7 +220,67 @@ export const Muddy = ({
   };
 
   return (
-    <div className={cn(styles.muddyContainer, scale)}>
+    <motion.div
+      className={cn(
+        styles.muddyContainer,
+        scale,
+        "cursor-grab active:cursor-grabbing"
+      )}
+      onClick={handleClick}
+      drag={enableAnimation}
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      dragElastic={0.7}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+      onDragStart={() => {
+        if (enableAnimation) {
+          setIsDragging(true);
+        }
+      }}
+      onDrag={(event, info) => {
+        if (enableAnimation) {
+          const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
+          setDragDistance(distance);
+          setDragDirection({ x: info.offset.x, y: info.offset.y });
+        }
+      }}
+      onDragEnd={() => {
+        if (enableAnimation) {
+          setIsDragging(false);
+          setDragDistance(0);
+          setDragDirection({ x: 0, y: 0 });
+        }
+      }}
+      animate={
+        isJumping
+          ? {
+              x: [0, -3, 3, -3, 3, -2, 2, -1, 1, 0],
+              transition: { duration: 0.5 },
+            }
+          : enableAnimation && !isDragging
+            ? {
+                y: [0, -8, 0],
+                transition: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+              }
+            : {}
+      }
+      onAnimationComplete={() => {
+        if (isJumping) {
+          setIsJumping(false);
+        }
+      }}
+      whileHover={
+        enableAnimation && !isDragging
+          ? {
+              scale: 1.05,
+              transition: { duration: 0.2 },
+            }
+          : {}
+      }
+    >
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
 
@@ -205,8 +337,8 @@ export const Muddy = ({
           <div className={styles.muddyBodyShineSmall2}></div>
         </div>
         {sproutContent[growthStage]}
-        {faceContent[face]}
+        {faceContent[currentFace]}
       </div>
-    </div>
+    </motion.div>
   );
 };
