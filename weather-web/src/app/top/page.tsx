@@ -6,7 +6,7 @@ export default function Top() {
   return (
     <main className="bg-radial-close flex flex-col items-center justify-center h-screen w-full mx-auto px-4">
       <div className="flex flex-col items-center gap-2">
-        <p className="text-lg text-[#91542E]">
+        <p className="text-lg text-[#91542E] text-center">
           毎日のケアを積み重ねる育成型習慣アプリ
         </p>
         <Image

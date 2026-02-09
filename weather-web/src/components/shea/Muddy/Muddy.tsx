@@ -1,7 +1,11 @@
+"use client";
+
 import styles from "./Muddy.module.css";
 import { getSkinImagePath } from "@/lib/imageMapping";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface MuddyProps {
   face: "normal" | "happy" | "sad";
@@ -11,6 +15,7 @@ interface MuddyProps {
   growthStage: "1" | "2" | "3" | "4" | "5";
   damageLevel: "1" | "2" | "3" | "4" | "5";
   scale?: string;
+  enableAnimation?: boolean;
 }
 
 export const Muddy = ({
@@ -21,11 +26,46 @@ export const Muddy = ({
   growthStage,
   damageLevel,
   scale = "scale-[0.9]",
+  enableAnimation = true,
 }: MuddyProps) => {
+  const [isJumping, setIsJumping] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragDistance, setDragDistance] = useState(0);
+  const [dragDirection, setDragDirection] = useState({ x: 0, y: 0 });
+
+  const handleClick = () => {
+    if (enableAnimation && !isDragging) {
+      setIsJumping(true);
+    }
+  };
+
+  const getCurrentFace = (): "normal" | "happy" | "sad" => {
+    if (!isDragging) return face;
+    if (dragDistance > 80) return "sad";
+    if (dragDistance > 40) return "sad";
+    return "normal";
+  };
+
+  const getEyeOffset = () => {
+    if (!isDragging) return { x: 0, y: 0 };
+    const maxOffset = 3;
+    const normalizedX = (dragDirection.x / 100) * maxOffset;
+    const normalizedY = (dragDirection.y / 100) * maxOffset;
+    return { x: normalizedX, y: normalizedY };
+  };
+
+  const eyeOffset = getEyeOffset();
+  const currentFace = getCurrentFace();
   const faceContent = {
     normal: (
       <>
-        <div className={styles.muddyBodyEyeLeftContainerNormal}>
+        <div
+          className={styles.muddyBodyEyeLeftContainerNormal}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeLeftNormal}>
             <span className={styles.muddyBodyEyeLeftHighlightBigNormal}></span>
             <span
@@ -33,7 +73,13 @@ export const Muddy = ({
             ></span>
           </div>
         </div>
-        <div className={styles.muddyBodyEyeRightContainerNormal}>
+        <div
+          className={styles.muddyBodyEyeRightContainerNormal}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeRightNormal}>
             <span className={styles.muddyBodyEyeRightHighlightBigNormal}></span>
             <span
@@ -50,8 +96,20 @@ export const Muddy = ({
     ),
     happy: (
       <>
-        <div className={styles.muddyBodyEyeLeftHappy}></div>
-        <div className={styles.muddyBodyEyeRightHappy}></div>
+        <div
+          className={styles.muddyBodyEyeLeftHappy}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        ></div>
+        <div
+          className={styles.muddyBodyEyeRightHappy}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        ></div>
         <div className={styles.muddyBodyMouthHappy}></div>
         <div className={styles.muddyBodyCheekLeftHappy}></div>
         <div className={styles.muddyBodyCheekRightHappy}></div>
@@ -59,11 +117,23 @@ export const Muddy = ({
     ),
     sad: (
       <>
-        <div className={styles.muddyBodyEyeLeftContainerSad}>
+        <div
+          className={styles.muddyBodyEyeLeftContainerSad}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeLeftSad}></div>
           <div className={styles.muddyBodyEyeLeftTearsSad}></div>
         </div>
-        <div className={styles.muddyBodyEyeRightContainerSad}>
+        <div
+          className={styles.muddyBodyEyeRightContainerSad}
+          style={{
+            transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+            transition: isDragging ? "none" : "transform 0.3s ease",
+          }}
+        >
           <div className={styles.muddyBodyEyeRightSad}></div>
           <div className={styles.muddyBodyEyeRightTearsSad}></div>
         </div>
@@ -79,12 +149,24 @@ export const Muddy = ({
     1: <></>,
     2: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-1.svg" alt="sprout" width={25} height={40} />
+        <Image
+          src="/images/sprout-1.svg"
+          alt="sprout"
+          width={25}
+          height={40}
+          draggable={false}
+        />
       </div>
     ),
     3: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-2.svg" alt="sprout" width={68} height={56} />
+        <Image
+          src="/images/sprout-2.svg"
+          alt="sprout"
+          width={68}
+          height={56}
+          draggable={false}
+        />
       </div>
     ),
     4: (
@@ -94,6 +176,7 @@ export const Muddy = ({
           alt="sprout"
           width={124}
           height={80}
+          draggable={false}
         />
       </div>
     ),
@@ -104,6 +187,7 @@ export const Muddy = ({
           alt="sprout"
           width={110}
           height={90}
+          draggable={false}
         />
       </div>
     ),
@@ -119,6 +203,7 @@ export const Muddy = ({
           width={164}
           height={137}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -130,6 +215,7 @@ export const Muddy = ({
           width={182}
           height={163}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -141,6 +227,7 @@ export const Muddy = ({
           width={182}
           height={180}
           className="w-[90%]"
+          draggable={false}
         />
       </div>
     ),
@@ -148,14 +235,74 @@ export const Muddy = ({
   };
 
   return (
-    <div className={cn(styles.muddyContainer, scale)}>
+    <motion.div
+      className={cn(
+        styles.muddyContainer,
+        scale,
+        "cursor-grab active:cursor-grabbing select-none"
+      )}
+      onClick={handleClick}
+      drag={enableAnimation}
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      dragElastic={0.7}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+      onDragStart={() => {
+        if (enableAnimation) {
+          setIsDragging(true);
+        }
+      }}
+      onDrag={(event, info) => {
+        if (enableAnimation) {
+          const distance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
+          setDragDistance(distance);
+          setDragDirection({ x: info.offset.x, y: info.offset.y });
+        }
+      }}
+      onDragEnd={() => {
+        if (enableAnimation) {
+          setIsDragging(false);
+          setDragDistance(0);
+          setDragDirection({ x: 0, y: 0 });
+        }
+      }}
+      animate={
+        isJumping
+          ? {
+              x: [0, -3, 3, -3, 3, -2, 2, -1, 1, 0],
+              transition: { duration: 0.5 },
+            }
+          : enableAnimation && !isDragging
+            ? {
+                y: [0, -8, 0],
+                transition: {
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+              }
+            : {}
+      }
+      onAnimationComplete={() => {
+        if (isJumping) {
+          setIsJumping(false);
+        }
+      }}
+      whileHover={
+        enableAnimation && !isDragging
+          ? {
+              scale: 1.05,
+              transition: { duration: 0.2 },
+            }
+          : {}
+      }
+    >
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
 
       {/* スキン画像 */}
-      <div className="absolute top-0 left-0 w-full h-full z-[15] pointer-events-none flex items-center justify-center">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none flex items-center justify-center">
         {headSkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-15">
             <Image
               src={getSkinImagePath(headSkin)}
               alt="head"
@@ -163,12 +310,13 @@ export const Muddy = ({
               height={200}
               className="object-contain"
               unoptimized
+              draggable={false}
             />
           </div>
         )}
 
         {bodySkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-15">
             <Image
               src={getSkinImagePath(bodySkin)}
               alt="body"
@@ -176,20 +324,24 @@ export const Muddy = ({
               height={200}
               className="object-contain"
               unoptimized
+              draggable={false}
             />
           </div>
         )}
 
         {baseSkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Image
-              src={getSkinImagePath(baseSkin)}
-              alt="base"
-              width={200}
-              height={200}
-              className="object-contain"
-              unoptimized
-            />
+          <div className="absolute inset-0 flex item-center justify-center z-5 "> 
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 flex items-center justify-center w-[300px] h-[300px]">
+              <Image
+                src={getSkinImagePath(baseSkin)}
+                alt="base"
+                width={300}
+                height={300}
+                className="object-contain"
+                unoptimized
+                draggable={false}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -205,8 +357,8 @@ export const Muddy = ({
           <div className={styles.muddyBodyShineSmall2}></div>
         </div>
         {sproutContent[growthStage]}
-        {faceContent[face]}
+        {faceContent[currentFace]}
       </div>
-    </div>
+    </motion.div>
   );
 };
