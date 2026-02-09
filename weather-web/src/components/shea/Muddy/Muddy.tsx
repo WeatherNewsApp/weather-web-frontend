@@ -300,9 +300,9 @@ export const Muddy = ({
       {damageLevelContent[damageLevel]}
 
       {/* スキン画像 */}
-      <div className="absolute top-0 left-0 w-full h-full z-[15] pointer-events-none flex items-center justify-center">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none flex items-center justify-center">
         {headSkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-15">
             <Image
               src={getSkinImagePath(headSkin)}
               alt="head"
@@ -316,7 +316,7 @@ export const Muddy = ({
         )}
 
         {bodySkin && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center z-15">
             <Image
               src={getSkinImagePath(bodySkin)}
               alt="body"
@@ -330,16 +330,18 @@ export const Muddy = ({
         )}
 
         {baseSkin && (
-          <div className="absolute top-0 left-1/1 -translate-x-1/2 flex items-center justify-center">
-            <Image
-              src={getSkinImagePath(baseSkin)}
-              alt="base"
-              width={300}
-              height={300}
-              className="object-contain"
-              unoptimized
-              draggable={false}
-            />
+          <div className="absolute inset-0 flex item-center justify-center z-5 "> 
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 flex items-center justify-center w-[300px] h-[300px]">
+              <Image
+                src={getSkinImagePath(baseSkin)}
+                alt="base"
+                width={300}
+                height={300}
+                className="object-contain"
+                unoptimized
+                draggable={false}
+              />
+            </div>
           </div>
         )}
       </div>
