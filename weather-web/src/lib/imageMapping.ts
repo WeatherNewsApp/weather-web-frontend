@@ -21,6 +21,11 @@ export const skinImageMap: Record<string, string> = {
   body_tie: "/skins/body/tie.png",
 
   // Base skins
+  base_beam: "/skins/base/beam.png",
+  base_cushon: "/skins/base/cushion.png",
+  base_pedestal: "/skins/base/pedestal.png",
+  base_stall: "/skins/base/stall.png",
+  base_tray: "/skins/base/tray.png",
 };
 
 export const getSkinImagePath = (imageKey: string | undefined): string => {
