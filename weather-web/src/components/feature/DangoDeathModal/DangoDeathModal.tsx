@@ -8,7 +8,15 @@ interface DangoDeathModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateNewDango: () => void;
-  dango: Pick<Dango, 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin' | 'totalDaysAlive'>;
+  dango: Pick<
+    Dango,
+    | "damageLevel"
+    | "growthStage"
+    | "headSkin"
+    | "bodySkin"
+    | "baseSkin"
+    | "totalDaysAlive"
+  >;
 }
 
 export const DangoDeathModal = ({

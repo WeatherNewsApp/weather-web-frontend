@@ -38,9 +38,9 @@ export default function Login() {
       router.push("/");
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Failed to login:', error);
+        console.error("Failed to login:", error);
       } else {
-        console.error('Failed to login:', error);
+        console.error("Failed to login:", error);
       }
     }
   };
@@ -52,7 +52,13 @@ export default function Login() {
           <Icons.chevronLeft className="w-10 h-10 text-white" strokeWidth={1} />
         </Link>
       </div>
-      <Image src="/images/design-asset2.png" alt="design-asset2" width={520} height={520} className="absolute -top-[426px] -left-[238px] w-[520px] h-[520px] z-0"/>
+      <Image
+        src="/images/design-asset2.png"
+        alt="design-asset2"
+        width={520}
+        height={520}
+        className="absolute -top-[426px] -left-[238px] w-[520px] h-[520px] z-0"
+      />
       <div className="max-h-[82vh] h-full w-full bg-radial rounded-t-xl shadow-tl absolute z-0 bottom-0 left-0 overflow-y-hidden">
         <Image
           src={"/images/design-asset.svg"}
@@ -77,7 +83,7 @@ export default function Login() {
         />
       </div>
       <div className="max-h-[82vh] h-full w-full rounded-t-xl absolute z-30 bottom-0 left-0 overflow-hidden pointer-events-none">
-        <span className="bg-home-layer absolute top-0 left-0 w-full h-full z-10"/>
+        <span className="bg-home-layer absolute top-0 left-0 w-full h-full z-10" />
       </div>
       <div className="max-h-[82vh] h-full w-full mx-auto px-4 py-10 rounded-t-xl overflow-y-auto z-20">
         <div className="flex flex-col gap-3">
@@ -95,7 +101,10 @@ export default function Login() {
           isValid={isValid}
           apiError={error ?? undefined}
         />
-        <Link href="/register" className="text-sm underline w-full text-center mt-4 block">
+        <Link
+          href="/register"
+          className="text-sm underline w-full text-center mt-4 block"
+        >
           アカウントをお持ちでない方はこちら
         </Link>
         {/* <div className="flex gap-10 items-center justify-center pt-15">

@@ -1,7 +1,9 @@
-import type { Dango } from "./dango"; 
+import type { Dango } from "./dango";
 
-export type RankingDango = Pick<Dango, 'id' | 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>
-
+export type RankingDango = Pick<
+  Dango,
+  "id" | "damageLevel" | "growthStage" | "headSkin" | "bodySkin" | "baseSkin"
+>;
 
 export interface RankingUser {
   id: number;
@@ -16,7 +18,7 @@ export type Ranking = {
   rankingTotalDaysAlive: number;
   dango: RankingDango;
   user: RankingUser;
-}
+};
 
 export interface MyRanking {
   rank: number;
@@ -27,4 +29,4 @@ export interface MyRanking {
 export type RankingResponse = {
   rankings: Ranking[];
   myRanking: MyRanking;
-}
+};

@@ -13,22 +13,17 @@ interface ShareModalProps {
   bestDango?: Omit<Dango, "id">;
 }
 
-export const ShareModal = ({
-  isOpen,
-  onClose,
-  bestDango
-}: ShareModalProps) => {
+export const ShareModal = ({ isOpen, onClose, bestDango }: ShareModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div 
+        <motion.div
           className="fixed inset-0 z-50 flex flex-col items-center justify-center px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-
           {/* オーバーレイ */}
           <motion.div
             className="absolute inset-0 bg-black opacity-60 "
@@ -40,8 +35,8 @@ export const ShareModal = ({
           />
 
           {/* モーダル本体 */}
-          <motion.div 
-            className="relative z-40 w-full max-w-[360px]" 
+          <motion.div
+            className="relative z-40 w-full max-w-[360px]"
             initial={{ opacity: 0, scale: 0.9, y: -40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 40 }}
@@ -53,9 +48,7 @@ export const ShareModal = ({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <HistoryDango
-              {...bestDango as Dango}
-            />
+            <HistoryDango {...(bestDango as Dango)} />
           </motion.div>
           <button
             className="rounded-full h-15 text-white relative mt-8"
@@ -70,5 +63,5 @@ export const ShareModal = ({
         </motion.div>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};

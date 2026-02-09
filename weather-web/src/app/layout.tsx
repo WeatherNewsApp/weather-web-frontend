@@ -33,9 +33,7 @@ export default function RootLayout({
           fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}
       >
-        <AppProviders>
-          {children}
-        </AppProviders>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import type { Mission } from "@/types/mission";
 
 export const useMissions = () => {
   const { data, isLoading, mutate } = useSWR<Mission[]>(
-    '/api/v1/missions',
+    "/api/v1/missions",
     missionRepository.getMissions,
     {
       revalidateOnFocus: false,

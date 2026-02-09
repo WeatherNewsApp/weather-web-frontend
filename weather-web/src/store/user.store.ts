@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import { userRepository } from "@/repositories/user.repository";
 import { authRepository } from "@/repositories/auth.repository";
 import type { User } from "@/types/user";
-import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "@/types/auth";
+import type { LoginRequest, RegisterRequest } from "@/types/auth";
 import { cookieManager } from "@/lib/cookies";
 
 interface UserState {
@@ -17,8 +17,8 @@ interface UserState {
   // actions
   fetchUser: () => Promise<void>;
   refreshUser: () => Promise<void>;
-  login: (data: LoginRequest ) => Promise<void>;
-  registerUser: (data: RegisterRequest ) => Promise<void>;
+  login: (data: LoginRequest) => Promise<void>;
+  registerUser: (data: RegisterRequest) => Promise<void>;
   updateUser: (data: Pick<User, "email" | "name">) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User) => void;
@@ -34,8 +34,8 @@ export const useUserStore = create<UserState>()(
       isInitialized: false,
       isLoading: false,
       error: null,
-      
-      // actions 
+
+      // actions
       fetchUser: async () => {
         if (get().user) return;
 
@@ -44,14 +44,14 @@ export const useUserStore = create<UserState>()(
           return;
         }
 
-        set({ isLoading: true, error: null});
+        set({ isLoading: true, error: null });
         try {
           const user = await userRepository.getMe();
-          set({ user, isInitialized: true, isLoading: false});
+          set({ user, isInitialized: true, isLoading: false });
         } catch (error) {
-          console.error('Failed to fetch user:', error);
+          console.error("Failed to fetch user:", error);
           set({
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : "Unknown error",
             isInitialized: true,
             isLoading: false,
           });
@@ -61,16 +61,16 @@ export const useUserStore = create<UserState>()(
       refreshUser: async () => {
         try {
           const user = await userRepository.getMe();
-          set({ user, isLoading: false});
+          set({ user, isLoading: false });
         } catch (error) {
-          console.error('Failed to refresh user:', error);
+          console.error("Failed to refresh user:", error);
         }
       },
 
-      setUser: (user: User) => set({user}),
+      setUser: (user: User) => set({ user }),
 
       login: async (data: LoginRequest) => {
-        set({isLoading: true, error: null});
+        set({ isLoading: true, error: null });
 
         try {
           const res = await authRepository.login(data);
@@ -78,12 +78,12 @@ export const useUserStore = create<UserState>()(
             cookieManager.setToken(res.token);
           }
           const user = await userRepository.getMe();
-          set({user, isInitialized: true, isLoading: false});
+          set({ user, isInitialized: true, isLoading: false });
         } catch (error) {
-          console.error('Failed to login:', error); 
+          console.error("Failed to login:", error);
           cookieManager.removeToken();
           set({
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : "Unknown error",
             isInitialized: true,
             isLoading: false,
           });
@@ -91,36 +91,40 @@ export const useUserStore = create<UserState>()(
       },
 
       registerUser: async (data: RegisterRequest) => {
-        set({isLoading: true, error:null});
+        set({ isLoading: true, error: null });
         try {
           const res = await authRepository.register(data);
           if (res.token) {
             cookieManager.setToken(res.token);
           }
           const user = await userRepository.getMe();
-          set({user, isInitialized: true, isLoading: false});
+          set({ user, isInitialized: true, isLoading: false });
         } catch (error) {
-          console.error('Failed to sign in:', error); 
+          console.error("Failed to sign in:", error);
           cookieManager.removeToken();
           set({
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : "Unknown error",
             isInitialized: true,
             isLoading: false,
           });
         }
       },
 
-      updateUser: async (data: Pick<User, 'email' | 'name'>) => {
-        set({isLoading: true, error:null});
+      updateUser: async (data: Pick<User, "email" | "name">) => {
+        set({ isLoading: true, error: null });
         try {
           const res = await userRepository.updateUser(data);
           if (res.success) {
-            set({user: { ...get().user, ...data } as User, isInitialized: true, isLoading: false});
+            set({
+              user: { ...get().user, ...data } as User,
+              isInitialized: true,
+              isLoading: false,
+            });
           }
         } catch (error) {
-          console.error('Failed to update user:', error);
+          console.error("Failed to update user:", error);
           set({
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : "Unknown error",
             isInitialized: true,
             isLoading: false,
           });
@@ -128,36 +132,38 @@ export const useUserStore = create<UserState>()(
       },
 
       logout: async () => {
-        set({isLoading: true,});
+        set({ isLoading: true });
         try {
           await authRepository.logout();
         } catch (error) {
-          console.error('Failed to logout:', error);
+          console.error("Failed to logout:", error);
         } finally {
           cookieManager.removeToken();
           mutate(() => true, undefined, { revalidate: false });
-          set({ 
-            user: null, 
-            isInitialized: true, 
+          set({
+            user: null,
+            isInitialized: true,
             isLoading: false,
-            error: null 
+            error: null,
           });
         }
       },
 
-      clearError: () => {set({error: null});},
+      clearError: () => {
+        set({ error: null });
+      },
 
       deleteAccount: async () => {
         try {
           await authRepository.deleteAccount();
           cookieManager.removeToken();
           mutate(() => true, undefined, { revalidate: false });
-          set({user: null});
+          set({ user: null });
         } catch (error) {
-          console.error('Failed to delete account:', error);
+          console.error("Failed to delete account:", error);
         }
       },
     }),
-    { name: 'user-storage'}
+    { name: "user-storage" }
   )
 );

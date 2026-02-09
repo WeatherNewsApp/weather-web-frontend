@@ -256,7 +256,7 @@
   left: 15%;
   width: 40px;
   height: 32px;
-  z-index:12;
+  z-index: 12;
   overflow: hidden;
 }
 
@@ -267,7 +267,7 @@
   top: -12px;
   background-color: #361c0c;
   border-radius: 50%;
-} 
+}
 
 .muddyBodyEyeLeftHighlightBigNormal {
   position: absolute;
@@ -299,7 +299,7 @@
   right: 15%;
   width: 40px;
   height: 32px;
-  z-index:12;
+  z-index: 12;
   overflow: hidden;
 }
 
@@ -310,7 +310,7 @@
   top: -12px;
   background-color: #361c0c;
   border-radius: 50%;
-} 
+}
 
 .muddyBodyEyeRightHighlightBigNormal {
   position: absolute;
@@ -334,8 +334,6 @@
   border-radius: 50%;
   z-index: 13;
 }
-
-
 
 /* happy */
 .muddyBodyEyeLeftHappy {
@@ -471,7 +469,7 @@
   width: 100%;
   border-radius: 50%;
   background-color: #361c0c;
-  z-index:13 ;
+  z-index: 13;
 }
 
 .muddyBodyMouthPinkSad {
@@ -484,7 +482,6 @@
   transform: translate(-50%, 15px);
   border-radius: 50%;
   z-index: 14;
-
 }
 
 /* =============== cheek styles =============== */
@@ -561,5 +558,3 @@
   z-index: 11;
   right: 14%;
 }
-
-

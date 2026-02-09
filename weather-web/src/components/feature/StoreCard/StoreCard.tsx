@@ -33,7 +33,7 @@ export const StoreCard = ({
       onClick();
       setIsOpen(false);
     }
-  }
+  };
 
   return (
     <>
@@ -81,7 +81,9 @@ export const StoreCard = ({
         buttonProps={{
           disabled: currentPoint - price <= 0,
           label: "OK",
-          onClick: () => {handlePurchase();},
+          onClick: () => {
+            handlePurchase();
+          },
           shadow: true,
           variant: "accent",
         }}

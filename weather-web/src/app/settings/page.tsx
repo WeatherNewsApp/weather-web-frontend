@@ -34,25 +34,24 @@ export default function Settings() {
   const [showAreaModal, setShowAreaModal] = useState(false);
   const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showUpdateBestDangoModal, setShowUpdateBestDangoModal] = useState(false);
+  const [showUpdateBestDangoModal, setShowUpdateBestDangoModal] =
+    useState(false);
 
   const [selectedAreaId, setSelectedAreaId] = useState<number | null>(null);
-  const [selectedBestDangoId, setSelectedBestDangoId] = useState<number | null>(null);
+  const [selectedBestDangoId, setSelectedBestDangoId] = useState<number | null>(
+    null
+  );
 
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
   const deleteAccount = useUserStore((state) => state.deleteAccount);
   const updateUser = useUserStore((state) => state.updateUser);
   const refreshUser = useUserStore((state) => state.refreshUser);
-  
-  const { bestDango, isLoadingBestDango, mutateBestDango } = useBestDango();
-  const { dangos, isLoadingDangos} = useDangos();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UpdateUserSchema>({
+  const { bestDango, isLoadingBestDango, mutateBestDango } = useBestDango();
+  const { dangos, isLoadingDangos } = useDangos();
+
+  const { register, handleSubmit } = useForm<UpdateUserSchema>({
     resolver: zodResolver(updateUserSchema),
     mode: "onChange",
     defaultValues: {
@@ -66,9 +65,9 @@ export default function Settings() {
       updateUser(data);
       setShowUpdateUserModal(false);
     } catch (error) {
-      console.error('Failed to update user:', error);
+      console.error("Failed to update user:", error);
     }
-  }
+  };
 
   if (isLoadingBestDango) return <Loading />;
 
@@ -76,26 +75,12 @@ export default function Settings() {
   const handleLogout = async () => {
     await logout();
     router.push("/top");
-  }
+  };
 
   // アカウント削除
   const handleDeleteAccount = async () => {
     await deleteAccount();
     router.push("/top");
-  }
-
-  // ユーザー情報更新
-  const handleUpdateUser = async () => {
-    try {
-      await userRepository.updateUser({
-        email: user?.email ?? "",
-        name: user?.name ?? "",
-      });
-      setShowUpdateUserModal(false);
-    } catch (error) {
-      console.error(error);
-      alert("ユーザー情報の更新に失敗しました");
-    }
   };
 
   // 共有モーダルを開く
@@ -103,21 +88,26 @@ export default function Settings() {
     if (isLoadingBestDango) return <Loading />;
     if (!bestDango) return;
     setShowShareModal(true);
-  }
+  };
 
   // ベスト団子変更モーダル
   const handleShowUpdateBestDangoModal = async () => {
     if (isLoadingDangos) return <Loading />;
     if (!dangos) return;
     console.log("dangos data:", dangos);
-    console.log("first dango growthStage:", dangos[0]?.growthStage, "type:", typeof dangos[0]?.growthStage);
+    console.log(
+      "first dango growthStage:",
+      dangos[0]?.growthStage,
+      "type:",
+      typeof dangos[0]?.growthStage
+    );
     setShowUpdateBestDangoModal(true);
-  }
+  };
 
   // ベスト団子選択
   const handleSelectBestDango = async (dangoId: number) => {
     setSelectedBestDangoId(dangoId);
-  }
+  };
 
   // ベスト団子更新
   const handleUpdateBestDango = async () => {
@@ -131,21 +121,21 @@ export default function Settings() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   // 地域変更
   const handleAreaUpdate = async () => {
     if (!selectedAreaId) return;
 
     try {
-      await userRepository.updateArea({ areaId: selectedAreaId});
+      await userRepository.updateArea({ areaId: selectedAreaId });
       await refreshUser();
       setShowAreaModal(false);
       setSelectedAreaId(null);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -158,9 +148,7 @@ export default function Settings() {
           <div className="flex justify-between w-full items-center p-3 bg-radial-close rounded-md shadow-md h-[150px] relative">
             <div className="flex flex-col justify-between h-full">
               <div className="flex flex-col gap-1">
-                <p className="text-xs font-medium">
-                  マイベストどろ団子
-                </p>
+                <p className="text-xs font-medium">マイベストどろ団子</p>
                 <p>
                   お気に入りどろ団子を
                   <br />
@@ -168,7 +156,7 @@ export default function Settings() {
                 </p>
               </div>
               {/* ボタン */}
-              <button 
+              <button
                 className="bg-accent rounded-full h-9 flex items-center justify-center  w-[180px]"
                 onClick={handleShowUpdateBestDangoModal}
               >
@@ -176,15 +164,23 @@ export default function Settings() {
               </button>
             </div>
             <div className="w-30 h-30 flex items-center justify-center">
-              <Muddy 
+              <Muddy
                 face="normal"
                 scale="scale-[0.5]"
-                {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
+                {...(bestDango
+                  ? (({ id: _id, ...rest }) => rest)(bestDango) // eslint-disable-line @typescript-eslint/no-unused-vars
+                  : {
+                      headSkin: "",
+                      bodySkin: "",
+                      baseSkin: "",
+                      damageLevel: "1",
+                      growthStage: "1",
+                    })}
               />
             </div>
-            <Icons.Share 
+            <Icons.Share
               className="w-7 h-7 absolute bottom-[2px] right-[2px]"
-              strokeWidth={1.2} 
+              strokeWidth={1.2}
               onClick={handleShowShareModal}
             />
           </div>
@@ -204,7 +200,9 @@ export default function Settings() {
               // ダミー値
               title={user?.name ?? ""}
               subtitle={user?.email ?? ""}
-              onClick={() => {setShowUpdateUserModal(true)}}
+              onClick={() => {
+                setShowUpdateUserModal(true);
+              }}
             />
 
             {/* 地域設定 */}
@@ -252,7 +250,11 @@ export default function Settings() {
           <ShareModal
             isOpen={showShareModal}
             onClose={() => setShowShareModal(false)}
-            bestDango={bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : undefined}
+            bestDango={
+              bestDango
+                ? (({ id: _id, ...rest }) => rest)(bestDango) // eslint-disable-line @typescript-eslint/no-unused-vars
+                : undefined
+            }
           />
 
           {/* ベスト団子変更モーダル */}
@@ -266,12 +268,14 @@ export default function Settings() {
             ) : (
               <>
                 <ul className="grid grid-cols-3 gap-y-4 gap-x-3 overflow-y-auto">
-                  {dangos && dangos.map((dango) => (
-                      <li 
+                  {dangos &&
+                    dangos.map((dango) => (
+                      <li
                         key={dango.id}
                         className={cn(
                           "flex justify-center items-center max-h-25",
-                          selectedBestDangoId === dango.id && "bg-white rounded-xs"
+                          selectedBestDangoId === dango.id &&
+                            "bg-white rounded-xs"
                         )}
                         onClick={() => handleSelectBestDango(dango.id)}
                       >
@@ -287,32 +291,42 @@ export default function Settings() {
                       </li>
                     ))}
                 </ul>
-                <button 
+                <button
                   className="h-15 w-full relative"
                   onClick={handleUpdateBestDango}
                 >
-                  <span className="text-white flex justify-center items-center bg-accent w-full rounded-sm py-4 relative z-20">このどろ団子に決めた！</span>
+                  <span className="text-white flex justify-center items-center bg-accent w-full rounded-sm py-4 relative z-20">
+                    このどろ団子に決めた！
+                  </span>
                   <span className="absolute bottom-0 right-0 w-full h-14 bg-accent-dark rounded-sm z-10" />
                 </button>
               </>
             )}
           </UpdateUserModal>
-          
+
           {/* ログアウトモーダル */}
           <ConfirmModal
-            dango={bestDango ? (({ id: _id, ...rest}) => rest)(bestDango) as Omit<Dango, "id"> : {
-              headSkin: "",
-              bodySkin: "",
-              baseSkin: "",
-              damageLevel: "1",
-              growthStage: "1",
-              totalDaysAlive: 0,
-              caredAt: "",
-              diedAt: null,
-              successCareCount: 0,
-              point: 0,
-              maxConsecutive: 0,
-            }}
+            dango={
+              bestDango
+                ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  ((({ id: _id, ...rest }) => rest)(bestDango) as Omit<
+                    Dango,
+                    "id"
+                  >)
+                : {
+                    headSkin: "",
+                    bodySkin: "",
+                    baseSkin: "",
+                    damageLevel: "1",
+                    growthStage: "1",
+                    totalDaysAlive: 0,
+                    caredAt: "",
+                    diedAt: null,
+                    successCareCount: 0,
+                    point: 0,
+                    maxConsecutive: 0,
+                  }
+            }
             isOpen={showLogoutModal}
             onClose={() => setShowLogoutModal(false)}
             onConfirm={handleLogout}
@@ -329,19 +343,27 @@ export default function Settings() {
 
           {/* アカウント削除モーダル */}
           <ConfirmModal
-            dango={bestDango ? (({ id: _id, ...rest}) => rest)(bestDango) as Omit<Dango, "id"> : {
-              headSkin: "",
-              bodySkin: "",
-              baseSkin: "",
-              damageLevel: "1",
-              growthStage: "1",
-              totalDaysAlive: 0,
-              caredAt: "",
-              diedAt: null,
-              successCareCount: 0,
-              point: 0,
-              maxConsecutive: 0,
-            }}
+            dango={
+              bestDango
+                ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  ((({ id: _id, ...rest }) => rest)(bestDango) as Omit<
+                    Dango,
+                    "id"
+                  >)
+                : {
+                    headSkin: "",
+                    bodySkin: "",
+                    baseSkin: "",
+                    damageLevel: "1",
+                    growthStage: "1",
+                    totalDaysAlive: 0,
+                    caredAt: "",
+                    diedAt: null,
+                    successCareCount: 0,
+                    point: 0,
+                    maxConsecutive: 0,
+                  }
+            }
             isOpen={showDeleteAccountModal}
             onClose={() => setShowDeleteAccountModal(false)}
             onConfirm={handleDeleteAccount}
@@ -386,7 +408,9 @@ export default function Settings() {
             <div className="h-[360px]">
               <AreaComboBox
                 selectedAreaId={selectedAreaId ?? undefined}
-                onChangeSelectedAreaId={(areaId: number) => setSelectedAreaId(areaId)}
+                onChangeSelectedAreaId={(areaId: number) =>
+                  setSelectedAreaId(areaId)
+                }
                 hasIcon={true}
               />
             </div>

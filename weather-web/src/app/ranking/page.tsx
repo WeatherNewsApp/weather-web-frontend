@@ -10,14 +10,14 @@ import { useUserStore } from "@/store/user.store";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 export default function Ranking() {
-  const [activeTabId, setActiveTabId] = useState<'area' | 'global'>("area");
+  const [activeTabId, setActiveTabId] = useState<"area" | "global">("area");
 
   const { user } = useUserStore();
   const { rankings, myRanking, isLoading } = useRankings(activeTabId);
 
   const getCurrentTimeSlot = () => {
     const hour = new Date().getHours();
-    return hour >= 6 && hour < 18 ? 'morning' : 'evening';
+    return hour >= 6 && hour < 18 ? "morning" : "evening";
   };
 
   const currentTimeSlot = getCurrentTimeSlot();
@@ -44,33 +44,41 @@ export default function Ranking() {
         ]}
         activeTabId={activeTabId}
         onTabChange={(tabId) => {
-          setActiveTabId(tabId as 'area' | 'global');
+          setActiveTabId(tabId as "area" | "global");
         }}
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         <div className="flex flex-col gap-5">
-          {isLoading ? (
-            Array.from({ length: 10 }).map((_, i) => (
-              <SkeletonRankingItem key={i} />
-            ))
-          ) : rankings?.map((ranking) => (
-            <RankingItem
-              key={ranking.rank}
-              rank={ranking.rank}
-              name={ranking.user.name}
-              days={ranking.rankingTotalDaysAlive}
-              dango={ranking.dango}
-              prediction={currentTimeSlot === 'morning' ? ranking.user.morningPrediction : ranking.user.eveningPrediction}
-            />
-          ))}
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, i) => (
+                <SkeletonRankingItem key={i} />
+              ))
+            : rankings?.map((ranking) => (
+                <RankingItem
+                  key={ranking.rank}
+                  rank={ranking.rank}
+                  name={ranking.user.name}
+                  days={ranking.rankingTotalDaysAlive}
+                  dango={ranking.dango}
+                  prediction={
+                    currentTimeSlot === "morning"
+                      ? ranking.user.morningPrediction
+                      : ranking.user.eveningPrediction
+                  }
+                />
+              ))}
         </div>
       </main>
       <div className="bg-main text-white rounded-t-sm py-4 px-4 flex items-center justify-between shadow-t">
         <div className="flex gap-3 items-center justify-center">
           <div className="w-15 h-15  flex items-center justify-center">
-            <Muddy 
-              damageLevel={myRanking?.dango?.damageLevel as "1" | "2" | "3" | "4" | "5"}
-              growthStage={myRanking?.dango?.growthStage as "1" | "2" | "3" | "4" | "5"}
+            <Muddy
+              damageLevel={
+                myRanking?.dango?.damageLevel as "1" | "2" | "3" | "4" | "5"
+              }
+              growthStage={
+                myRanking?.dango?.growthStage as "1" | "2" | "3" | "4" | "5"
+              }
               headSkin={myRanking?.dango?.headSkin}
               bodySkin={myRanking?.dango?.bodySkin}
               baseSkin={myRanking?.dango?.baseSkin}
@@ -81,7 +89,9 @@ export default function Ranking() {
           <div className="flex flex-col gap-3">
             <p className=" font-sen">{user?.name}</p>
             <div className="flex gap-2 items-end justify-center">
-              <p className=" text-xl font-sen leading-4">{myRanking?.rankingTotalDaysAlive}</p>
+              <p className=" text-xl font-sen leading-4">
+                {myRanking?.rankingTotalDaysAlive}
+              </p>
               <p className="text-sm leading-4">日</p>
             </div>
           </div>

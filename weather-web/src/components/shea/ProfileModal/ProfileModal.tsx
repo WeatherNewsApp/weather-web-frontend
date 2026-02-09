@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const ProfileModal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div 
+        <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -36,7 +36,7 @@ export const ProfileModal = ({
           />
 
           {/* モーダル本体 */}
-          <motion.div 
+          <motion.div
             className="relative bg-radial-close rounded-lg flex flex-col items-center justify-center text-center max-w-[360px] w-full overflow-hidden"
             initial={{ opacity: 0, scale: 0.9, y: -40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -52,7 +52,9 @@ export const ProfileModal = ({
             <div className="bg-main text-white text-lg py-4 w-full text-center">
               {title}
             </div>
-            <div className="pt-7 p-3 flex flex-col gap-7 w-full ">{children}</div>
+            <div className="pt-7 p-3 flex flex-col gap-7 w-full ">
+              {children}
+            </div>
           </motion.div>
         </motion.div>
       )}

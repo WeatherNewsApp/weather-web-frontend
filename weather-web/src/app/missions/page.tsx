@@ -16,8 +16,8 @@ export default function Missions() {
 
   const { user, refreshUser } = useUserStore();
   const { missions, isLoadingMissions, refetchMissions } = useMissions();
-  const { achievements, isLoadingAchievements ,refetchAchievements} = useAchievements();
-
+  const { achievements, isLoadingAchievements, refetchAchievements } =
+    useAchievements();
 
   // ミッションの報酬の受け取り
   const handleClaimMission = async (missionId: number) => {
@@ -39,7 +39,7 @@ export default function Missions() {
     } catch (error) {
       console.error("報酬の受け取りに失敗しました:", error);
     }
-  }
+  };
 
   return (
     <div className="h-screen flex flex-col">

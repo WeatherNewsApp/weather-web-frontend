@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  UseFormRegister,
-  UseFormHandleSubmit,
-} from "react-hook-form";
+import { UseFormRegister, UseFormHandleSubmit } from "react-hook-form";
 
 import { type UpdateUserSchema } from "@/schemas/user";
 
@@ -21,14 +18,11 @@ export const UpdateUserForm = ({
   apiError,
 }: UpdateUserFormProps) => {
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)}
-
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-6">
         <div className="flex items-start gap-1 flex-col">
           <p className="text-sm">ユーザーネーム</p>
-          <input 
+          <input
             type="text"
             className="rounded-md bg-white py-4 px-3 w-full font-sen"
             placeholder="ユーザーネーム"
@@ -39,7 +33,7 @@ export const UpdateUserForm = ({
         </div>
         <div className="flex items-start gap-1 flex-col ">
           <p className="test-sm">メールアドレス</p>
-          <input 
+          <input
             type="email"
             className="rounded-md bg-white py-4 px-3 w-full font-sen"
             placeholder="example@example.com"
@@ -50,14 +44,11 @@ export const UpdateUserForm = ({
         </div>
       </div>
       {apiError && <p className="text-error text-sm mt-2">{apiError}</p>}
-      <button
-        type="submit"
-        className="relative w-full mt-10"
-        >
+      <button type="submit" className="relative w-full mt-10">
         <div className="font-medium rounded-sm w-full relative z-20 text-white bg-accent py-4">
           変更を保存する
         </div>
-        <span className="absolute w-full h-full rounded-sm top-1 left-0 z-10 bg-accent-dark py-4"/>
+        <span className="absolute w-full h-full rounded-sm top-1 left-0 z-10 bg-accent-dark py-4" />
       </button>
     </form>
   );

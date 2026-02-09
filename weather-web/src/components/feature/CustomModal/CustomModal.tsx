@@ -3,7 +3,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/shea/icon";
@@ -37,15 +37,20 @@ interface CustomModalProps {
   mutateDango: () => void;
 }
 
-export const CustomModal = ({
-  ...props
-}: CustomModalProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export const CustomModal = ({ ...props }: CustomModalProps) => {
   const isDragging = useRef(false);
 
-  const handleApplySkin = async (head_skin_id: number | null, body_skin_id: number | null, base_skin_id: number | null) => {
+  const handleApplySkin = async (
+    head_skin_id: number | null,
+    body_skin_id: number | null,
+    base_skin_id: number | null
+  ) => {
     try {
-      await dangoRepository.changeDangoSkin(head_skin_id, body_skin_id, base_skin_id);
+      await dangoRepository.changeDangoSkin(
+        head_skin_id,
+        body_skin_id,
+        base_skin_id
+      );
       props.onClose();
     } catch (error) {
       console.error("団子スキン変更に失敗しました:", error);
@@ -54,22 +59,26 @@ export const CustomModal = ({
     }
   };
 
-  const handleFavoriteClick = async (skinId: number, categoryId: "head" | "body" | "base") => {
+  const handleFavoriteClick = async (
+    skinId: number,
+    categoryId: "head" | "body" | "base"
+  ) => {
     try {
-      const skins = categoryId === "head" 
-        ? props.ownedSkinsHead 
-        : categoryId === "body" 
-        ? props.ownedSkinsBody 
-        : props.ownedSkinsBase;
-      
+      const skins =
+        categoryId === "head"
+          ? props.ownedSkinsHead
+          : categoryId === "body"
+            ? props.ownedSkinsBody
+            : props.ownedSkinsBase;
+
       const skin = skins.find((s) => s.id === skinId);
-      
+
       if (skin?.isFavorite) {
         await skinRepository.removeFavoriteSkin(skinId);
       } else {
         await skinRepository.addFavoriteSkin(skinId);
       }
-      
+
       if (categoryId === "head") {
         props.mutateOwnedSkinsHead();
       } else if (categoryId === "body") {
@@ -86,9 +95,18 @@ export const CustomModal = ({
     if (isDragging.current) return;
 
     const handlers = {
-      head: { current: props.selectedSkinHeadId, handler: props.onSkinSelectHead },
-      body: { current: props.selectedSkinBodyId, handler: props.onSkinSelectBody },
-      base: { current: props.selectedSkinBaseId, handler: props.onSkinSelectBase },
+      head: {
+        current: props.selectedSkinHeadId,
+        handler: props.onSkinSelectHead,
+      },
+      body: {
+        current: props.selectedSkinBodyId,
+        handler: props.onSkinSelectBody,
+      },
+      base: {
+        current: props.selectedSkinBaseId,
+        handler: props.onSkinSelectBase,
+      },
     };
 
     const { current, handler } = handlers[categoryId as keyof typeof handlers];
@@ -105,9 +123,11 @@ export const CustomModal = ({
   };
 
   const isAllSkinsSelected = () => {
-    return props.selectedSkinHeadId !== null && 
-          props.selectedSkinBodyId !== null && 
-          props.selectedSkinBaseId !== null;
+    return (
+      props.selectedSkinHeadId !== null &&
+      props.selectedSkinBodyId !== null &&
+      props.selectedSkinBaseId !== null
+    );
   };
 
   const getUnselectedCategories = () => {
@@ -121,25 +141,28 @@ export const CustomModal = ({
   const categories = [
     {
       id: "head",
-      skins: props.tabId === "favorite"
-        ? props.ownedSkinsHead.filter((skin) => skin.isFavorite)
-        : props.ownedSkinsHead,
+      skins:
+        props.tabId === "favorite"
+          ? props.ownedSkinsHead.filter((skin) => skin.isFavorite)
+          : props.ownedSkinsHead,
       isLoading: props.isLoadingOwnedSkinsHead,
     },
     {
       id: "body",
-      skins: props.tabId === "favorite"
-        ? props.ownedSkinsBody.filter((skin) => skin.isFavorite)
-        : props.ownedSkinsBody,
+      skins:
+        props.tabId === "favorite"
+          ? props.ownedSkinsBody.filter((skin) => skin.isFavorite)
+          : props.ownedSkinsBody,
       isLoading: props.isLoadingOwnedSkinsBody,
     },
     {
       id: "base",
-      skins: props.tabId === "favorite"
-        ? props.ownedSkinsBase.filter((skin) => skin.isFavorite)
-        : props.ownedSkinsBase,
+      skins:
+        props.tabId === "favorite"
+          ? props.ownedSkinsBase.filter((skin) => skin.isFavorite)
+          : props.ownedSkinsBase,
       isLoading: props.isLoadingOwnedSkinsBase,
-    }
+    },
   ];
 
   return (
@@ -162,7 +185,7 @@ export const CustomModal = ({
             transition={{ duration: 0.2 }}
           />
           {/* コンテンツ */}
-          <motion.div 
+          <motion.div
             className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full rounded-t-lg bg-radial max-w-[460px] pb-6"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
@@ -173,11 +196,11 @@ export const CustomModal = ({
               <button
                 className={cn(
                   "rounded-full h-12 flex items-center justify-center gap-2 text-white w-full",
-                  props.tabId === "normal" && "bg-white text-black",
+                  props.tabId === "normal" && "bg-white text-black"
                 )}
                 onClick={() => props.onTabChange("normal")}
               >
-                <Icons.custom className="w-5 h-5"/>
+                <Icons.custom className="w-5 h-5" />
                 <p className="text-sm">カスタム一覧</p>
               </button>
               <button
@@ -187,7 +210,7 @@ export const CustomModal = ({
                 )}
                 onClick={() => props.onTabChange("favorite")}
               >
-                <Icons.favorite className="w-5 h-5"/>
+                <Icons.favorite className="w-5 h-5" />
                 <p className="text-sm">お気に入り一覧</p>
               </button>
             </div>
@@ -206,21 +229,24 @@ export const CustomModal = ({
                   modifier: 2,
                   slideShadows: false,
                 }}
-                onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
                 className="w-full px-6"
               >
                 {categories.map((category) => (
                   <SwiperSlide key={category.id} className="!w-auto">
-                    <div className={cn(
-                      "bg-white rounded-lg p-3 grid grid-cols-3 gap-2 min-w-[328px] min-h-[320px]",
-                      getUnselectedCategories().length > 0 && "opacity-80 cursor-not-allowed"
-                    )}>
+                    <div
+                      className={cn(
+                        "bg-white rounded-lg p-3 grid grid-cols-3 gap-2 min-w-[328px] min-h-[320px]",
+                        getUnselectedCategories().length > 0 &&
+                          "opacity-80 cursor-not-allowed"
+                      )}
+                    >
                       {category.skins.map((skin) => (
                         <div
                           key={skin.id}
                           className={cn(
                             "relative flex items-center justify-center aspect-square overflow-hidden rounded-sm w-24 h-24 cursor-pointer transition-all duration-200",
-                            isSkinSelected(category.id, skin.id) && "bg-radial ring-2 ring-accent"
+                            isSkinSelected(category.id, skin.id) &&
+                              "bg-radial ring-2 ring-accent"
                           )}
                           onClick={() => handleSkinClick(category.id, skin.id)}
                         >
@@ -228,26 +254,48 @@ export const CustomModal = ({
                             <Muddy
                               face="normal"
                               scale="scale-[0.3]"
-                              headSkin={category.id === "head" ? skin.imageKey : undefined}
-                              bodySkin={category.id === "body" ? skin.imageKey : undefined}
-                              baseSkin={category.id === "base" ? skin.imageKey : undefined}
+                              headSkin={
+                                category.id === "head"
+                                  ? skin.imageKey
+                                  : undefined
+                              }
+                              bodySkin={
+                                category.id === "body"
+                                  ? skin.imageKey
+                                  : undefined
+                              }
+                              baseSkin={
+                                category.id === "base"
+                                  ? skin.imageKey
+                                  : undefined
+                              }
                               growthStage="1"
                               damageLevel="1"
                             />
                           </div>
-                          
+
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleFavoriteClick(skin.id, category.id as "head" | "body" | "base");
+                              handleFavoriteClick(
+                                skin.id,
+                                category.id as "head" | "body" | "base"
+                              );
                             }}
                             className="absolute top-1 right-1 w-7 h-7 z-20 transition-transform hover:scale-110"
-                            aria-label={skin.isFavorite ? "お気に入りから削除" : "お気に入りに追加"}
+                            aria-label={
+                              skin.isFavorite
+                                ? "お気に入りから削除"
+                                : "お気に入りに追加"
+                            }
                           >
                             {skin.isFavorite ? (
                               <Icons.trueHeart />
                             ) : (
-                              <Icons.favorite className="w-7 h-7" strokeWidth={1.2} />
+                              <Icons.favorite
+                                className="w-7 h-7"
+                                strokeWidth={1.2}
+                              />
                             )}
                           </button>
                         </div>
@@ -260,15 +308,21 @@ export const CustomModal = ({
             <div className="px-4">
               <PrimaryButton
                 label="どろ団子につけてあげる"
-                onClick={() => handleApplySkin(props.selectedSkinHeadId ?? null, props.selectedSkinBodyId ?? null, props.selectedSkinBaseId ?? null)}
+                onClick={() =>
+                  handleApplySkin(
+                    props.selectedSkinHeadId ?? null,
+                    props.selectedSkinBodyId ?? null,
+                    props.selectedSkinBaseId ?? null
+                  )
+                }
                 shadow={true}
                 py="py-4"
                 disabled={!isAllSkinsSelected()}
               />
             </div>
           </motion.div>
-        </motion.div>  
+        </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 };

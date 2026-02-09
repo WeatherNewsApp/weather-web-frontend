@@ -8,15 +8,16 @@ import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
 import type { Mission } from "@/types/mission";
 import type { Achievement } from "@/types/achievement";
 
-type MissionItemProps = (Mission & {
-  skin: null
-} | Achievement) & {
+type MissionItemProps = (
+  | (Mission & {
+      skin: null;
+    })
+  | Achievement
+) & {
   onClaim: () => void;
 };
 
-export const MissionItem = ({
-  ...props
-}: MissionItemProps) => {
+export const MissionItem = ({ ...props }: MissionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const MissionIcons = {
@@ -35,11 +36,21 @@ export const MissionItem = ({
         <div className="flex gap-2 h-full w-full">
           <div className="flex items-center justify-center px-1 py-3 bg-white border border-border-main rounded-full relative min-w-15  min-h-15 max-w-15 max-h-15">
             {props.type === "consecutive" || props.type === "login" ? (
-              <span className="absolute top-[60%] left-1/2 -translate-1/2 text-center text-lg font-sen">{props.requiredCount}</span>
+              <span className="absolute top-[60%] left-1/2 -translate-1/2 text-center text-lg font-sen">
+                {props.requiredCount}
+              </span>
             ) : (
-              <span className="absolute top-2 left-[6px] text-lg font-sen">{props.requiredCount}</span>
+              <span className="absolute top-2 left-[6px] text-lg font-sen">
+                {props.requiredCount}
+              </span>
             )}
-            <Image src={MissionIcons[props.type]} alt={props.type} width={60} height={60} className="w-full h-full object-contain" />
+            <Image
+              src={MissionIcons[props.type]}
+              alt={props.type}
+              width={60}
+              height={60}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div className="flex flex-col justify-between w-full">
             <p className="text-sm">{props.title}</p>
@@ -63,16 +74,22 @@ export const MissionItem = ({
             props.isCompleted ? "opacity-100" : "opacity-40"
           )}
         >
-          <div className={cn(
-            "w-[66px] relative z-10 h-14 rounded-sm flex items-center justify-center",
-            props.isClaimed ? "bg-main" : "bg-accent"
-          )}>
-            <p className="text-white text-sm">{props.isClaimed ? "表示" : "獲得"}</p>
+          <div
+            className={cn(
+              "w-[66px] relative z-10 h-14 rounded-sm flex items-center justify-center",
+              props.isClaimed ? "bg-main" : "bg-accent"
+            )}
+          >
+            <p className="text-white text-sm">
+              {props.isClaimed ? "表示" : "獲得"}
+            </p>
           </div>
-          <span className={cn(
-            "absolute bottom-0 right-0 w-full h-14 rounded-sm z-0",
-            props.isClaimed ? "bg-main-dark" : "bg-accent-dark"
-          )} />
+          <span
+            className={cn(
+              "absolute bottom-0 right-0 w-full h-14 rounded-sm z-0",
+              props.isClaimed ? "bg-main-dark" : "bg-accent-dark"
+            )}
+          />
         </button>
       </div>
       <SelectModal
@@ -118,7 +135,7 @@ export const MissionItem = ({
                 height={80}
               />
               <p className="text-xs">{props.skin.name}</p>
-          </div>
+            </div>
           )}
         </div>
       </SelectModal>

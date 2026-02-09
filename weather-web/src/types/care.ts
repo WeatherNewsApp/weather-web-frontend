@@ -1,6 +1,5 @@
 import type { Dango } from "./dango";
 
-
 export type CareType = "sunny" | "cloudy" | "rainy";
 
 export type WeatherType = "sunny" | "cloudy" | "rainy" | null;
@@ -19,5 +18,13 @@ export interface UnConfirmResponse {
   actualWeather: WeatherType;
   isCorrect: boolean;
   pointsEarned: number;
-  dango: Pick<Dango, "damageLevel" | "growthStage" | "headSkin" | "bodySkin" | "baseSkin" | "totalDaysAlive">;
+  dango: Pick<
+    Dango,
+    | "damageLevel"
+    | "growthStage"
+    | "headSkin"
+    | "bodySkin"
+    | "baseSkin"
+    | "totalDaysAlive"
+  >;
 }

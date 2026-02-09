@@ -9,50 +9,100 @@ import { useUserStore } from "@/store/user.store";
 import { SideMenu } from "@/components/feature/SideMenu/SideMenu";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { SkeletonHome } from "@/components/shea/Skeleton";
-import { useOwnedSkinsHead, useOwnedSkinsBody, useOwnedSkinsBase } from "@/hooks/useSkins";
+import {
+  useOwnedSkinsHead,
+  useOwnedSkinsBody,
+  useOwnedSkinsBase,
+} from "@/hooks/useSkins";
 import { useDango, useDangos } from "@/hooks/useDangos";
-import { CountdownTimer } from "@/components/feature/CountdownTimer/CountdownTimer"
+import { CountdownTimer } from "@/components/feature/CountdownTimer/CountdownTimer";
 import { careRepository } from "@/repositories/care.repository";
 import { useCare, useUnconfirmCare } from "@/hooks/useCare";
 import { dangoRepository } from "@/repositories/dango.repository";
 import { useWeather } from "@/hooks/usWeather";
+import type { Dango } from "@/types/dango";
 
-const CustomModal = dynamic(() => import("@/components/feature/CustomModal/CustomModal").then(mod => ({ default: mod.CustomModal })), {
-  ssr: false,
-});
+const CustomModal = dynamic(
+  () =>
+    import("@/components/feature/CustomModal/CustomModal").then((mod) => ({
+      default: mod.CustomModal,
+    })),
+  {
+    ssr: false,
+  }
+);
 
-const CareCardSelectModal = dynamic(() => import("@/components/feature/CareCardSelectModal/CareCardSelectModal").then(mod => ({ default: mod.CareCardSelectModal })), {
-  ssr: false,
-});
+const CareCardSelectModal = dynamic(
+  () =>
+    import("@/components/feature/CareCardSelectModal/CareCardSelectModal").then(
+      (mod) => ({ default: mod.CareCardSelectModal })
+    ),
+  {
+    ssr: false,
+  }
+);
 
-const CareAnimationModal = dynamic(() => import("@/components/shea/CareAnimationModal/CareAnimationModal").then(mod => ({ default: mod.CareAnimationModal })), {
-  ssr: false,
-});
+const CareAnimationModal = dynamic(
+  () =>
+    import("@/components/shea/CareAnimationModal/CareAnimationModal").then(
+      (mod) => ({ default: mod.CareAnimationModal })
+    ),
+  {
+    ssr: false,
+  }
+);
 
-const SelectModal = dynamic(() => import("@/components/shea/SelectModal/SelectModal").then(mod => ({ default: mod.SelectModal })), {
-  ssr: false,
-});
+const SelectModal = dynamic(
+  () =>
+    import("@/components/shea/SelectModal/SelectModal").then((mod) => ({
+      default: mod.SelectModal,
+    })),
+  {
+    ssr: false,
+  }
+);
 
-const DangoDeathModal = dynamic(() => import("@/components/feature/DangoDeathModal/DangoDeathModal").then(mod => ({ default: mod.DangoDeathModal })), {
-  ssr: false,
-});
+const DangoDeathModal = dynamic(
+  () =>
+    import("@/components/feature/DangoDeathModal/DangoDeathModal").then(
+      (mod) => ({ default: mod.DangoDeathModal })
+    ),
+  {
+    ssr: false,
+  }
+);
 
 type Care = "cloudy" | "rainy" | "sunny";
 
 export default function Home() {
-
   const { user } = useUserStore();
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("bg-home-morning");
   const [care, setCare] = useState<Care>("cloudy");
 
   // ステート
-  const [selectedSkinHeadId, setSelectedSkinHeadId] = useState<number | null>(null);
-  const [selectedSkinBodyId, setSelectedSkinBodyId] = useState<number | null>(null);
-  const [selectedSkinBaseId, setSelectedSkinBaseId] = useState<number | null>(null);
-  const [customModalTabId, setCustomModalTabId] = useState<"normal"| "favorite">("normal");
+  const [selectedSkinHeadId, setSelectedSkinHeadId] = useState<number | null>(
+    null
+  );
+  const [selectedSkinBodyId, setSelectedSkinBodyId] = useState<number | null>(
+    null
+  );
+  const [selectedSkinBaseId, setSelectedSkinBaseId] = useState<number | null>(
+    null
+  );
+  const [customModalTabId, setCustomModalTabId] = useState<
+    "normal" | "favorite"
+  >("normal");
   const [currentResultIndex, setCurrentResultIndex] = useState(0);
-  const [deadDangoData, setDeadDangoData] = useState<any>(null);
+  const [deadDangoData, setDeadDangoData] = useState<Pick<
+    Dango,
+    | "damageLevel"
+    | "growthStage"
+    | "headSkin"
+    | "bodySkin"
+    | "baseSkin"
+    | "totalDaysAlive"
+  > | null>(null);
 
   // モーダル
   const [showCustomModal, setShowCustomModal] = useState(false);
@@ -61,15 +111,17 @@ export default function Home() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [showDangoDeathModal, setShowDangoDeathModal] = useState(false);
 
-  const { ownedSkinsHead, isLoadingOwnedSkinsHead, mutateOwnedSkinsHead } = useOwnedSkinsHead(showCustomModal);
-  const { ownedSkinsBody, isLoadingOwnedSkinsBody, mutateOwnedSkinsBody } = useOwnedSkinsBody(showCustomModal);
-  const { ownedSkinsBase, isLoadingOwnedSkinsBase, mutateOwnedSkinsBase } = useOwnedSkinsBase(showCustomModal);
+  const { ownedSkinsHead, isLoadingOwnedSkinsHead, mutateOwnedSkinsHead } =
+    useOwnedSkinsHead(showCustomModal);
+  const { ownedSkinsBody, isLoadingOwnedSkinsBody, mutateOwnedSkinsBody } =
+    useOwnedSkinsBody(showCustomModal);
+  const { ownedSkinsBase, isLoadingOwnedSkinsBase, mutateOwnedSkinsBase } =
+    useOwnedSkinsBase(showCustomModal);
 
-
-  const { currentCare, careLoading, mutateCurrentCare } = useCare();
-  const { unconfirmCares, unconfirmCareLoading, mutateUnconfirmCare } = useUnconfirmCare();
+  const { currentCare, mutateCurrentCare } = useCare();
+  const { unconfirmCares, mutateUnconfirmCare } = useUnconfirmCare();
   const { dango, mutateDango } = useDango();
-  const {mutateDangos} = useDangos();
+  useDangos();
 
   useEffect(() => {
     if (unconfirmCares && unconfirmCares.length > 0) {
@@ -89,17 +141,23 @@ export default function Home() {
 
   useEffect(() => {
     if (showCustomModal && dango) {
-      const headSkin = ownedSkinsHead?.find(skin => skin.imageKey === dango.headSkin);
+      const headSkin = ownedSkinsHead?.find(
+        (skin) => skin.imageKey === dango.headSkin
+      );
       if (headSkin) {
         setSelectedSkinHeadId(headSkin.id);
       }
 
-      const bodySkin = ownedSkinsBody?.find(skin => skin.imageKey === dango.bodySkin);
+      const bodySkin = ownedSkinsBody?.find(
+        (skin) => skin.imageKey === dango.bodySkin
+      );
       if (bodySkin) {
         setSelectedSkinBodyId(bodySkin.id);
       }
 
-      const baseSkin = ownedSkinsBase?.find(skin => skin.imageKey === dango.baseSkin);
+      const baseSkin = ownedSkinsBase?.find(
+        (skin) => skin.imageKey === dango.baseSkin
+      );
       if (baseSkin) {
         setSelectedSkinBaseId(baseSkin.id);
       }
@@ -111,31 +169,30 @@ export default function Home() {
       const now = new Date();
       const hour = now.getHours();
       const minute = now.getMinutes();
-      
-    
+
       if ((hour === 6 || hour === 18) && minute >= 1 && minute <= 5) {
         console.log("バッチ処理完了時刻：未確認ケアを再取得");
         mutateUnconfirmCare();
         mutateDango();
       }
     };
-    
+
     const interval = setInterval(checkBatchCompletion, 60000);
-    
+
     checkBatchCompletion();
-    
+
     return () => clearInterval(interval);
   }, [mutateUnconfirmCare, mutateDango]);
 
-  const handleNextResult =  async() => {
+  const handleNextResult = async () => {
     if (!unconfirmCares || unconfirmCares.length === 0) return;
     const currentCare = unconfirmCares[currentResultIndex];
-    
+
     try {
       await careRepository.confirmCare(currentCare.id);
     } catch (error) {
       console.error("ケア確認に失敗しました:", error);
-    } 
+    }
 
     // 団子が壊れた場合は、残りの未確認ケアも全て確認済みにする
     if (String(currentCare.dango.damageLevel) === "4") {
@@ -149,7 +206,7 @@ export default function Home() {
           baseSkin: currentCare.dango.baseSkin,
           totalDaysAlive: currentCare.dango.totalDaysAlive,
         });
-        
+
         // 残りの未確認ケアを全て確認
         for (let i = currentResultIndex + 1; i < unconfirmCares.length; i++) {
           await careRepository.confirmCare(unconfirmCares[i].id);
@@ -171,7 +228,7 @@ export default function Home() {
       mutateUnconfirmCare();
       mutateDango();
     }
-  }
+  };
 
   const handleNewDango = async () => {
     try {
@@ -187,7 +244,7 @@ export default function Home() {
       mutateDango();
       mutateCurrentCare();
     }
-  }
+  };
 
   const currentResult = unconfirmCares?.[currentResultIndex];
 
@@ -195,7 +252,7 @@ export default function Home() {
     const now = new Date();
     const hour = now.getHours();
 
-    if (hour >= 6 && hour < 11 ) {
+    if (hour >= 6 && hour < 11) {
       const target = new Date(now);
       target.setHours(11, 0, 0, 0);
       return target;
@@ -208,18 +265,18 @@ export default function Home() {
     }
 
     return null;
-  }
+  };
 
   const targetTime = getTargetDate();
 
   const isCountdownActive = () => {
     const hour = new Date().getHours();
     return (hour >= 6 && hour < 11) || (hour >= 18 && hour < 24);
-  }
-  
+  };
+
   const countdownActive = isCountdownActive();
 
-  const handleCareSelect = async (value: "sunny" | "cloudy" | "rainy" ) => {
+  const handleCareSelect = async (value: "sunny" | "cloudy" | "rainy") => {
     setCare(value);
     setShowCareModal(false);
     setTimeout(() => {
@@ -233,10 +290,11 @@ export default function Home() {
     } finally {
       mutateCurrentCare();
     }
-  }
+  };
 
   const { weather, weatherLoading } = useWeather();
-  const weatherType = (weather as any)?.weather;
+  const weatherType = (weather as { weather?: "sunny" | "cloudy" | "rainy" })
+    ?.weather;
 
   // 初回データ取得中はスケルトンを表示
   if (!dango || weatherLoading) {
@@ -244,7 +302,9 @@ export default function Home() {
   }
 
   return (
-    <main className={`${backgroundColor} w-full h-screen relative overflow-hidden`}>
+    <main
+      className={`${backgroundColor} w-full h-screen relative overflow-hidden`}
+    >
       <SideMenu
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
@@ -268,7 +328,7 @@ export default function Home() {
           </div>
           <div className="absolute bottom-0 right-[165px] ">
             {weatherType === "sunny" ? (
-                <Image
+              <Image
                 src="/images/sunny-morning.png"
                 alt="cloud"
                 width={320}
@@ -293,44 +353,60 @@ export default function Home() {
               />
             )}
           </div>
-          <div 
+          <div
             className="w-16 h-[66px] relative"
-            onClick={ () => setIsSideMenuOpen(true)}
+            onClick={() => setIsSideMenuOpen(true)}
           >
             <div className="w-16 h-16 bg-main rounded-full flex flex-col gap-2 items-center justify-center relative z-20">
               <span className="w-8 h-[2px] bg-white rounded-[2px]"></span>
               <span className="w-8 h-[2px] bg-white rounded-[2px]"></span>
               <span className="w-8 h-[2px] bg-white rounded-[2px]"></span>
             </div>
-            <span className="absolute bottom-0 left-0 w-16 h-16 bg-main-dark rounded-full z-10"/>
+            <span className="absolute bottom-0 left-0 w-16 h-16 bg-main-dark rounded-full z-10" />
           </div>
         </div>
-        <div className={cn(
-          "pt-7 flex flex-col items-center h-full",
-          countdownActive ? "justify-between" : "justify-end"
-        )}>
-        
+        <div
+          className={cn(
+            "pt-7 flex flex-col items-center h-full",
+            countdownActive ? "justify-between" : "justify-end"
+          )}
+        >
           {countdownActive && targetTime && (
             <CountdownTimer
-            targetDate={targetTime}
-            backgroundColor={backgroundColor}
+              targetDate={targetTime}
+              backgroundColor={backgroundColor}
             />
           )}
           <div className="w-full flex flex-col items-center justify-center">
             <div className="flex flex-col gap-2 w-fit bg-[#fff] rounded-sm shadow-speech py-3 px-6 speech-bubble relative z-10">
               {currentCare === "sunny" ? (
                 <div className="flex gap-3 items-center justify-center">
-                  <Image src="/images/sunny-trace.png" alt="sunny" width={32} height={32} />
+                  <Image
+                    src="/images/sunny-trace.png"
+                    alt="sunny"
+                    width={32}
+                    height={32}
+                  />
                   <p>水をかけてもらったよ</p>
                 </div>
               ) : currentCare === "cloudy" ? (
                 <div className="flex gap-3 items-center justify-center">
-                  <Image src="/images/cloudy-trace.png" alt="cloudy" width={32} height={32} />
+                  <Image
+                    src="/images/cloudy-trace.png"
+                    alt="cloudy"
+                    width={32}
+                    height={32}
+                  />
                   <p>拭いてもらったよ</p>
                 </div>
               ) : currentCare === "rainy" ? (
                 <div className="flex gap-3 items-center justify-center">
-                  <Image src="/images/rainy-trace.png" alt="rainy" width={32} height={32} />
+                  <Image
+                    src="/images/rainy-trace.png"
+                    alt="rainy"
+                    width={32}
+                    height={32}
+                  />
                   <p>傘をさしてもらったよ</p>
                 </div>
               ) : (
@@ -338,11 +414,11 @@ export default function Home() {
               )}
             </div>
             <div className="w-full flex flex-col items-center mt-10">
-              <div 
+              <div
                 className="w-[200px] h-[200px] mt-5"
                 onClick={() => setShowCustomModal(true)}
               >
-                <Muddy 
+                <Muddy
                   face="normal"
                   headSkin={dango?.headSkin ?? undefined}
                   bodySkin={dango?.bodySkin ?? undefined}
@@ -353,7 +429,7 @@ export default function Home() {
               </div>
               <button
                 className={cn(
-                  "relative h-[70px] w-full mt-15",
+                  "relative h-[70px] w-full mt-15"
                   // !isCountdownActive() ? "opacity-50 cursor-not-allowed" : ""
                 )}
                 // disabled={!isCountdownActive()}
@@ -361,26 +437,36 @@ export default function Home() {
               >
                 <div className="absolute top-0 left-0 w-full h-[66px] flex items-center justify-center bg-accent rounded-full z-30">
                   <p className="text-white text-center text-lg">
-                    {currentCare ? "別のケアをしてあげる？" : "今日のケアはどうする？"}
+                    {currentCare
+                      ? "別のケアをしてあげる？"
+                      : "今日のケアはどうする？"}
                   </p>
                 </div>
-                <span className="absolute bottom-0 left-0 w-full h-[66px] bg-accent-dark rounded-full z-20"/>
+                <span className="absolute bottom-0 left-0 w-full h-[66px] bg-accent-dark rounded-full z-20" />
               </button>
             </div>
           </div>
         </div>
-      </div>  
+      </div>
       <CustomModal
         isOpen={showCustomModal}
         onClose={() => setShowCustomModal(false)}
         tabId={customModalTabId}
-        onTabChange={(tabId: "normal"| "favorite") => setCustomModalTabId(tabId)}
+        onTabChange={(tabId: "normal" | "favorite") =>
+          setCustomModalTabId(tabId)
+        }
         selectedSkinHeadId={selectedSkinHeadId}
         selectedSkinBodyId={selectedSkinBodyId}
         selectedSkinBaseId={selectedSkinBaseId}
-        onSkinSelectHead={(skinId: number | null) => setSelectedSkinHeadId(skinId)}
-        onSkinSelectBody={(skinId: number | null) => setSelectedSkinBodyId(skinId)}
-        onSkinSelectBase={(skinId: number | null) => setSelectedSkinBaseId(skinId)}
+        onSkinSelectHead={(skinId: number | null) =>
+          setSelectedSkinHeadId(skinId)
+        }
+        onSkinSelectBody={(skinId: number | null) =>
+          setSelectedSkinBodyId(skinId)
+        }
+        onSkinSelectBase={(skinId: number | null) =>
+          setSelectedSkinBaseId(skinId)
+        }
         ownedSkinsHead={ownedSkinsHead || []}
         ownedSkinsBody={ownedSkinsBody || []}
         ownedSkinsBase={ownedSkinsBase || []}
@@ -409,8 +495,11 @@ export default function Home() {
         onClose={() => setShowResultModal(false)}
         title="ケア結果"
         buttonProps={{
-          label: String(currentResult?.dango.damageLevel) === "4" ? "新しい団子を作る" : "閉じる",
-          onClick:  () => {
+          label:
+            String(currentResult?.dango.damageLevel) === "4"
+              ? "新しい団子を作る"
+              : "閉じる",
+          onClick: () => {
             handleNextResult();
           },
           shadow: true,
@@ -430,8 +519,13 @@ export default function Home() {
                   scale="scale-[0.6]"
                 />
               </div>
-              {String(currentResult.dango.damageLevel) === "4" ? (<p className="text-lg text-center">今までありがとう...</p>)
-              : (currentResult.isCorrect ? <p className="text-lg text-center">無事だったよー！</p> : <p className="text-lg text-center">ちょっと溶けちゃったよ</p>)}
+              {String(currentResult.dango.damageLevel) === "4" ? (
+                <p className="text-lg text-center">今までありがとう...</p>
+              ) : currentResult.isCorrect ? (
+                <p className="text-lg text-center">無事だったよー！</p>
+              ) : (
+                <p className="text-lg text-center">ちょっと溶けちゃったよ</p>
+              )}
             </div>
             {currentResult.isCorrect && (
               <div className="flex gap-3 items-center">
@@ -452,7 +546,7 @@ export default function Home() {
           </div>
         )}
       </SelectModal>
-      
+
       {/* 団子死亡モーダル */}
       {showDangoDeathModal && deadDangoData && (
         <DangoDeathModal

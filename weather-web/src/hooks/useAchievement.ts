@@ -4,7 +4,7 @@ import type { Achievement } from "@/types/achievement";
 
 export const useAchievements = () => {
   const { data, isLoading, mutate } = useSWR<Achievement[]>(
-    '/api/v1/achievements',
+    "/api/v1/achievements",
     achievementRepository.getAchievements,
     {
       revalidateOnFocus: false,
@@ -17,4 +17,4 @@ export const useAchievements = () => {
     isLoadingAchievements: isLoading,
     refetchAchievements: mutate,
   };
-}
+};

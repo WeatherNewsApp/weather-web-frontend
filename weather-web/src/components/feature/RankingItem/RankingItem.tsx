@@ -10,7 +10,10 @@ export interface RankingUser {
   rank: number;
   name: string;
   days: number;
-  dango: Pick<Dango, 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>;
+  dango: Pick<
+    Dango,
+    "damageLevel" | "growthStage" | "headSkin" | "bodySkin" | "baseSkin"
+  >;
   prediction: string | null;
 }
 
@@ -19,25 +22,25 @@ export const RankingItem = ({
   name,
   days,
   dango,
-  prediction
+  prediction,
 }: RankingUser) => {
   const [isOpen, setIsOpen] = useState(false);
 
   // ケアアイコンのマッピング
   const getCareIcon = (prediction: string | null) => {
     if (!prediction) return null;
-    
+
     switch (prediction) {
-      case 'sunny':
-        return '/images/sunny-trace.png';
-      case 'cloudy':
-        return '/images/cloudy-trace.png';
-      case 'rainy':
-        return '/images/rainy-trace.png';
+      case "sunny":
+        return "/images/sunny-trace.png";
+      case "cloudy":
+        return "/images/cloudy-trace.png";
+      case "rainy":
+        return "/images/rainy-trace.png";
       default:
         return null;
     }
-  };  
+  };
 
   return (
     <>
@@ -48,11 +51,7 @@ export const RankingItem = ({
       >
         <div className="flex gap-3">
           <div className="w-13 h-13 flex items-center justify-center">
-            <Muddy
-              {...dango}
-              face="normal"
-              scale="scale-[0.25]"
-            />
+            <Muddy {...dango} face="normal" scale="scale-[0.25]" />
           </div>
           <div className="flex flex-col ">
             <p className="text-sm font-sen">{name}</p>
@@ -77,11 +76,7 @@ export const RankingItem = ({
       >
         <div className="flex flex-col gap-3 items-center justify-center">
           <div className="w-20 h-20 flex items-center justify-center">
-            <Muddy 
-              {...dango}
-              face="normal"
-              scale="scale-[0.4]"
-            />
+            <Muddy {...dango} face="normal" scale="scale-[0.4]" />
           </div>
           <p className="text-lg font-sen">{name}</p>
           <div className="flex gap-2 items-end justify-center">
@@ -92,20 +87,18 @@ export const RankingItem = ({
         <div className="flex flex-col gap-1 w-full items-center justify-center">
           <p className="text-sm text-left w-full">ユーザーが選んだケア</p>
           <div className="w-full flex items-center justify-center gap-4 bg-white py-5 rounded-sm">
-
             <div className="flex flex-col items-center gap-2">
               {prediction ? (
                 <div className="w-30 h-30 relative">
                   <Image
-                    src={getCareIcon(prediction) || '/images/dummy-image.png'}
+                    src={getCareIcon(prediction) || "/images/dummy-image.png"}
                     alt={`${prediction}`}
                     fill
                     className="object-contain"
                   />
                 </div>
               ) : (
-                <div className="w-30 h-30 flex items-center justify-center">
-                </div>
+                <div className="w-30 h-30 flex items-center justify-center"></div>
               )}
             </div>
           </div>

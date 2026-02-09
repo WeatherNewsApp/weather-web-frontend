@@ -30,9 +30,21 @@ export const PageHeader = ({
     <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[460px] z-30 pb-5">
       <header className="pt-6 pb-3 px-4 flex items-start justify-start">
         {tabs ? (
-          <Image src="/images/page-head-bg.png" alt="page-head-bg" width={460} height={100} className="absolute bottom-0 left-0 w-full h-full " />
+          <Image
+            src="/images/page-head-bg.png"
+            alt="page-head-bg"
+            width={460}
+            height={100}
+            className="absolute bottom-0 left-0 w-full h-full "
+          />
         ) : (
-          <Image src="/images/page-head-bg-normal.png" alt="page-head-bg-normal" width={460} height={100} className="absolute bottom-0 left-0 w-full h-full" />
+          <Image
+            src="/images/page-head-bg-normal.png"
+            alt="page-head-bg-normal"
+            width={460}
+            height={100}
+            className="absolute bottom-0 left-0 w-full h-full"
+          />
         )}
         <div className="flex items-center justify-between w-full relative">
           <Link href={href} className="text-white w-10 h-10">

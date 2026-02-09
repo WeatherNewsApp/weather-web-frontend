@@ -7,13 +7,13 @@ export const Loading = () => {
   return (
     <main className="bg-radial-close flex flex-col items-center justify-center h-screen w-full mx-auto ">
       <div className="relative flex items-center justify-center w-30 h-30">
-        <div 
+        <div
           className="absolute inset-0 animate-spin"
-          style={{ animationDuration: '3s' }}
+          style={{ animationDuration: "3s" }}
         >
           <Icons.loader />
         </div>
-        <Muddy  
+        <Muddy
           face="happy"
           scale="scale-[0.4]"
           growthStage="1"

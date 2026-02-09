@@ -28,17 +28,20 @@ export const Muddy = ({
         <div className={styles.muddyBodyEyeLeftContainerNormal}>
           <div className={styles.muddyBodyEyeLeftNormal}>
             <span className={styles.muddyBodyEyeLeftHighlightBigNormal}></span>
-            <span className={styles.muddyBodyEyeLeftHighlightSmallNormal}></span>
+            <span
+              className={styles.muddyBodyEyeLeftHighlightSmallNormal}
+            ></span>
           </div>
         </div>
         <div className={styles.muddyBodyEyeRightContainerNormal}>
           <div className={styles.muddyBodyEyeRightNormal}>
             <span className={styles.muddyBodyEyeRightHighlightBigNormal}></span>
-            <span className={styles.muddyBodyEyeRightHighlightSmallNormal}></span>
+            <span
+              className={styles.muddyBodyEyeRightHighlightSmallNormal}
+            ></span>
           </div>
         </div>
-        <div className={styles.muddyBodyMouthNormal}>
-        </div>
+        <div className={styles.muddyBodyMouthNormal}></div>
         <div className={styles.muddyBodyCheekNormal}>
           <div className={styles.muddyBodyCheekLeftNormal}></div>
           <div className={styles.muddyBodyCheekRightNormal}></div>
@@ -54,7 +57,7 @@ export const Muddy = ({
         <div className={styles.muddyBodyCheekRightHappy}></div>
       </>
     ),
-    sad: (  
+    sad: (
       <>
         <div className={styles.muddyBodyEyeLeftContainerSad}>
           <div className={styles.muddyBodyEyeLeftSad}></div>
@@ -72,12 +75,8 @@ export const Muddy = ({
     ),
   };
 
-  const scaleValue = scale.toString();
-
   const sproutContent = {
-    1: (
-      <></>
-    ),
+    1: <></>,
     2: (
       <div className={styles.muddyBodySprout}>
         <Image src="/images/sprout-1.svg" alt="sprout" width={25} height={40} />
@@ -90,53 +89,74 @@ export const Muddy = ({
     ),
     4: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-3.svg" alt="sprout" width={124} height={80} />
+        <Image
+          src="/images/sprout-3.svg"
+          alt="sprout"
+          width={124}
+          height={80}
+        />
       </div>
     ),
     5: (
       <div className={styles.muddyBodySprout}>
-        <Image src="/images/sprout-4.svg" alt="sprout" width={110} height={90} />
+        <Image
+          src="/images/sprout-4.svg"
+          alt="sprout"
+          width={110}
+          height={90}
+        />
       </div>
-    )
-  }
+    ),
+  };
 
   const damageLevelContent = {
-    1: (
-      <></>
-    ),
+    1: <></>,
     2: (
       <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
-        <Image src="/images/damage-2.svg" alt="damage-level" width={164} height={137} className="w-[90%]"/>
+        <Image
+          src="/images/damage-2.svg"
+          alt="damage-level"
+          width={164}
+          height={137}
+          className="w-[90%]"
+        />
       </div>
     ),
     3: (
       <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
-        <Image src="/images/damage-2.svg" alt="damage-level" width={182} height={163}  className="w-[90%]"/>
+        <Image
+          src="/images/damage-2.svg"
+          alt="damage-level"
+          width={182}
+          height={163}
+          className="w-[90%]"
+        />
       </div>
     ),
     4: (
       <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14 ">
-        <Image src="/images/damage-3.svg" alt="damage-level" width={182} height={180}  className="w-[90%]"/>
+        <Image
+          src="/images/damage-3.svg"
+          alt="damage-level"
+          width={182}
+          height={180}
+          className="w-[90%]"
+        />
       </div>
     ),
-    5: (
-      <></>
-    )
-  }
+    5: <></>,
+  };
 
   return (
-    <div className={cn(
-      styles.muddyContainer,
-      scale,
-    )}>
+    <div className={cn(styles.muddyContainer, scale)}>
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
-      
+
       {/* スキン画像 */}
       <div className="absolute top-0 left-0 w-full h-full z-[15] pointer-events-none flex items-center justify-center">
         {headSkin && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Image 
+            <Image
               src={getSkinImagePath(headSkin)}
               alt="head"
               width={200}
@@ -146,10 +166,10 @@ export const Muddy = ({
             />
           </div>
         )}
-        
+
         {bodySkin && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Image 
+            <Image
               src={getSkinImagePath(bodySkin)}
               alt="body"
               width={200}
@@ -159,10 +179,10 @@ export const Muddy = ({
             />
           </div>
         )}
-        
+
         {baseSkin && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Image 
+            <Image
               src={getSkinImagePath(baseSkin)}
               alt="base"
               width={200}

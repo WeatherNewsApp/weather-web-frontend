@@ -5,12 +5,5 @@ interface SkeletonBoxProps {
 }
 
 export const SkeletonBox = ({ className }: SkeletonBoxProps) => {
-  return (
-    <div 
-      className={cn(
-        "bg-gray-200 animate-pulse rounded",
-        className
-      )} 
-    />
-  );
+  return <div className={cn("bg-gray-200 animate-pulse rounded", className)} />;
 };

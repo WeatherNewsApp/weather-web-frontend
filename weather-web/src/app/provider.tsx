@@ -1,11 +1,12 @@
 // app/providers.tsx
-'use client';
+"use client";
 
-import { ReactNode, useEffect } from 'react';
-import { SWRConfig } from 'swr';
-import { useUserStore } from '@/store/user.store';
-import { Loading } from '@/components/shea/Loading/Loading';
-import { cookieManager } from '@/lib/cookies';
+import { ReactNode, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { SWRConfig } from "swr";
+import { useUserStore } from "@/store/user.store";
+import { Loading } from "@/components/shea/Loading/Loading";
+import { cookieManager } from "@/lib/cookies";
 
 // SWR Provider
 function SwrProvider({ children }: { children: ReactNode }) {
@@ -25,6 +26,7 @@ function SwrProvider({ children }: { children: ReactNode }) {
 // Auth Provider
 function AuthProvider({ children }: { children: ReactNode }) {
   const { fetchUser, isInitialized, isLoading, error } = useUserStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isInitialized) {
@@ -32,15 +34,16 @@ function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [fetchUser, isInitialized]);
 
+  useEffect(() => {
+    // トークンはあるのにユーザー取得失敗 = 認証エラー
+    if (error && cookieManager.getToken()) {
+      cookieManager.removeToken();
+      router.push("/login");
+    }
+  }, [error, router]);
+
   if (isLoading || !isInitialized) {
     return <Loading />;
-  }
-
-  // トークンはあるのにユーザー取得失敗 = 認証エラー
-  if (error && cookieManager.getToken()) {
-    cookieManager.removeToken();
-    window.location.href = '/login';
-    return null;
   }
 
   return <>{children}</>;
@@ -50,9 +53,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <SwrProvider>
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </SwrProvider>
   );
 }

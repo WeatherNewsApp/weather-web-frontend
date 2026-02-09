@@ -29,7 +29,7 @@ export const ConfirmModal = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div 
+        <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -47,7 +47,7 @@ export const ConfirmModal = ({
           />
 
           {/* モーダル本体 */}
-          <motion.div 
+          <motion.div
             className="relative bg-radial-close rounded-lg pt-10 px-3 pb-4 flex flex-col items-center justify-center text-center max-w-[360px] w-full"
             initial={{ opacity: 0, scale: 0.9, y: -40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -60,11 +60,7 @@ export const ConfirmModal = ({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <Muddy 
-              face="sad"
-              scale="scale-[0.9]"
-              {...dango}
-            />
+            <Muddy face="sad" scale="scale-[0.9]" {...dango} />
             <h3 className="text-lg text-center mt-6">{title}</h3>
             <p className="mt-3">{message}</p>
             <div className="flex gap-2 w-full mt-6">
@@ -83,7 +79,7 @@ export const ConfirmModal = ({
             </div>
           </motion.div>
         </motion.div>
-        )}
-      </AnimatePresence>
+      )}
+    </AnimatePresence>
   );
 };

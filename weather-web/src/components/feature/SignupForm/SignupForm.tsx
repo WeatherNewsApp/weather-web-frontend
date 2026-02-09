@@ -34,9 +34,7 @@ export const SignupForm = ({
   handleSubmit,
   control,
   isValid,
-  apiError,
 }: SignupFormProps) => {
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
       <div className="flex flex-col gap-7">
@@ -90,9 +88,9 @@ export const SignupForm = ({
         </div>
       </div>
       <TermsAgreement
-          register={register("isTermsAccepted")}
-          error={errors.isTermsAccepted?.message}
-        />
+        register={register("isTermsAccepted")}
+        error={errors.isTermsAccepted?.message}
+      />
       <PrimaryButton
         variant="accent"
         label="新規登録"

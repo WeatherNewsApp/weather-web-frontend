@@ -3,8 +3,9 @@ import { careRepository } from "@/repositories/care.repository";
 
 export const useCare = () => {
   const { data, isLoading, mutate } = useSWR(
-    '/api/v1/cares/current',
-    careRepository.getCurrentCare, {
+    "/api/v1/cares/current",
+    careRepository.getCurrentCare,
+    {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -12,17 +13,17 @@ export const useCare = () => {
     }
   );
 
-  return { 
+  return {
     currentCare: data?.weatherPrediction ?? null,
     careLoading: isLoading,
     mutateCurrentCare: mutate,
   };
-}
+};
 
 export const useUnconfirmCare = () => {
   const { data, isLoading, mutate } = useSWR(
-    '/api/v1/cares/unconfirmed',
-    careRepository.getUnConfirmCare, 
+    "/api/v1/cares/unconfirmed",
+    careRepository.getUnConfirmCare,
     {
       revalidateIfStale: false,
       revalidateOnFocus: true, // フォーカス時は再検証
@@ -36,5 +37,5 @@ export const useUnconfirmCare = () => {
     unconfirmCares: data,
     unconfirmCareLoading: isLoading,
     mutateUnconfirmCare: mutate,
-  }
-}
+  };
+};
