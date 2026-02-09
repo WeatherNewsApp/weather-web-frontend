@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppProviders } from "./provider";
 import { M_PLUS_1p, Sen } from "next/font/google";
 import "./globals.css";
 
@@ -27,12 +28,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden`}
+        className={`${mPlus1p.variable} ${sen.variable} antialiased max-w-[460px] mx-auto overflow-x-hidden overflow-y-hidden bg-white`}
         style={{
           fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}
       >
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

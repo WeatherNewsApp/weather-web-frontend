@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
 
+import { useState } from "react";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { Icons } from "@/components/shea/icon";
 import Image from "next/image";
 import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
@@ -12,6 +13,8 @@ export interface StoreCardProps {
   onClick: () => void;
   currentPoint: number;
   isOwned: boolean;
+  imageKey: string;
+  category: "head" | "body" | "base";
 }
 
 export const StoreCard = ({
@@ -19,27 +22,37 @@ export const StoreCard = ({
   price,
   currentPoint,
   isOwned,
+  onClick,
+  imageKey,
+  category,
 }: StoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 一旦ここまで
-  // const { data: user } = useGet<UserResponse>()
+  const handlePurchase = () => {
+    if (currentPoint - price > 0) {
+      onClick();
+      setIsOpen(false);
+    }
+  };
 
   return (
     <>
       <div className="bg-radial rounded-md py-3 px-1 flex flex-col justify-center items-center">
-        {/* ダミー  API疎通後に変更 */}
-        <Image
-          src="/images/dummy-image.png"
-          alt="dummy"
-          width={80}
-          height={80}
-        />
+        <div className="flex items-center justify-center w-20 h-20 relative">
+          <Muddy
+            face="normal"
+            growthStage="1"
+            damageLevel="1"
+            scale="scale-[0.4]"
+            headSkin={category === "head" ? imageKey : undefined}
+            bodySkin={category === "body" ? imageKey : undefined}
+            baseSkin={category === "base" ? imageKey : undefined}
+          />
+        </div>
         <p className="text-xs mt-5 mb-2">{title}</p>
         <PrimaryButton
           label={isOwned ? "所持済み" : `${price}P`}
           onClick={() => setIsOpen(true)}
-          // isOwendがtrueの場合はiconを表示しない
           icon={
             isOwned ? undefined : (
               <div className="h-4 w-[15px] relative">
@@ -66,9 +79,10 @@ export const StoreCard = ({
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         buttonProps={{
+          disabled: currentPoint - price <= 0,
           label: "OK",
           onClick: () => {
-            //TODO: 購入処理を追加
+            handlePurchase();
           },
           shadow: true,
           variant: "accent",
@@ -102,7 +116,7 @@ export const StoreCard = ({
             </div>
             <span className="bg-points-dark rounded-full absolute bottom-0 right-0 h-18 w-full z-0" />
             <p className="text-lg translate-x-1/2 text-black absolute bottom-0 right-0 font-sen z-20">
-              {price}
+              {currentPoint - price > 0 ? currentPoint - price : 0}
             </p>
           </div>
         </div>

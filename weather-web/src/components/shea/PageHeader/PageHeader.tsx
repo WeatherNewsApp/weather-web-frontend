@@ -27,8 +27,25 @@ export const PageHeader = ({
   onTabChange,
 }: PageHeaderProps) => {
   return (
-    <>
-      <header className="pt-6 pb-3 px-4 bg-main flex items-start justify-start relative">
+    <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[460px] z-30 pb-5">
+      <header className="pt-6 pb-3 px-4 flex items-start justify-start">
+        {tabs ? (
+          <Image
+            src="/images/page-head-bg.png"
+            alt="page-head-bg"
+            width={460}
+            height={100}
+            className="absolute bottom-0 left-0 w-full h-full "
+          />
+        ) : (
+          <Image
+            src="/images/page-head-bg-normal.png"
+            alt="page-head-bg-normal"
+            width={460}
+            height={100}
+            className="absolute bottom-0 left-0 w-full h-full"
+          />
+        )}
         <div className="flex items-center justify-between w-full relative">
           <Link href={href} className="text-white w-10 h-10">
             <Icons.chevronLeft className="w-10 h-10" strokeWidth={1} />
@@ -37,11 +54,11 @@ export const PageHeader = ({
             {title}
           </h2>
           {showPoints && (
-            <div className="flex items-center gap-1 pr-3 bg-white rounded-full">
+            <div className="flex items-center justify-between gap-1 pr-3 bg-white rounded-full w-25">
               <div className="pb-[2px] w-8 flex relative">
                 <div className="w-8 h-8 bg-points rounded-full relative z-10 p-1">
                   <Image
-                    src="/images/dummy-image.png"
+                    src="/images/coin.svg"
                     alt="points"
                     width={32}
                     height={32}
@@ -55,13 +72,13 @@ export const PageHeader = ({
         </div>
       </header>
       {tabs && tabs.length > 0 && (
-        <div className="flex p-4 gap-5 bg-main">
+        <div className="flex p-4 gap-5 relative z-20">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange?.(tab.id)}
               className={cn(
-                "flex items-center gap-1 text-main text-sm rounded-full w-full p-3 justify-center text-white",
+                "flex items-center gap-1 text-sm rounded-full w-full p-3 justify-center text-white",
                 activeTabId === tab.id && "text-black bg-white"
               )}
             >
@@ -71,6 +88,6 @@ export const PageHeader = ({
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };

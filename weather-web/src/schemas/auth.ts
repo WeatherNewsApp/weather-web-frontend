@@ -9,6 +9,7 @@ export const signupSchema = z
     isTermsAccepted: z.literal(true, {
       message: "※利用規約に同意してください",
     }),
+    areaId: z.number({ message: "※地域を選択してください" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "※パスワードが一致しません",

@@ -1,22 +1,9 @@
-import Image from "next/image";
+import type { Dango } from "@/types/dango";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
-interface HistoryDangoProps {
-  survivalDays: number;
-  successCareCount: number;
-  startDate: string;
-  deathDate: string;
-  xCombo: number;
-  totalPoints: number;
-}
+type HistoryDangoProps = Omit<Dango, "id">;
 
-export const HistoryDango = ({
-  survivalDays,
-  successCareCount,
-  startDate,
-  deathDate,
-  xCombo,
-  totalPoints,
-}: HistoryDangoProps) => {
+export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
@@ -31,61 +18,65 @@ export const HistoryDango = ({
 
   return (
     <div className="flex flex-col gap-5 py-5 px-3 rounded-md bg-radial shadow-md w-full ">
-      <div className="flex items-end pb-2 border-b-[0.5px] border-black justify-between">
+      <div className="flex items-end pb-2 border-b-2 border-border-main justify-between">
         <div className="flex flex-col gap-3 w-[180px]">
           <div className="flex items-center justify-between">
             <p>生存日数</p>
             <div className="flex items-end gap-1">
-              <p className="font-sen text-lg">{survivalDays}</p>
+              <p className="font-sen text-lg">{dango.totalDaysAlive}</p>
               <p className="text-sm">日</p>
             </div>
           </div>
           <div className="flex items-center justify-between">
             <p>成功ケア回数</p>
             <div className="flex items-end gap-1">
-              <p className="font-sen text-lg">{successCareCount}</p>
+              <p className="font-sen text-lg">{dango.successCareCount}</p>
               <p className="text-sm">回</p>
             </div>
           </div>
         </div>
-        {/* ダミー */}
-        <Image
-          src="/images/dummy-image.png"
-          alt="dummy-image"
-          width={100}
-          height={100}
-        />
+        <div className="max-h-25 max-w-25 overflow-hidden flex items-center justify-center ">
+          <Muddy
+            face="normal"
+            scale="scale-[0.4]"
+            headSkin={dango.headSkin}
+            bodySkin={dango.bodySkin}
+            baseSkin={dango.baseSkin}
+            damageLevel={dango.damageLevel}
+            growthStage={dango.growthStage}
+          />
+        </div>
       </div>
       <div className="px-2 flex flex-col gap-4">
         <div className="flex items-end justify-between">
           <p className="">どろ団子を育て始めた日</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">
-              {formatDate(startDate)}
+              {formatDate(dango.caredAt)}
             </p>
-            <p>({getWeekday(startDate)})</p>
+            <p>({getWeekday(dango.caredAt)})</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">どろ団子が死んだ日</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">
-              {formatDate(deathDate)}
+              {dango.diedAt ? formatDate(dango.diedAt) : ""}
             </p>
-            <p>({getWeekday(deathDate)})</p>
+            <p>{dango.diedAt ? `(${getWeekday(dango.diedAt)})` : "生存中"}</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">最大コンボ数</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{xCombo}</p>
+            <p className="font-sen text-lg leading-6">{dango.maxConsecutive}</p>
             <p>コンボ</p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <p className="">合計ポイント数</p>
           <div className="flex items-end gap-1">
-            <p className="font-sen text-lg leading-6">{totalPoints}</p>
+            <p className="font-sen text-lg leading-6">{dango.point}</p>
             <p>ポイント</p>
           </div>
         </div>

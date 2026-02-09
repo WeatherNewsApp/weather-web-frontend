@@ -3,19 +3,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Image from "next/image";
 
 import { Icons } from "@/components/shea/icon";
-import { cookieManager } from "@/lib/cookies";
 import { loginSchema, type LoginSchema } from "@/schemas/auth";
-import { login } from "@/lib/api/auth";
 import { LoginForm } from "@/components/feature/LoginForm/LoginForm";
+import { useUserStore } from "@/store/user.store";
 
 export default function Login() {
   const router = useRouter();
-  const [apiError, setApiError] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
+  const login = useUserStore((state) => state.login);
+  const isLoading = useUserStore((state) => state.isLoading);
+  const error = useUserStore((state) => state.error);
 
   const {
     register,
@@ -31,54 +30,67 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    setApiError(undefined);
-    setIsLoading(true);
     try {
-      const res = await login({
+      await login({
         email: data.email,
         password: data.password,
       });
-      if (res.success) {
-        cookieManager.setToken(res.token);
-        router.push("/home");
-      } else {
-        setApiError(res.messages.join(", "));
-      }
+      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
-        setApiError(error.message);
-      } else if (typeof error === "string") {
-        setApiError(error);
+        console.error("Failed to login:", error);
       } else {
-        setApiError("予期しないエラーが発生しました");
+        console.error("Failed to login:", error);
       }
-      console.error("APIエラー:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <main className="bg-main h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <Image
-        src={"/images/design-asset2.svg"}
-        alt="design-asset2"
-        width={400}
-        height={427}
-        className="absolute top-5 -translate-y-1/2  right-11 translate-x-1/2 z-40"
-      />
-      <div className="p-4 w-full rounded-xl h-full absolute z-10">
-        <div className="bg-radial w-full rounded-xl h-full"></div>
+    <main className="bg-white h-screen flex flex-col items-center justify-between relative overflow-hidden">
+      <div className="pt-6 px-4 pb-3 w-full relative z-10">
+        <Link href="/top" className="w-10 h-10">
+          <Icons.chevronLeft className="w-10 h-10 text-white" strokeWidth={1} />
+        </Link>
       </div>
-      <div className="h-full w-full rounded-xl py-5 flex flex-col between px-3 overflow-y-auto relative z-30">
-        <div className="sticky top-5 left-0 h-fit">
-          <Link href="/" className="pl-3 flex items-center justify-start w-fit">
-            <Icons.chevronLeft className="w-10 h-10" strokeWidth={1} />
-          </Link>
-        </div>
-        <div className="flex flex-col gap-3 mt-13">
+      <Image
+        src="/images/design-asset2.png"
+        alt="design-asset2"
+        width={520}
+        height={520}
+        className="absolute -top-[426px] -left-[238px] w-[520px] h-[520px] z-0"
+      />
+      <div className="max-h-[82vh] h-full w-full bg-radial rounded-t-xl shadow-tl absolute z-0 bottom-0 left-0 overflow-y-hidden">
+        <Image
+          src={"/images/design-asset.svg"}
+          alt="design-asset"
+          width={240}
+          height={240}
+          className="right-[-171px] absolute top-[260px]"
+        />
+        <Image
+          src={"/images/design-asset.svg"}
+          alt="design-asset"
+          width={240}
+          height={240}
+          className="left-[-207px] absolute top-[109px]"
+        />
+        <Image
+          src={"/images/design-asset.svg"}
+          alt="design-asset"
+          width={240}
+          height={240}
+          className="left-[-109px] absolute bottom-[-191px]"
+        />
+      </div>
+      <div className="max-h-[82vh] h-full w-full rounded-t-xl absolute z-30 bottom-0 left-0 overflow-hidden pointer-events-none">
+        <span className="bg-home-layer absolute top-0 left-0 w-full h-full z-10" />
+      </div>
+      <div className="max-h-[82vh] h-full w-full mx-auto px-4 py-10 rounded-t-xl overflow-y-auto z-20">
+        <div className="flex flex-col gap-3">
           <h1 className="font-medium text-2xl">ログイン</h1>
-          <p className="text-sm">ログインしてどろ団子の様子を確認しよう！</p>
+          <p className="text-sm text-gray-500">
+            ログインして泥団子の状態を確認しよう!
+          </p>
         </div>
         <LoginForm
           onSubmit={onSubmit}
@@ -87,12 +99,15 @@ export default function Login() {
           register={register}
           handleSubmit={handleSubmit}
           isValid={isValid}
-          apiError={apiError}
+          apiError={error ?? undefined}
         />
-        <Link href="/signup" className="text-sm text-center underline pt-4">
+        <Link
+          href="/register"
+          className="text-sm underline w-full text-center mt-4 block"
+        >
           アカウントをお持ちでない方はこちら
         </Link>
-        <div className="flex gap-10 items-center justify-center pt-15">
+        {/* <div className="flex gap-10 items-center justify-center pt-15">
           <button
             type="button"
             className="flex items-center justify-center w-15 h-15 border border-accent rounded-full"
@@ -105,31 +120,31 @@ export default function Login() {
           >
             <Icons.apple />
           </button>
-        </div>
-      </div>
-      <div className="p-4 w-full rounded-xl h-full absolute z-20">
-        <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
-          <Image
-            src={"/images/design-asset.svg"}
-            alt="design-asset"
-            width={240}
-            height={240}
-            className="right-[-171px] absolute top-[260px]"
-          />
-          <Image
-            src={"/images/design-asset.svg"}
-            alt="design-asset"
-            width={240}
-            height={240}
-            className="left-[-207px] absolute top-[109px]"
-          />
-          <Image
-            src={"/images/design-asset.svg"}
-            alt="design-asset"
-            width={240}
-            height={240}
-            className="left-[-109px] absolute bottom-[-191px]"
-          />
+        </div> */}
+        <div className="p-4 w-full rounded-xl h-full absolute z-20">
+          <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
+            <Image
+              src={"/images/design-asset.svg"}
+              alt="design-asset"
+              width={240}
+              height={240}
+              className="right-[-171px] absolute top-[260px]"
+            />
+            <Image
+              src={"/images/design-asset.svg"}
+              alt="design-asset"
+              width={240}
+              height={240}
+              className="left-[-207px] absolute top-[109px]"
+            />
+            <Image
+              src={"/images/design-asset.svg"}
+              alt="design-asset"
+              width={240}
+              height={240}
+              className="left-[-109px] absolute bottom-[-191px]"
+            />
+          </div>
         </div>
       </div>
     </main>

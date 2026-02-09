@@ -24,7 +24,7 @@ export const SettingsListItem = ({
   variant = "default",
   showChevron = true,
 }: SettingsListItemProps) => {
-  const iconColorClass = variant === "danger" ? "text-error" : "text-accent";
+  const iconColorClass = variant === "danger" ? "text-error" : "text-black";
 
   const leftContent = (
     <div className="flex items-center gap-2">

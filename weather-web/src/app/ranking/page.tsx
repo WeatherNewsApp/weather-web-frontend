@@ -1,46 +1,26 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
-import { RankingUser } from "@/components/feature/RankingItem/RankingItem";
 import { RankingItem } from "@/components/feature/RankingItem/RankingItem";
-
-// 地域ランキングのダミーデータ
-const localRankingData: RankingUser[] = [
-  { rank: 1, name: "ryota", days: 100 },
-  { rank: 2, name: "takeshi", days: 85 },
-  { rank: 3, name: "yuki", days: 72 },
-  { rank: 4, name: "haruka", days: 65 },
-  { rank: 5, name: "kenji", days: 58 },
-  { rank: 6, name: "sakura", days: 51 },
-  { rank: 7, name: "daiki", days: 47 },
-  { rank: 8, name: "mika", days: 42 },
-  { rank: 9, name: "taro", days: 38 },
-  { rank: 10, name: "hanako", days: 35 },
-];
-
-// 全国ランキングのダミーデータ
-const globalRankingData: RankingUser[] = [
-  { rank: 1, name: "champion", days: 365 },
-  { rank: 2, name: "master", days: 320 },
-  { rank: 3, name: "legend", days: 285 },
-  { rank: 4, name: "hero", days: 250 },
-  { rank: 5, name: "warrior", days: 215 },
-  { rank: 6, name: "knight", days: 180 },
-  { rank: 7, name: "fighter", days: 155 },
-  { rank: 8, name: "brave", days: 130 },
-  { rank: 9, name: "ryota", days: 100 },
-  { rank: 10, name: "rookie", days: 85 },
-];
+import { SkeletonRankingItem } from "@/components/shea/Skeleton";
+import { useRankings } from "@/hooks/useRankings";
+import { useUserStore } from "@/store/user.store";
+import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 export default function Ranking() {
-  const [activeTabId, setActiveTabId] = useState<string>("local");
+  const [activeTabId, setActiveTabId] = useState<"area" | "global">("area");
 
-  // アクティブなタブに応じてデータを切り替え devのみ
-  const currentRankingData =
-    activeTabId === "local" ? localRankingData : globalRankingData;
+  const { user } = useUserStore();
+  const { rankings, myRanking, isLoading } = useRankings(activeTabId);
+
+  const getCurrentTimeSlot = () => {
+    const hour = new Date().getHours();
+    return hour >= 6 && hour < 18 ? "morning" : "evening";
+  };
+
+  const currentTimeSlot = getCurrentTimeSlot();
 
   return (
     <div className="h-screen flex flex-col">
@@ -49,10 +29,10 @@ export default function Ranking() {
         href="/"
         showPoints={true}
         // TODO: ポイントを取得する
-        points={0}
+        points={user?.point}
         tabs={[
           {
-            id: "local",
+            id: "area",
             label: "地域ランキング",
             icon: <Icons.local />,
           },
@@ -64,40 +44,60 @@ export default function Ranking() {
         ]}
         activeTabId={activeTabId}
         onTabChange={(tabId) => {
-          setActiveTabId(tabId);
+          setActiveTabId(tabId as "area" | "global");
         }}
       />
-      <main className="flex-1 bg-white overflow-y-auto py-7 px-4">
+      <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         <div className="flex flex-col gap-5">
-          {currentRankingData.map((user) => (
-            <RankingItem
-              key={user.rank}
-              rank={user.rank}
-              name={user.name}
-              days={user.days}
-            />
-          ))}
+          {isLoading
+            ? Array.from({ length: 10 }).map((_, i) => (
+                <SkeletonRankingItem key={i} />
+              ))
+            : rankings?.map((ranking) => (
+                <RankingItem
+                  key={ranking.rank}
+                  rank={ranking.rank}
+                  name={ranking.user.name}
+                  days={ranking.rankingTotalDaysAlive}
+                  dango={ranking.dango}
+                  prediction={
+                    currentTimeSlot === "morning"
+                      ? ranking.user.morningPrediction
+                      : ranking.user.eveningPrediction
+                  }
+                />
+              ))}
         </div>
       </main>
-      <div className="bg-main text-white rounded-t-xs py-4 px-4 flex items-center justify-between shadow-t">
+      <div className="bg-main text-white rounded-t-sm py-4 px-4 flex items-center justify-between shadow-t">
         <div className="flex gap-3 items-center justify-center">
-          <Image
-            src="/images/dummy-image.png"
-            alt="dummy-image"
-            width={60}
-            height={60}
-            className="h-15"
-          />
+          <div className="w-15 h-15  flex items-center justify-center">
+            <Muddy
+              damageLevel={
+                myRanking?.dango?.damageLevel as "1" | "2" | "3" | "4" | "5"
+              }
+              growthStage={
+                myRanking?.dango?.growthStage as "1" | "2" | "3" | "4" | "5"
+              }
+              headSkin={myRanking?.dango?.headSkin}
+              bodySkin={myRanking?.dango?.bodySkin}
+              baseSkin={myRanking?.dango?.baseSkin}
+              face="normal"
+              scale="scale-[0.3]"
+            />
+          </div>
           <div className="flex flex-col gap-3">
-            <p className=" font-sen">Ryouta</p>
+            <p className=" font-sen">{user?.name}</p>
             <div className="flex gap-2 items-end justify-center">
-              <p className=" text-xl font-sen leading-4">1000000</p>
+              <p className=" text-xl font-sen leading-4">
+                {myRanking?.rankingTotalDaysAlive}
+              </p>
               <p className="text-sm leading-4">日</p>
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center">
-          <p className="text-xl font-sen">1000</p>
+        <div className="flex items-center justify-center w-15 h-15 bg-white rounded-sm text-black">
+          <p className="text-xl font-sen">{myRanking?.rank}</p>
         </div>
       </div>
     </div>

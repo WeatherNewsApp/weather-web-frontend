@@ -4,6 +4,8 @@ import {
   FieldErrors,
   UseFormRegister,
   UseFormHandleSubmit,
+  Controller,
+  Control,
 } from "react-hook-form";
 
 import { type SignupSchema } from "@/schemas/auth";
@@ -11,6 +13,7 @@ import { Icons } from "@/components/shea/icon";
 import { TermsAgreement } from "@/components/feature/TermsAgreement/TermsAgreement";
 import { FormInput } from "@/components/shea/FormInput/FormInput";
 import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
+import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
 
 interface SignupFormProps {
   onSubmit: (data: SignupSchema) => void;
@@ -18,6 +21,7 @@ interface SignupFormProps {
   errors: FieldErrors<SignupSchema>;
   register: UseFormRegister<SignupSchema>;
   handleSubmit: UseFormHandleSubmit<SignupSchema>;
+  control: Control<SignupSchema>;
   isValid: boolean;
   apiError?: string;
 }
@@ -28,8 +32,8 @@ export const SignupForm = ({
   errors,
   register,
   handleSubmit,
+  control,
   isValid,
-  apiError,
 }: SignupFormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
@@ -66,12 +70,27 @@ export const SignupForm = ({
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
+        <div>
+          <Controller
+            name="areaId"
+            control={control}
+            render={({ field }) => (
+              <AreaComboBox
+                selectedAreaId={field.value}
+                onChangeSelectedAreaId={field.onChange}
+                hasIcon={true}
+              />
+            )}
+          />
+          {errors.areaId && (
+            <p className="text-error text-sm mt-1">{errors.areaId.message}</p>
+          )}
+        </div>
       </div>
       <TermsAgreement
         register={register("isTermsAccepted")}
         error={errors.isTermsAccepted?.message}
       />
-      {apiError && <p className="text-error text-sm my-2">{apiError}</p>}
       <PrimaryButton
         variant="accent"
         label="新規登録"

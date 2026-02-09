@@ -1,4 +1,5 @@
 import styles from "./Muddy.module.css";
+import { getSkinImagePath } from "@/lib/imageMapping";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -7,11 +8,9 @@ interface MuddyProps {
   headSkin?: string;
   bodySkin?: string;
   baseSkin?: string;
-  growthLevel: "1" | "2" | "3" | "4" | "5";
+  growthStage: "1" | "2" | "3" | "4" | "5";
   damageLevel: "1" | "2" | "3" | "4" | "5";
-  scale: string;
-  width: string;
-  height: string;
+  scale?: string;
 }
 
 export const Muddy = ({
@@ -19,11 +18,9 @@ export const Muddy = ({
   headSkin,
   bodySkin,
   baseSkin,
-  growthLevel,
+  growthStage,
   damageLevel,
-  scale,
-  width,
-  height,
+  scale = "scale-[0.9]",
 }: MuddyProps) => {
   const faceContent = {
     normal: (
@@ -31,17 +28,20 @@ export const Muddy = ({
         <div className={styles.muddyBodyEyeLeftContainerNormal}>
           <div className={styles.muddyBodyEyeLeftNormal}>
             <span className={styles.muddyBodyEyeLeftHighlightBigNormal}></span>
-            <span className={styles.muddyBodyEyeLeftHighlightSmallNormal}></span>
+            <span
+              className={styles.muddyBodyEyeLeftHighlightSmallNormal}
+            ></span>
           </div>
         </div>
         <div className={styles.muddyBodyEyeRightContainerNormal}>
           <div className={styles.muddyBodyEyeRightNormal}>
             <span className={styles.muddyBodyEyeRightHighlightBigNormal}></span>
-            <span className={styles.muddyBodyEyeRightHighlightSmallNormal}></span>
+            <span
+              className={styles.muddyBodyEyeRightHighlightSmallNormal}
+            ></span>
           </div>
         </div>
-        <div className={styles.muddyBodyMouthNormal}>
-        </div>
+        <div className={styles.muddyBodyMouthNormal}></div>
         <div className={styles.muddyBodyCheekNormal}>
           <div className={styles.muddyBodyCheekLeftNormal}></div>
           <div className={styles.muddyBodyCheekRightNormal}></div>
@@ -57,7 +57,7 @@ export const Muddy = ({
         <div className={styles.muddyBodyCheekRightHappy}></div>
       </>
     ),
-    sad: (  
+    sad: (
       <>
         <div className={styles.muddyBodyEyeLeftContainerSad}>
           <div className={styles.muddyBodyEyeLeftSad}></div>
@@ -75,81 +75,136 @@ export const Muddy = ({
     ),
   };
 
-  const scaleValue = scale.toString();
-
   const sproutContent = {
-    "1": "/images/dummy-image.png",
-    "2": "/images/dummy-image.png",
-    "3": "/images/dummy-image.png",
-    "4": "/images/dummy-image.png",
-    "5": "/images/dummy-image.png",
-  }
-
-  const damageLevelContent = {
-    1: (
-      <></>
-    ),
+    1: <></>,
     2: (
-      <div className="inset-0">
-        <div className="absolute top-0 left-0">
-          <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-        </div>
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-1.svg" alt="sprout" width={25} height={40} />
       </div>
     ),
     3: (
-      <div className="absolute top-0 left-0">
-        <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-        <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
+      <div className={styles.muddyBodySprout}>
+        <Image src="/images/sprout-2.svg" alt="sprout" width={68} height={56} />
       </div>
     ),
     4: (
-      <div className="absolute top-0 left-0">
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-    </div>
+      <div className={styles.muddyBodySprout}>
+        <Image
+          src="/images/sprout-3.svg"
+          alt="sprout"
+          width={124}
+          height={80}
+        />
+      </div>
     ),
     5: (
-      <div className="absolute top-0 left-0">
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-      <Image src="/images/dummy-image.png" alt="damage-level" width={20} height={20} />
-    </div>
-    )
-  }
+      <div className={styles.muddyBodySprout}>
+        <Image
+          src="/images/sprout-4.svg"
+          alt="sprout"
+          width={110}
+          height={90}
+        />
+      </div>
+    ),
+  };
 
-  const widthPx = `w-[${width}px]`;
-  const heightPx = `h-[${height}px]`;
+  const damageLevelContent = {
+    1: <></>,
+    2: (
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
+        <Image
+          src="/images/damage-2.svg"
+          alt="damage-level"
+          width={164}
+          height={137}
+          className="w-[90%]"
+        />
+      </div>
+    ),
+    3: (
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
+        <Image
+          src="/images/damage-2.svg"
+          alt="damage-level"
+          width={182}
+          height={163}
+          className="w-[90%]"
+        />
+      </div>
+    ),
+    4: (
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14 ">
+        <Image
+          src="/images/damage-3.svg"
+          alt="damage-level"
+          width={182}
+          height={180}
+          className="w-[90%]"
+        />
+      </div>
+    ),
+    5: <></>,
+  };
 
   return (
-    <div className={cn(
-      styles.muddyContainer,
-      scale,
-      widthPx,
-      heightPx,
-    )}>
+    <div className={cn(styles.muddyContainer, scale)}>
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
-      <div className="absolute top-0 right-0">
-        <Image src={headSkin || ""} alt="head-skin" width={20} height={20} />
-        <Image src={bodySkin || ""} alt="body-skin" width={20} height={20} />
-        <Image src={baseSkin || ""} alt="base-skin" width={20} height={20} />
+
+      {/* スキン画像 */}
+      <div className="absolute top-0 left-0 w-full h-full z-[15] pointer-events-none flex items-center justify-center">
+        {headSkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src={getSkinImagePath(headSkin)}
+              alt="head"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
+
+        {bodySkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src={getSkinImagePath(bodySkin)}
+              alt="body"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
+
+        {baseSkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src={getSkinImagePath(baseSkin)}
+              alt="base"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
       </div>
       <div className={styles.muddyContainerBackground}></div>
       <div className={styles.aura}></div>
       <div className={styles.muddyBody}>
         <div className={styles.muddyBodyBefore}></div>
-        <div className={styles.muddyBodyAffer}></div>
+        <div className={styles.muddyBodyAfter}></div>
         <div className={styles.muddyBodyShine}>
           <div className={styles.muddyBodyShineLeft}></div>
           <div className={styles.muddyBodyShineRight}></div>
           <div className={styles.muddyBodyShineSmall1}></div>
           <div className={styles.muddyBodyShineSmall2}></div>
         </div>
-        <div className={styles.muddyBodySprout}>
-          <Image src={sproutContent[growthLevel]} alt="sprout" width={20} height={20} />
-        </div>
+        {sproutContent[growthStage]}
         {faceContent[face]}
       </div>
     </div>
