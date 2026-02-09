@@ -19,5 +19,5 @@ export interface UnConfirmResponse {
   actualWeather: WeatherType;
   isCorrect: boolean;
   pointsEarned: number;
-  dango: Pick<Dango, "damageLevel" | "growthStage">;
+  dango: Pick<Dango, "damageLevel" | "growthStage" | "headSkin" | "bodySkin" | "baseSkin" | "totalDaysAlive">;
 }

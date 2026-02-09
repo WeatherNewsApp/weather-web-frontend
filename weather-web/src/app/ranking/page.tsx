@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
 import { RankingItem } from "@/components/feature/RankingItem/RankingItem";
+import { SkeletonRankingItem } from "@/components/shea/Skeleton";
 import { useRankings } from "@/hooks/useRankings";
 import { useUserStore } from "@/store/user.store";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
@@ -13,6 +14,13 @@ export default function Ranking() {
 
   const { user } = useUserStore();
   const { rankings, myRanking, isLoading } = useRankings(activeTabId);
+
+  const getCurrentTimeSlot = () => {
+    const hour = new Date().getHours();
+    return hour >= 6 && hour < 18 ? 'morning' : 'evening';
+  };
+
+  const currentTimeSlot = getCurrentTimeSlot();
 
   return (
     <div className="h-screen flex flex-col">
@@ -41,13 +49,18 @@ export default function Ranking() {
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         <div className="flex flex-col gap-5">
-          {rankings?.map((ranking) => (
+          {isLoading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <SkeletonRankingItem key={i} />
+            ))
+          ) : rankings?.map((ranking) => (
             <RankingItem
               key={ranking.rank}
               rank={ranking.rank}
               name={ranking.user.name}
               days={ranking.rankingTotalDaysAlive}
               dango={ranking.dango}
+              prediction={currentTimeSlot === 'morning' ? ranking.user.morningPrediction : ranking.user.eveningPrediction}
             />
           ))}
         </div>

@@ -12,11 +12,12 @@ export const dangoRepository = {
   ),
 
   // 団子追加
-  // API書き直すかも
+  newDango: () => apiClient.post<ApiResponse>(
+    '/api/v1/dangos',
+  ),
 
   // now団子
-  // api書き直す
-  getNowDango: () => apiClient.get<Dango>(
+  getNowDango: () => apiClient.get<Pick<Dango, 'id' | 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>>(
     '/api/v1/dangos/me/now'
   ),
 

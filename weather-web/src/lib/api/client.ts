@@ -43,10 +43,24 @@ class ApiClient {
 
     if (!res.ok) {
       // エラーハンドリング
-      const error = await res.json().catch(() => ({
-        message: 'An error occurred',
-      }));
-      throw new Error(error.message || `HTTP Error: ${res.status}`);
+      const errorBody = await res.text();
+      console.error('API Error:', {
+        url,
+        status: res.status,
+        statusText: res.statusText,
+        body: errorBody
+      });
+      
+      let error;
+      try {
+        error = JSON.parse(errorBody);
+      } catch {
+        error = { message: errorBody || 'An error occurred' };
+      }
+      
+      // バックエンドからのエラーメッセージを優先
+      const errorMessage = error.messages?.[0] || error.message || `HTTP Error: ${res.status}`;
+      throw new Error(errorMessage);
     }
   
     return res.json();

@@ -13,7 +13,7 @@ export interface StoreCardProps {
   onClick: () => void;
   currentPoint: number;
   isOwned: boolean;
-  imageUrl: string;
+  imageKey: string;
   category: "head" | "body" | "base";
 }
 
@@ -23,14 +23,16 @@ export const StoreCard = ({
   currentPoint,
   isOwned,
   onClick,
-  imageUrl,
+  imageKey,
   category,
 }: StoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handlePurchase = () => {
-    onClick();
-    setIsOpen(false);
+    if (currentPoint - price > 0) {
+      onClick();
+      setIsOpen(false);
+    }
   }
 
   return (
@@ -42,9 +44,9 @@ export const StoreCard = ({
             growthStage="1"
             damageLevel="1"
             scale="scale-[0.4]"
-            headSkin={category === "head" ? imageUrl : undefined}
-            bodySkin={category === "body" ? imageUrl : undefined}
-            baseSkin={category === "base" ? imageUrl : undefined}
+            headSkin={category === "head" ? imageKey : undefined}
+            bodySkin={category === "body" ? imageKey : undefined}
+            baseSkin={category === "base" ? imageKey : undefined}
           />
         </div>
         <p className="text-xs mt-5 mb-2">{title}</p>
@@ -77,6 +79,7 @@ export const StoreCard = ({
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         buttonProps={{
+          disabled: currentPoint - price <= 0,
           label: "OK",
           onClick: () => {handlePurchase();},
           shadow: true,
@@ -111,7 +114,7 @@ export const StoreCard = ({
             </div>
             <span className="bg-points-dark rounded-full absolute bottom-0 right-0 h-18 w-full z-0" />
             <p className="text-lg translate-x-1/2 text-black absolute bottom-0 right-0 font-sen z-20">
-              {price}
+              {currentPoint - price > 0 ? currentPoint - price : 0}
             </p>
           </div>
         </div>

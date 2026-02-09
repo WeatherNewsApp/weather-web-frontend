@@ -9,6 +9,7 @@ export const useDangos = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 60000,
     }
   );
 
@@ -26,6 +27,7 @@ export const useBestDango = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 60000,
     }
   )  
   
@@ -35,6 +37,23 @@ export const useBestDango = () => {
     mutateBestDango: mutate,
   };
 };
+
+export const useDango = () => {
+  const { data, mutate } = useSWR<Pick<Dango, 'id' | 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>>(
+    '/api/v1/dangos/me/now',
+    dangoRepository.getNowDango,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
+  )
+
+  return {
+    dango: data,
+    mutateDango: mutate,
+  };
+}
 
 
 

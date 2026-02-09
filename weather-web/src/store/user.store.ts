@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { mutate } from "swr";
 
 import { userRepository } from "@/repositories/user.repository";
 import { authRepository } from "@/repositories/auth.repository";
@@ -134,6 +135,7 @@ export const useUserStore = create<UserState>()(
           console.error('Failed to logout:', error);
         } finally {
           cookieManager.removeToken();
+          mutate(() => true, undefined, { revalidate: false });
           set({ 
             user: null, 
             isInitialized: true, 
@@ -149,6 +151,7 @@ export const useUserStore = create<UserState>()(
         try {
           await authRepository.deleteAccount();
           cookieManager.removeToken();
+          mutate(() => true, undefined, { revalidate: false });
           set({user: null});
         } catch (error) {
           console.error('Failed to delete account:', error);

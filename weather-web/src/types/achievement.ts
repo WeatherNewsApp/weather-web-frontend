@@ -1,6 +1,6 @@
 export interface Achievement {
   id: number;
-  type: "consecutive" | "care" | "prediction";
+  type: "consecutive" | "care" | "total_alive";
   title: string;
   requiredCount: number;
   point: number;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
 import { MissionItem } from "@/components/shea/MissonItem/MissionItem";
+import { SkeletonMissionItem } from "@/components/shea/Skeleton";
 import { missionRepository } from "@/repositories/mission.repository";
 import { achievementRepository } from "@/repositories/achievement.repository";
 import { useMissions } from "@/hooks/useMissions";
@@ -15,9 +16,7 @@ export default function Missions() {
 
   const { user, refreshUser } = useUserStore();
   const { missions, isLoadingMissions, refetchMissions } = useMissions();
-  console.log(missions);
   const { achievements, isLoadingAchievements ,refetchAchievements} = useAchievements();
-  console.log(achievements);
 
 
   // ミッションの報酬の受け取り
@@ -68,7 +67,11 @@ export default function Missions() {
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         {isLoadingMissions || isLoadingAchievements ? (
-          <></>
+          <div className="flex flex-col gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonMissionItem key={i} />
+            ))}
+          </div>
         ) : activeTabId === "mission" ? (
           <div className="flex flex-col gap-3">
             {missions?.length === 0 ? (

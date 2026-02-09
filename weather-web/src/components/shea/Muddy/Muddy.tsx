@@ -1,4 +1,5 @@
 import styles from "./Muddy.module.css";
+import { getSkinImagePath } from "@/lib/imageMapping";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -104,18 +105,18 @@ export const Muddy = ({
       <></>
     ),
     2: (
-      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20">
-        <Image src="/images/damage-2.svg" alt="damage-level" width={164} height={137} />
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
+        <Image src="/images/damage-2.svg" alt="damage-level" width={164} height={137} className="w-[90%]"/>
       </div>
     ),
     3: (
-      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20">
-        <Image src="/images/damage-2.svg" alt="damage-level" width={182} height={163} />
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14">
+        <Image src="/images/damage-2.svg" alt="damage-level" width={182} height={163}  className="w-[90%]"/>
       </div>
     ),
     4: (
-      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-20 ">
-        <Image src="/images/damage-3.svg" alt="damage-level" width={182} height={180} />
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full justify-center items-center flex z-14 ">
+        <Image src="/images/damage-3.svg" alt="damage-level" width={182} height={180}  className="w-[90%]"/>
       </div>
     ),
     5: (
@@ -130,10 +131,47 @@ export const Muddy = ({
     )}>
       {/* ダメージ */}
       {damageLevelContent[damageLevel]}
-      <div className="absolute top-0 right-0">
-        <Image src={headSkin || ""} alt="head-skin" width={20} height={20} />
-        <Image src={bodySkin || ""} alt="body-skin" width={20} height={20} />
-        <Image src={baseSkin || ""} alt="base-skin" width={20} height={20} />
+      
+      {/* スキン画像 */}
+      <div className="absolute top-0 left-0 w-full h-full z-[15] pointer-events-none flex items-center justify-center">
+        {headSkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image 
+              src={getSkinImagePath(headSkin)}
+              alt="head"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
+        
+        {bodySkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image 
+              src={getSkinImagePath(bodySkin)}
+              alt="body"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
+        
+        {baseSkin && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image 
+              src={getSkinImagePath(baseSkin)}
+              alt="base"
+              width={200}
+              height={200}
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        )}
       </div>
       <div className={styles.muddyContainerBackground}></div>
       <div className={styles.aura}></div>

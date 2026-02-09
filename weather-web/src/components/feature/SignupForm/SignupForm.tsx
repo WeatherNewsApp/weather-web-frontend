@@ -93,7 +93,6 @@ export const SignupForm = ({
           register={register("isTermsAccepted")}
           error={errors.isTermsAccepted?.message}
         />
-      {apiError && <p className="text-error text-sm my-2">{apiError}</p>}
       <PrimaryButton
         variant="accent"
         label="新規登録"

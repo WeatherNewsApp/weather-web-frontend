@@ -104,7 +104,7 @@ export default function Register() {
         <Link href="/login" className="text-sm underline w-full text-center mt-4 block">
           すでにアカウントをお持ちの方はこちら
         </Link>
-        <div className="flex gap-10 items-center justify-center pt-15">
+        {/* <div className="flex gap-10 items-center justify-center pt-15">
           <button
             type="button"
             className="flex items-center justify-center w-15 h-15 border border-accent rounded-full"
@@ -117,7 +117,7 @@ export default function Register() {
           >
             <Icons.apple />
           </button>
-        </div>
+        </div> */}
       </div>
     </main>
   );

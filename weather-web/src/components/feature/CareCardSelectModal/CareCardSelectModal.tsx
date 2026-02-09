@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 
-// Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
@@ -52,7 +51,7 @@ export const CareCardSelectModal = ({
         
         {/* モーダル */}
         <motion.div 
-          className="relative z-10 w-full"
+          className="relative z-10 w-full max-w-[460px] mx-auto"
           initial={{ opacity: 0, scale: 0.9, y: -40 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 40 }}

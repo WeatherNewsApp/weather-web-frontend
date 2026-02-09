@@ -23,6 +23,7 @@ import { userRepository } from "@/repositories/user.repository";
 import { UpdateUserForm } from "@/components/feature/UpdateUserForm/UpdateUserForm";
 import { UpdateUserModal } from "@/components/feature/UpdateUserModal/UpdateUserModal";
 import { ShareModal } from "@/components/feature/ShareModal/ShareModal";
+import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
 import { Dango } from "@/types/dango";
 
 export default function Settings() {
@@ -42,6 +43,7 @@ export default function Settings() {
   const logout = useUserStore((state) => state.logout);
   const deleteAccount = useUserStore((state) => state.deleteAccount);
   const updateUser = useUserStore((state) => state.updateUser);
+  const refreshUser = useUserStore((state) => state.refreshUser);
   
   const { bestDango, isLoadingBestDango, mutateBestDango } = useBestDango();
   const { dangos, isLoadingDangos} = useDangos();
@@ -107,6 +109,8 @@ export default function Settings() {
   const handleShowUpdateBestDangoModal = async () => {
     if (isLoadingDangos) return <Loading />;
     if (!dangos) return;
+    console.log("dangos data:", dangos);
+    console.log("first dango growthStage:", dangos[0]?.growthStage, "type:", typeof dangos[0]?.growthStage);
     setShowUpdateBestDangoModal(true);
   }
 
@@ -123,8 +127,21 @@ export default function Settings() {
       });
       mutateBestDango();
       setShowUpdateBestDangoModal(false);
-      console.log("ベスト団子を更新しました");
       setSelectedBestDangoId(null);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 地域変更
+  const handleAreaUpdate = async () => {
+    if (!selectedAreaId) return;
+
+    try {
+      await userRepository.updateArea({ areaId: selectedAreaId});
+      await refreshUser();
+      setShowAreaModal(false);
+      setSelectedAreaId(null);
     } catch (error) {
       console.error(error);
     }
@@ -152,7 +169,7 @@ export default function Settings() {
               </div>
               {/* ボタン */}
               <button 
-                className="bg-accent rounded-full py-2 blockw-[180px]"
+                className="bg-accent rounded-full h-9 flex items-center justify-center  w-[180px]"
                 onClick={handleShowUpdateBestDangoModal}
               >
                 <span className="text-white text-xs">どろ団子を切り替える</span>
@@ -161,7 +178,7 @@ export default function Settings() {
             <div className="w-30 h-30 flex items-center justify-center">
               <Muddy 
                 face="normal"
-                scale="scale-[0.6]"
+                scale="scale-[0.5]"
                 {...bestDango ? (({ id: _id, ...rest }) => rest)(bestDango) : { headSkin: "", bodySkin: "", baseSkin: "", damageLevel: "1", growthStage: "1" }}
               />
             </div>
@@ -261,7 +278,11 @@ export default function Settings() {
                         <Muddy
                           face="normal"
                           scale="scale-[0.35]"
-                          {...dango}
+                          headSkin={dango.headSkin}
+                          bodySkin={dango.bodySkin}
+                          baseSkin={dango.baseSkin}
+                          growthStage={dango.growthStage}
+                          damageLevel="1"
                         />
                       </li>
                     ))}
@@ -276,6 +297,7 @@ export default function Settings() {
               </>
             )}
           </UpdateUserModal>
+          
           {/* ログアウトモーダル */}
           <ConfirmModal
             dango={bestDango ? (({ id: _id, ...rest}) => rest)(bestDango) as Omit<Dango, "id"> : {
@@ -354,25 +376,20 @@ export default function Settings() {
             title="地域設定"
             buttonProps={{
               label: "地域を設定する",
-              onClick: () => setShowAreaModal(false),
+              onClick: handleAreaUpdate,
               disabled: !selectedAreaId,
               variant: "accent",
               shadow: true,
               py: "py-4",
             }}
           >
-            <p>テスト</p>
-          {/* <ComboBox
-            items={areas || []}
-            selectedId={selectedAreaId}
-            onSelect={(area) =>
-              setSelectedAreaId(area.id)
-            }
-            getItemLabel={(area) => area.name}
-            getItemKey={(area) => area.id}
-            searchPlaceholder="都道府県名で検索..."
-            emptyMessage="該当する都道府県が見つかりません"
-          /> */}
+            <div className="h-[360px]">
+              <AreaComboBox
+                selectedAreaId={selectedAreaId ?? undefined}
+                onChangeSelectedAreaId={(areaId: number) => setSelectedAreaId(areaId)}
+                hasIcon={true}
+              />
+            </div>
           </SelectModal>
         </div>
       </main>

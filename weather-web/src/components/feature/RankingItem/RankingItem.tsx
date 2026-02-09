@@ -11,6 +11,7 @@ export interface RankingUser {
   name: string;
   days: number;
   dango: Pick<Dango, 'damageLevel' | 'growthStage' | 'headSkin' | 'bodySkin' | 'baseSkin'>;
+  prediction: string | null;
 }
 
 export const RankingItem = ({
@@ -18,8 +19,25 @@ export const RankingItem = ({
   name,
   days,
   dango,
+  prediction
 }: RankingUser) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // ケアアイコンのマッピング
+  const getCareIcon = (prediction: string | null) => {
+    if (!prediction) return null;
+    
+    switch (prediction) {
+      case 'sunny':
+        return '/images/sunny-trace.png';
+      case 'cloudy':
+        return '/images/cloudy-trace.png';
+      case 'rainy':
+        return '/images/rainy-trace.png';
+      default:
+        return null;
+    }
+  };  
 
   return (
     <>
@@ -29,12 +47,6 @@ export const RankingItem = ({
         className="flex items-center justify-between shadow-md rounded-md p-2 bg-radial"
       >
         <div className="flex gap-3">
-          {/* <Image
-            src="/images/dummy-image.png"
-            alt="dummy-avatar"
-            width={52}
-            height={52}
-          /> */}
           <div className="w-13 h-13 flex items-center justify-center">
             <Muddy
               {...dango}
@@ -79,13 +91,23 @@ export const RankingItem = ({
         </div>
         <div className="flex flex-col gap-1 w-full items-center justify-center">
           <p className="text-sm text-left w-full">ユーザーが選んだケア</p>
-          <div className="w-full flex items-center justify-center bg-white py-5 rounded-sm">
-            <Image
-              src="/images/dummy-image.png"
-              alt="dummy-image"
-              width={120}
-              height={120}
-            />
+          <div className="w-full flex items-center justify-center gap-4 bg-white py-5 rounded-sm">
+
+            <div className="flex flex-col items-center gap-2">
+              {prediction ? (
+                <div className="w-30 h-30 relative">
+                  <Image
+                    src={getCareIcon(prediction) || '/images/dummy-image.png'}
+                    alt={`${prediction}`}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-30 h-30 flex items-center justify-center">
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </ProfileModal>

@@ -34,7 +34,7 @@ interface CustomModalProps {
   mutateOwnedSkinsHead: () => void;
   mutateOwnedSkinsBody: () => void;
   mutateOwnedSkinsBase: () => void;
-  mutateDangos: () => void;
+  mutateDango: () => void;
 }
 
 export const CustomModal = ({
@@ -46,10 +46,11 @@ export const CustomModal = ({
   const handleApplySkin = async (head_skin_id: number | null, body_skin_id: number | null, base_skin_id: number | null) => {
     try {
       await dangoRepository.changeDangoSkin(head_skin_id, body_skin_id, base_skin_id);
+      props.onClose();
     } catch (error) {
       console.error("団子スキン変更に失敗しました:", error);
     } finally {
-      props.mutateDangos();
+      props.mutateDango();
     }
   };
 
@@ -94,7 +95,6 @@ export const CustomModal = ({
     handler(current !== skinId ? skinId : null);
   };
 
-  // スキンが選択されているかチェック
   const isSkinSelected = (categoryId: string, skinId: number) => {
     const selectedIds = {
       head: props.selectedSkinHeadId,
@@ -102,6 +102,20 @@ export const CustomModal = ({
       base: props.selectedSkinBaseId,
     };
     return selectedIds[categoryId as keyof typeof selectedIds] === skinId;
+  };
+
+  const isAllSkinsSelected = () => {
+    return props.selectedSkinHeadId !== null && 
+          props.selectedSkinBodyId !== null && 
+          props.selectedSkinBaseId !== null;
+  };
+
+  const getUnselectedCategories = () => {
+    const unselected = [];
+    if (props.selectedSkinHeadId === null) unselected.push("アタマ");
+    if (props.selectedSkinBodyId === null) unselected.push("カラダ");
+    if (props.selectedSkinBaseId === null) unselected.push("土台");
+    return unselected;
   };
 
   const categories = [
@@ -197,7 +211,10 @@ export const CustomModal = ({
               >
                 {categories.map((category) => (
                   <SwiperSlide key={category.id} className="!w-auto">
-                    <div className="bg-white rounded-lg p-3 grid grid-cols-3 gap-2 min-w-[312px] min-h-[320px]">
+                    <div className={cn(
+                      "bg-white rounded-lg p-3 grid grid-cols-3 gap-2 min-w-[328px] min-h-[320px]",
+                      getUnselectedCategories().length > 0 && "opacity-80 cursor-not-allowed"
+                    )}>
                       {category.skins.map((skin) => (
                         <div
                           key={skin.id}
@@ -211,9 +228,9 @@ export const CustomModal = ({
                             <Muddy
                               face="normal"
                               scale="scale-[0.3]"
-                              headSkin={category.id === "head" ? skin.imageUrl : undefined}
-                              bodySkin={category.id === "body" ? skin.imageUrl : undefined}
-                              baseSkin={category.id === "base" ? skin.imageUrl : undefined}
+                              headSkin={category.id === "head" ? skin.imageKey : undefined}
+                              bodySkin={category.id === "body" ? skin.imageKey : undefined}
+                              baseSkin={category.id === "base" ? skin.imageKey : undefined}
                               growthStage="1"
                               damageLevel="1"
                             />
@@ -246,6 +263,7 @@ export const CustomModal = ({
                 onClick={() => handleApplySkin(props.selectedSkinHeadId ?? null, props.selectedSkinBodyId ?? null, props.selectedSkinBaseId ?? null)}
                 shadow={true}
                 py="py-4"
+                disabled={!isAllSkinsSelected()}
               />
             </div>
           </motion.div>

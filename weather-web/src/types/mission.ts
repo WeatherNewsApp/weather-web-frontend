@@ -1,7 +1,7 @@
 export interface Mission {
   id: number;
   title: string;
-  type: "prediction" | "care";
+  type: "login" | "care";
   requiredCount: number;
   point: number;
   progress: number;

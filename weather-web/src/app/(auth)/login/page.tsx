@@ -81,9 +81,9 @@ export default function Login() {
       </div>
       <div className="max-h-[82vh] h-full w-full mx-auto px-4 py-10 rounded-t-xl overflow-y-auto z-20">
         <div className="flex flex-col gap-3">
-          <h1 className="font-medium text-2xl">新規アカウント作成</h1>
+          <h1 className="font-medium text-2xl">ログイン</h1>
           <p className="text-sm text-gray-500">
-            アカウントを作成してどろ団子を誕生させよう！
+            ログインして泥団子の状態を確認しよう!
           </p>
         </div>
         <LoginForm
@@ -98,7 +98,7 @@ export default function Login() {
         <Link href="/register" className="text-sm underline w-full text-center mt-4 block">
           アカウントをお持ちでない方はこちら
         </Link>
-        <div className="flex gap-10 items-center justify-center pt-15">
+        {/* <div className="flex gap-10 items-center justify-center pt-15">
           <button
             type="button"
             className="flex items-center justify-center w-15 h-15 border border-accent rounded-full"
@@ -111,7 +111,7 @@ export default function Login() {
           >
             <Icons.apple />
           </button>
-        </div>
+        </div> */}
         <div className="p-4 w-full rounded-xl h-full absolute z-20">
           <div className="overflow-x-hidden h-full w-full relative z-20 rounded-xl">
             <Image

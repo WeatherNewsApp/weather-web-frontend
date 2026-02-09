@@ -12,7 +12,7 @@ export const careRepository = {
 
   // 未確認のリザルト取得
   getUnConfirmCare: async () => {
-    const res = await apiClient.get<UnConfirmResponse>('/api/v1/cares/unconfirmed');
+    const res = await apiClient.get<UnConfirmResponse[]>('/api/v1/cares/unconfirmed');
     return res
   },
 

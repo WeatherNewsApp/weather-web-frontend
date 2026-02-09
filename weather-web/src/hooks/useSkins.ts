@@ -5,7 +5,12 @@ export const useSkinsHead = () => {
   // アタマのスキンを取得
   const { data, isLoading, mutate } = useSWR(
     '/api/v1/skins?category=head',
-    skinRepository.getSkinsHead
+    skinRepository.getSkinsHead,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000, // 60秒間は重複リクエストを防ぐ
+    }
   )
 
   return {
@@ -19,7 +24,12 @@ export const useSkinsBody = () => {
   // カラダのスキンを取得
   const { data, isLoading, mutate } = useSWR(
     '/api/v1/skins?category=body',
-    skinRepository.getSkinsBody
+    skinRepository.getSkinsBody,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
   )
 
   return {
@@ -33,7 +43,12 @@ export const useSkinsBase = () => {
   // 土台のスキンを取得
   const { data, isLoading, mutate } = useSWR(
     '/api/v1/skins?category=base',
-    skinRepository.getSkinsBase
+    skinRepository.getSkinsBase,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
   )
 
   return {
@@ -50,6 +65,7 @@ export const useOwnedSkinsHead = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 60000,
     }
   )
 
@@ -67,6 +83,7 @@ export const useOwnedSkinsBody = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 60000,
     }
   )
 
@@ -84,6 +101,7 @@ export const useOwnedSkinsBase = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 60000,
     }
   )
 

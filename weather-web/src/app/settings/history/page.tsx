@@ -3,9 +3,9 @@
 import { Icons } from "@/components/shea/icon";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { HistoryDango } from "@/components/feature/HistoryDango/HistoryDango";
+import { SkeletonHistoryDango } from "@/components/shea/Skeleton";
 import { PrimaryButton } from "@/components/shea/PrimaryButton/PrimaryButton";
 import { useRouter } from "next/navigation";
-import { Loading } from "@/components/shea/Loading/Loading";
 import { useDangos } from "@/hooks/useDangos";
 
 export default function history() {
@@ -13,11 +13,16 @@ export default function history() {
   const router = useRouter();
   const { dangos, isLoadingDangos } = useDangos();
 
-  if (isLoadingDangos) return <Loading />;
   return (
     <div className="h-screen flex flex-col">
       <PageHeader title="アーカイブ" href="/settings" />
-        {dangos && dangos.length === 0 ? (
+        {isLoadingDangos ? (
+          <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 pt-26">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <SkeletonHistoryDango key={i} />
+            ))}
+          </main>
+        ) : dangos && dangos.length === 0 ? (
           <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-26">
             <div className="flex flex-col h-full justify-center items-center">
               <div className="flex gap-5 items-end">

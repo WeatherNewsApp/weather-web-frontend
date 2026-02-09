@@ -19,7 +19,7 @@ export const userRepository = {
   ),
 
   // 自身の所在地変更
-  updateArea: (data: Pick<User, "area">) => apiClient.patch<Pick<ApiResponse, "success">>(
+  updateArea: (data: { areaId: number }) => apiClient.patch<Pick<ApiResponse, "success">>(
     '/api/v1/users/me/area',
     data
   )

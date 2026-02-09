@@ -20,9 +20,10 @@ export const MissionItem = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const MissionIcons = {
-    care: "/images/dummy-1.png",
-    consecutive: "/images/dummy-2.png",
-    prediction: "/images/dummy-3.png",
+    care: "/images/care-type.svg",
+    consecutive: "/images/consecutive-type.svg",
+    total_alive: "/images/alive-type.svg",
+    login: "/images/consecutive-type.svg",
   };
 
   const progressRatio =
@@ -32,7 +33,14 @@ export const MissionItem = ({
     <>
       <div className="flex justify-between gap-5 px-2 py-5 rounded-md bg-radial shadow-md h-fit">
         <div className="flex gap-2 h-full w-full">
-          <Image src={MissionIcons[props.type]} alt={props.type} width={60} height={60} />
+          <div className="flex items-center justify-center px-1 py-3 bg-white border border-border-main rounded-full relative min-w-15  min-h-15 max-w-15 max-h-15">
+            {props.type === "consecutive" || props.type === "login" ? (
+              <span className="absolute top-[60%] left-1/2 -translate-1/2 text-center text-lg font-sen">{props.requiredCount}</span>
+            ) : (
+              <span className="absolute top-2 left-[6px] text-lg font-sen">{props.requiredCount}</span>
+            )}
+            <Image src={MissionIcons[props.type]} alt={props.type} width={60} height={60} className="w-full h-full object-contain" />
+          </div>
           <div className="flex flex-col justify-between w-full">
             <p className="text-sm">{props.title}</p>
             <div className="flex justify-center items-center bg-white p-[2px] rounded-sm w-full">
@@ -55,10 +63,16 @@ export const MissionItem = ({
             props.isCompleted ? "opacity-100" : "opacity-40"
           )}
         >
-          <div className="w-[66px] relative z-10 h-14 rounded-sm bg-accent flex items-center justify-center">
+          <div className={cn(
+            "w-[66px] relative z-10 h-14 rounded-sm flex items-center justify-center",
+            props.isClaimed ? "bg-main" : "bg-accent"
+          )}>
             <p className="text-white text-sm">{props.isClaimed ? "表示" : "獲得"}</p>
           </div>
-          <span className="absolute bottom-0 right-0 w-full h-14 bg-accent-dark rounded-sm z-0" />
+          <span className={cn(
+            "absolute bottom-0 right-0 w-full h-14 rounded-sm z-0",
+            props.isClaimed ? "bg-main-dark" : "bg-accent-dark"
+          )} />
         </button>
       </div>
       <SelectModal
@@ -81,12 +95,18 @@ export const MissionItem = ({
       >
         <div className="flex justify-center items-center gap-5 bg-white rounded-sm w-full py-10">
           <div className="flex items-end">
-            <Image
-              src="/images/dummy-image.png"
-              alt="points"
-              width={80}
-              height={80}
-            />
+            <div className="pb-1 w-18 flex relative">
+              <div className="w-18 h-18 bg-points rounded-full flex items-center justify-center relative z-10">
+                <Image
+                  src="/images/coin.svg"
+                  alt="points"
+                  width={60}
+                  height={60}
+                  className="w-full max-w-15 max-h-15 h-full object-contain"
+                />
+              </div>
+              <span className="absolute bottom-0 right-0 w-18 h-18 rounded-full bg-points-dark z-0" />
+            </div>
             <p className="text-sm font-sen">×{props.point}</p>
           </div>
           {props.skin && (
