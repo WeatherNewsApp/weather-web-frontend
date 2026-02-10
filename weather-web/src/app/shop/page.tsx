@@ -23,32 +23,41 @@ export default function Shop() {
       (isLoadingHead && !skinsHead) ||
       (isLoadingBody && !skinsBody) ||
       (isLoadingBase && !skinsBase),
-    [isLoadingHead, skinsHead, isLoadingBody, skinsBody, isLoadingBase, skinsBase]
+    [
+      isLoadingHead,
+      skinsHead,
+      isLoadingBody,
+      skinsBody,
+      isLoadingBase,
+      skinsBase,
+    ]
   );
 
   const handlePurchaseSkin = useCallback(
     async (skinId: number, category: "head" | "body" | "base") => {
-    try {
-      const res = await skinRepository.purchaseSkin(skinId);
-      if (res.success) {
-        if (category === "head") {
-          await mutateHead();
-          await mutate("/api/v1/skins?category=head&scope=owned");
-        } else if (category === "body") {
-          await mutateBody();
-          await mutate("/api/v1/skins?category=body&scope=owned");
-        } else {
-          await mutateBase();
-          await mutate("/api/v1/skins?category=base&scope=owned");
-        }
+      try {
+        const res = await skinRepository.purchaseSkin(skinId);
+        if (res.success) {
+          if (category === "head") {
+            await mutateHead();
+            await mutate("/api/v1/skins?category=head&scope=owned");
+          } else if (category === "body") {
+            await mutateBody();
+            await mutate("/api/v1/skins?category=body&scope=owned");
+          } else {
+            await mutateBase();
+            await mutate("/api/v1/skins?category=base&scope=owned");
+          }
 
-        // ユーザー情報を強制的に再取得
-        await refreshUser();
+          // ユーザー情報を強制的に再取得
+          await refreshUser();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [mutateHead, mutateBody, mutateBase, refreshUser]);
+    },
+    [mutateHead, mutateBody, mutateBase, refreshUser]
+  );
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTabId(tabId);

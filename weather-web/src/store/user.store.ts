@@ -82,7 +82,8 @@ export const useUserStore = create<UserState>()(
         } catch (error) {
           console.error("Failed to login:", error);
           set({
-            error: error instanceof Error ? error.message : "ログインに失敗しました",
+            error:
+              error instanceof Error ? error.message : "ログインに失敗しました",
             isLoading: false,
           });
           throw error;
@@ -101,7 +102,8 @@ export const useUserStore = create<UserState>()(
         } catch (error) {
           console.error("Failed to sign in:", error);
           set({
-            error: error instanceof Error ? error.message : "新規登録に失敗しました",
+            error:
+              error instanceof Error ? error.message : "新規登録に失敗しました",
             isLoading: false,
           });
           throw error;

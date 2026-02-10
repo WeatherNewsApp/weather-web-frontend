@@ -44,22 +44,11 @@ export default function History() {
       ) : (
         <main className="flex flex-col gap-5 bg-white overflow-y-auto py-7 px-4 pt-26">
           {dangos &&
-            dangos.map((dango) => (
-              <HistoryDango
-                key={dango.id}
-                headSkin={dango.headSkin}
-                bodySkin={dango.bodySkin}
-                baseSkin={dango.baseSkin}
-                damageLevel={dango.damageLevel}
-                growthStage={dango.growthStage}
-                totalDaysAlive={dango.totalDaysAlive}
-                successCareCount={dango.successCareCount}
-                caredAt={dango.caredAt}
-                diedAt={dango.diedAt || ""}
-                maxConsecutive={dango.maxConsecutive}
-                point={dango.point}
-              />
-            ))}
+            dangos.map((dango) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { id, ...dangoProps } = dango;
+              return <HistoryDango key={dango.id} {...dangoProps} />;
+            })}
         </main>
       )}
     </div>

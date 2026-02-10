@@ -1,9 +1,9 @@
 import type { Dango } from "@/types/dango";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 
-type HistoryDangoProps = Dango;
+type HistoryDangoProps = Omit<Dango, "id">;
 
-export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {  
+export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
@@ -23,7 +23,7 @@ export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
           <div className="flex items-center justify-between">
             <p>生存日数</p>
             <div className="flex items-end gap-1">
-              <p className="font-sen text-lg">{formatDate(dango.createdAt)}</p>
+              <p className="font-sen text-lg">{dango.totalDaysAlive}</p>
               <p className="text-sm">日</p>
             </div>
           </div>
@@ -52,9 +52,9 @@ export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
           <p className="">どろ団子を育て始めた日</p>
           <div className="flex items-end gap-1">
             <p className="font-sen text-lg leading-6">
-              {formatDate(dango.caredAt)}
+              {formatDate(dango.createdAt)}
             </p>
-            <p>({getWeekday(dango.caredAt)})</p>
+            <p>({getWeekday(dango.createdAt)})</p>
           </div>
         </div>
         <div className="flex items-end justify-between">

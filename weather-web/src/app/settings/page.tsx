@@ -373,7 +373,7 @@ export default function Settings() {
             dango={
               bestDango
                 ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  ((({ id, createdAt, ...rest }) => rest)(bestDango))
+                  (({ id, createdAt, ...rest }) => rest)(bestDango)
                 : {
                     headSkin: "",
                     bodySkin: "",
@@ -407,7 +407,7 @@ export default function Settings() {
             dango={
               bestDango
                 ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  ((({ id, createdAt, ...rest }) => rest)(bestDango))
+                  (({ id, createdAt, ...rest }) => rest)(bestDango)
                 : {
                     headSkin: "",
                     bodySkin: "",
