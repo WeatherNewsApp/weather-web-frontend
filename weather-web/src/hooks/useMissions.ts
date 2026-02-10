@@ -9,6 +9,7 @@ export const useMissions = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 300000,
     }
   );
 

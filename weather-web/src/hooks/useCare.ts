@@ -9,7 +9,7 @@ export const useCare = () => {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 30000, // ケアは30秒間隔で十分
+      dedupingInterval: 300000,
     }
   );
 
@@ -26,10 +26,10 @@ export const useUnconfirmCare = () => {
     careRepository.getUnConfirmCare,
     {
       revalidateIfStale: false,
-      revalidateOnFocus: true, // フォーカス時は再検証
-      revalidateOnReconnect: true, // 再接続時は再検証
-      dedupingInterval: 30000,
-      refreshInterval: 5 * 60 * 1000, // 5分ごとに自動更新
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 300000,
+      refreshInterval: 5 * 60 * 1000,
     }
   );
 

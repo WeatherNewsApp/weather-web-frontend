@@ -9,6 +9,7 @@ export const useAreas = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      dedupingInterval: 300000,
     }
   );
 

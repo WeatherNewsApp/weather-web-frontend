@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
@@ -20,26 +20,36 @@ export default function Missions() {
     useAchievements();
 
   // ミッションの報酬の受け取り
-  const handleClaimMission = async (missionId: number) => {
-    try {
-      await missionRepository.claimMission(missionId);
-      await refetchMissions();
-      await refreshUser();
-    } catch (error) {
-      console.error("報酬の受け取りに失敗しました:", error);
-    }
-  };
+  const handleClaimMission = useCallback(
+    async (missionId: number) => {
+      try {
+        await missionRepository.claimMission(missionId);
+        await refetchMissions();
+        await refreshUser();
+      } catch (error) {
+        console.error("報酬の受け取りに失敗しました:", error);
+      }
+    },
+    [refetchMissions, refreshUser]
+  );
 
   // アチーブメントの取得
-  const handleClaimAchievement = async (achievementId: number) => {
-    try {
-      await achievementRepository.claimAchievement(achievementId);
-      await refetchAchievements();
-      await refreshUser();
-    } catch (error) {
-      console.error("報酬の受け取りに失敗しました:", error);
-    }
-  };
+  const handleClaimAchievement = useCallback(
+    async (achievementId: number) => {
+      try {
+        await achievementRepository.claimAchievement(achievementId);
+        await refetchAchievements();
+        await refreshUser();
+      } catch (error) {
+        console.error("報酬の受け取りに失敗しました:", error);
+      }
+    },
+    [refetchAchievements, refreshUser]
+  );
+
+  const handleTabChange = useCallback((tabId: string) => {
+    setActiveTabId(tabId);
+  }, []);
 
   return (
     <div className="h-screen flex flex-col">
@@ -61,9 +71,7 @@ export default function Missions() {
           },
         ]}
         activeTabId={activeTabId}
-        onTabChange={(tabId) => {
-          setActiveTabId(tabId);
-        }}
+        onTabChange={handleTabChange}
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         {isLoadingMissions || isLoadingAchievements ? (

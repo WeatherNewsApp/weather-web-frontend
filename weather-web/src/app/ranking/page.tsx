@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { Icons } from "@/components/shea/icon";
@@ -15,12 +15,14 @@ export default function Ranking() {
   const { user } = useUserStore();
   const { rankings, myRanking, isLoading } = useRankings(activeTabId);
 
-  const getCurrentTimeSlot = () => {
+  const currentTimeSlot = useMemo(() => {
     const hour = new Date().getHours();
     return hour >= 6 && hour < 18 ? "morning" : "evening";
-  };
+  }, []);
 
-  const currentTimeSlot = getCurrentTimeSlot();
+  const handleTabChange = useCallback((tabId: string) => {
+    setActiveTabId(tabId as "area" | "global");
+  }, []);
 
   return (
     <div className="h-screen flex flex-col">
@@ -43,9 +45,7 @@ export default function Ranking() {
           },
         ]}
         activeTabId={activeTabId}
-        onTabChange={(tabId) => {
-          setActiveTabId(tabId as "area" | "global");
-        }}
+        onTabChange={handleTabChange}
       />
       <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-[201px]">
         <div className="flex flex-col gap-5">

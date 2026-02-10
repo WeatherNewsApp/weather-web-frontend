@@ -9,7 +9,7 @@ export const useSkinsHead = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000, // 60秒間は重複リクエストを防ぐ
+      dedupingInterval: 300000, // 5分間は重複リクエストを防ぐ
     }
   );
 
@@ -28,7 +28,7 @@ export const useSkinsBody = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -47,7 +47,7 @@ export const useSkinsBase = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -65,7 +65,7 @@ export const useOwnedSkinsHead = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -83,7 +83,7 @@ export const useOwnedSkinsBody = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -101,7 +101,7 @@ export const useOwnedSkinsBase = (shouldFetch: boolean = true) => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 

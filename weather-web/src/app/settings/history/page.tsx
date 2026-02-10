@@ -21,7 +21,7 @@ export default function History() {
             <SkeletonHistoryDango key={i} />
           ))}
         </main>
-      ) : dangos && dangos.length === 0 ? (
+      ) : dangos && dangos.length === 1 ? (
         <main className="flex-1 bg-white overflow-y-auto py-7 px-4 pt-26">
           <div className="flex flex-col h-full justify-center items-center">
             <div className="flex gap-5 items-end">
@@ -36,7 +36,7 @@ export default function History() {
             </div>
             <PrimaryButton
               label="どろ団子を育てにいく"
-              onClick={() => router.push("/settings")}
+              onClick={() => router.push("/")}
               py="mt-15 py-[18px]"
             />
           </div>
