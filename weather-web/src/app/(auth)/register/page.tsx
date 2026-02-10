@@ -26,6 +26,7 @@ export default function Register() {
     formState: { errors, isValid },
   } = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
+    mode: "onBlur",
     defaultValues: {
       name: "",
       email: "",

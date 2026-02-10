@@ -93,7 +93,7 @@ export const MissionItem = ({ ...props }: MissionItemProps) => {
         </button>
       </div>
       <SelectModal
-        title="獲得"
+        title={props.isCompleted && !props.isClaimed ? "獲得" : "確認"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         buttonProps={{
