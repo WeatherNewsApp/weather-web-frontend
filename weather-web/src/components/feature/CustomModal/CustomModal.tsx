@@ -14,6 +14,7 @@ import { skinRepository } from "@/repositories/skin.repository";
 import { dangoRepository } from "@/repositories/dango.repository";
 
 import type { Skin } from "@/types/skin";
+import type { KeyedMutator } from "swr";
 
 interface CustomModalProps {
   isOpen: boolean;
@@ -32,9 +33,9 @@ interface CustomModalProps {
   isLoadingOwnedSkinsHead: boolean;
   isLoadingOwnedSkinsBody: boolean;
   isLoadingOwnedSkinsBase: boolean;
-  mutateOwnedSkinsHead: () => void;
-  mutateOwnedSkinsBody: () => void;
-  mutateOwnedSkinsBase: () => void;
+  mutateOwnedSkinsHead: KeyedMutator<Skin[]>;
+  mutateOwnedSkinsBody: KeyedMutator<Skin[]>;
+  mutateOwnedSkinsBase: KeyedMutator<Skin[]>;
   mutateDango: () => void;
 }
 
@@ -74,21 +75,36 @@ export const CustomModal = React.memo(({ ...props }: CustomModalProps) => {
 
       const skin = skins.find((s) => s.id === skinId);
 
+      const mutateFn =
+        categoryId === "head"
+          ? props.mutateOwnedSkinsHead
+          : categoryId === "body"
+            ? props.mutateOwnedSkinsBody
+            : props.mutateOwnedSkinsBase;
+
+      await mutateFn(
+        skins.map((s) =>
+          s.id === skinId ? { ...s, isFavorite: !s.isFavorite } : s
+        ),
+        false
+      );
+
       if (skin?.isFavorite) {
         await skinRepository.removeFavoriteSkin(skinId);
       } else {
         await skinRepository.addFavoriteSkin(skinId);
       }
 
-      if (categoryId === "head") {
-        props.mutateOwnedSkinsHead();
-      } else if (categoryId === "body") {
-        props.mutateOwnedSkinsBody();
-      } else {
-        props.mutateOwnedSkinsBase();
-      }
+      await mutateFn();
     } catch (error) {
       console.error("お気に入りの更新に失敗しました:", error);
+      const mutateFn =
+        categoryId === "head"
+          ? props.mutateOwnedSkinsHead
+          : categoryId === "body"
+            ? props.mutateOwnedSkinsBody
+            : props.mutateOwnedSkinsBase;
+      await mutateFn();
     }
   };
 

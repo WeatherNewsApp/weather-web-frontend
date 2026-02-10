@@ -4,17 +4,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
 
 import { Icons } from "@/components/shea/icon";
 import { signupSchema, type SignupSchema } from "@/schemas/auth";
 import { SignupForm } from "@/components/feature/SignupForm/SignupForm";
 import { useUserStore } from "@/store/user.store";
+import { Loading } from "@/components/shea/Loading/Loading";
 
 export default function Register() {
   const router = useRouter();
   const registerUser = useUserStore((state) => state.registerUser);
   const isLoading = useUserStore((state) => state.isLoading);
   const error = useUserStore((state) => state.error);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const {
     register,
@@ -39,6 +42,7 @@ export default function Register() {
         password: data.password,
         areaId: data.areaId,
       });
+      setIsRedirecting(true);
       router.push("/");
     } catch (error) {
       if (error instanceof Error) {
@@ -46,8 +50,13 @@ export default function Register() {
       } else {
         console.error("Failed to sign in:", error);
       }
+      setIsRedirecting(false);
     }
   };
+
+  if (isRedirecting) {
+    return <Loading />;
+  }
 
   return (
     <main className="bg-white h-screen flex flex-col items-center justify-between relative overflow-hidden">

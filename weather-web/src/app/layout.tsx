@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { AppProviders } from "./provider";
 import { M_PLUS_1p, Sen } from "next/font/google";
+import { Loading } from "@/components/shea/Loading/Loading";
 import "./globals.css";
 
 const mPlus1p = M_PLUS_1p({
@@ -33,7 +35,9 @@ export default function RootLayout({
           fontFamily: "var(--font-m-plus-1p), sans-serif",
         }}
       >
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </AppProviders>
       </body>
     </html>
   );
