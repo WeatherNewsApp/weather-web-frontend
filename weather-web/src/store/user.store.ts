@@ -138,9 +138,10 @@ export const useUserStore = create<UserState>()(
         } finally {
           cookieManager.removeToken();
           mutate(() => true, undefined, { revalidate: false });
+          localStorage.removeItem("user-storage");
           set({
             user: null,
-            isInitialized: true,
+            isInitialized: false,
             isLoading: false,
             error: null,
           });
@@ -156,7 +157,13 @@ export const useUserStore = create<UserState>()(
           await authRepository.deleteAccount();
           cookieManager.removeToken();
           mutate(() => true, undefined, { revalidate: false });
-          set({ user: null });
+          localStorage.removeItem("user-storage");
+          set({
+            user: null,
+            isInitialized: false,
+            isLoading: false,
+            error: null,
+          });
         } catch (error) {
           console.error("Failed to delete account:", error);
         }
