@@ -7,7 +7,12 @@ export const useRankings = (scope: "area" | "global") => {
     `/api/v1/rankings?scope=${scope}`,
     scope === "area"
       ? rankingRepository.getLocalRankings
-      : rankingRepository.getGlobalRankings
+      : rankingRepository.getGlobalRankings,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 300000,
+    }
   );
 
   return {

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,7 +38,7 @@ interface CustomModalProps {
   mutateDango: () => void;
 }
 
-export const CustomModal = ({ ...props }: CustomModalProps) => {
+export const CustomModal = React.memo(({ ...props }: CustomModalProps) => {
   const isDragging = useRef(false);
 
   const handleApplySkin = async (
@@ -325,4 +326,6 @@ export const CustomModal = ({ ...props }: CustomModalProps) => {
       )}
     </AnimatePresence>
   );
-};
+});
+
+CustomModal.displayName = "CustomModal";

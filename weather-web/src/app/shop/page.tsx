@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { mutate } from "swr";
 
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
@@ -18,15 +18,16 @@ export default function Shop() {
   const { skinsBody, isLoadingBody, mutateBody } = useSkinsBody();
   const { skinsBase, isLoadingBase, mutateBase } = useSkinsBase();
 
-  const isInitialLoading =
-    (isLoadingHead && !skinsHead) ||
-    (isLoadingBody && !skinsBody) ||
-    (isLoadingBase && !skinsBase);
+  const isInitialLoading = useMemo(
+    () =>
+      (isLoadingHead && !skinsHead) ||
+      (isLoadingBody && !skinsBody) ||
+      (isLoadingBase && !skinsBase),
+    [isLoadingHead, skinsHead, isLoadingBody, skinsBody, isLoadingBase, skinsBase]
+  );
 
-  const handlePurchaseSkin = async (
-    skinId: number,
-    category: "head" | "body" | "base"
-  ) => {
+  const handlePurchaseSkin = useCallback(
+    async (skinId: number, category: "head" | "body" | "base") => {
     try {
       const res = await skinRepository.purchaseSkin(skinId);
       if (res.success) {
@@ -47,7 +48,11 @@ export default function Shop() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [mutateHead, mutateBody, mutateBase, refreshUser]);
+
+  const handleTabChange = useCallback((tabId: string) => {
+    setActiveTabId(tabId);
+  }, []);
 
   return (
     <div className="h-screen flex flex-col bg-main">
@@ -71,9 +76,7 @@ export default function Shop() {
           },
         ]}
         activeTabId={activeTabId}
-        onTabChange={(tabId) => {
-          setActiveTabId(tabId);
-        }}
+        onTabChange={handleTabChange}
       />
       <main className="bg-white overflow-y-auto h-full py-5 px-4 pt-[201px]">
         <div className="grid grid-cols-3 gap-x-3 gap-y-4">

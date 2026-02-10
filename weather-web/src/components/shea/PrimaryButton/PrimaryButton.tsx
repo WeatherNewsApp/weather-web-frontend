@@ -101,6 +101,7 @@ export const PrimaryButton = ({
         className={cn(
           "font-medium rounded-sm w-full relative z-20 text-white",
           styles.bg,
+          fontSize,
           py
         )}
       >

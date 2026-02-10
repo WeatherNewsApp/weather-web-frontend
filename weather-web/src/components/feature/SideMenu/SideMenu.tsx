@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
@@ -9,7 +10,7 @@ interface SideMenuProps {
   onClose: () => void;
 }
 
-export const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
+export const SideMenu = React.memo(({ isOpen, onClose }: SideMenuProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -61,4 +62,6 @@ export const SideMenu = ({ isOpen, onClose }: SideMenuProps) => {
       )}
     </AnimatePresence>
   );
-};
+});
+
+SideMenu.displayName = "SideMenu";

@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema, type UpdateUserSchema } from "@/schemas/user";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/shea/icon";
@@ -13,18 +14,47 @@ import { ToggleSwitch } from "@/components/shea/ToggleSwitch/ToggleSwitch";
 import { PageHeader } from "@/components/shea/PageHeader/PageHeader";
 import { SettingsList } from "@/components/feature/SettingsList/SettingsList";
 import { SettingsListItem } from "@/components/feature/SettingsListItem/SettingslistItem";
-import { ConfirmModal } from "@/components/shea/ConfirmModal/ConfirmModal";
 import { Loading } from "@/components/shea/Loading/Loading";
-import { SelectModal } from "@/components/shea/SelectModal/SelectModal";
 import { useBestDango, useDangos } from "@/hooks/useDangos";
 import { useUserStore } from "@/store/user.store";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { userRepository } from "@/repositories/user.repository";
 import { UpdateUserForm } from "@/components/feature/UpdateUserForm/UpdateUserForm";
-import { UpdateUserModal } from "@/components/feature/UpdateUserModal/UpdateUserModal";
-import { ShareModal } from "@/components/feature/ShareModal/ShareModal";
 import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
 import { Dango } from "@/types/dango";
+
+// モーダルを動的インポート
+const ConfirmModal = dynamic(
+  () =>
+    import("@/components/shea/ConfirmModal/ConfirmModal").then((mod) => ({
+      default: mod.ConfirmModal,
+    })),
+  { ssr: false }
+);
+
+const SelectModal = dynamic(
+  () =>
+    import("@/components/shea/SelectModal/SelectModal").then((mod) => ({
+      default: mod.SelectModal,
+    })),
+  { ssr: false }
+);
+
+const UpdateUserModal = dynamic(
+  () =>
+    import("@/components/feature/UpdateUserModal/UpdateUserModal").then(
+      (mod) => ({ default: mod.UpdateUserModal })
+    ),
+  { ssr: false }
+);
+
+const ShareModal = dynamic(
+  () =>
+    import("@/components/feature/ShareModal/ShareModal").then((mod) => ({
+      default: mod.ShareModal,
+    })),
+  { ssr: false }
+);
 
 export default function Settings() {
   const router = useRouter();
@@ -60,57 +90,49 @@ export default function Settings() {
     },
   });
 
-  const onSubmit = async (data: UpdateUserSchema) => {
-    try {
-      updateUser(data);
-      setShowUpdateUserModal(false);
-    } catch (error) {
-      console.error("Failed to update user:", error);
-    }
-  };
-
-  if (isLoadingBestDango) return <Loading />;
+  const onSubmit = useCallback(
+    async (data: UpdateUserSchema) => {
+      try {
+        updateUser(data);
+        setShowUpdateUserModal(false);
+      } catch (error) {
+        console.error("Failed to update user:", error);
+      }
+    },
+    [updateUser]
+  );
 
   // ログアウト
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout();
     router.push("/top");
-  };
+  }, [logout, router]);
 
   // アカウント削除
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = useCallback(async () => {
     await deleteAccount();
     router.push("/top");
-  };
+  }, [deleteAccount, router]);
 
   // 共有モーダルを開く
-  const handleShowShareModal = async () => {
-    if (isLoadingBestDango) return <Loading />;
-    if (!bestDango) return;
+  const handleShowShareModal = useCallback(() => {
+    if (isLoadingBestDango || !bestDango) return;
     setShowShareModal(true);
-  };
+  }, [isLoadingBestDango, bestDango]);
 
   // ベスト団子変更モーダル
-  const handleShowUpdateBestDangoModal = async () => {
-    if (isLoadingDangos) return <Loading />;
-    if (!dangos) return;
-    console.log("dangos data:", dangos);
-    console.log(
-      "first dango growthStage:",
-      dangos[0]?.growthStage,
-      "type:",
-      typeof dangos[0]?.growthStage
-    );
+  const handleShowUpdateBestDangoModal = useCallback(() => {
+    if (isLoadingDangos || !dangos) return;
     setShowUpdateBestDangoModal(true);
-  };
+  }, [isLoadingDangos, dangos]);
 
   // ベスト団子選択
-  const handleSelectBestDango = async (dangoId: number) => {
+  const handleSelectBestDango = useCallback((dangoId: number) => {
     setSelectedBestDangoId(dangoId);
-  };
+  }, []);
 
   // ベスト団子更新
-  const handleUpdateBestDango = async () => {
+  const handleUpdateBestDango = useCallback(async () => {
     try {
       await userRepository.updateBestDango({
         dangoId: selectedBestDangoId ?? 0,
@@ -121,10 +143,10 @@ export default function Settings() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [selectedBestDangoId, mutateBestDango]);
 
   // 地域変更
-  const handleAreaUpdate = async () => {
+  const handleAreaUpdate = useCallback(async () => {
     if (!selectedAreaId) return;
 
     try {
@@ -135,7 +157,51 @@ export default function Settings() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [selectedAreaId, refreshUser]);
+
+  // モーダルのcloseハンドラーをメモ化
+  const handleCloseLogoutModal = useCallback(() => {
+    setShowLogoutModal(false);
+  }, []);
+
+  const handleCloseDeleteAccountModal = useCallback(() => {
+    setShowDeleteAccountModal(false);
+  }, []);
+
+  const handleCloseAreaModal = useCallback(() => {
+    setShowAreaModal(false);
+  }, []);
+
+  const handleCloseUpdateUserModal = useCallback(() => {
+    setShowUpdateUserModal(false);
+  }, []);
+
+  const handleCloseShareModal = useCallback(() => {
+    setShowShareModal(false);
+  }, []);
+
+  const handleCloseUpdateBestDangoModal = useCallback(() => {
+    setShowUpdateBestDangoModal(false);
+  }, []);
+
+  // SettingsListItemのonClickハンドラー
+  const handleShowUpdateUserModal = useCallback(() => {
+    setShowUpdateUserModal(true);
+  }, []);
+
+  const handleShowAreaModal = useCallback(() => {
+    setShowAreaModal(true);
+  }, []);
+
+  const handleShowLogoutModal = useCallback(() => {
+    setShowLogoutModal(true);
+  }, []);
+
+  const handleShowDeleteAccountModal = useCallback(() => {
+    setShowDeleteAccountModal(true);
+  }, []);
+
+  if (isLoadingBestDango) return <Loading />;
 
   return (
     <div className="h-screen flex flex-col">
@@ -200,16 +266,14 @@ export default function Settings() {
               // ダミー値
               title={user?.name ?? ""}
               subtitle={user?.email ?? ""}
-              onClick={() => {
-                setShowUpdateUserModal(true);
-              }}
+              onClick={handleShowUpdateUserModal}
             />
 
             {/* 地域設定 */}
             <SettingsListItem
               icon={<Icons.prefecture className="w-6 h-6" strokeWidth={1.2} />}
               title="地域設定"
-              onClick={() => setShowAreaModal(true)}
+              onClick={handleShowAreaModal}
             />
 
             {/* 通知を許可 */}
@@ -233,7 +297,7 @@ export default function Settings() {
             <SettingsListItem
               icon={<Icons.logout className="w-6 h-6" strokeWidth={1.2} />}
               title="ログアウト"
-              onClick={() => setShowLogoutModal(true)}
+              onClick={handleShowLogoutModal}
               variant="danger"
             />
 
@@ -241,7 +305,7 @@ export default function Settings() {
             <SettingsListItem
               icon={<Icons.delete className="w-6 h-6" strokeWidth={1.2} />}
               title="アカウント削除"
-              onClick={() => setShowDeleteAccountModal(true)}
+              onClick={handleShowDeleteAccountModal}
               variant="danger"
             />
           </SettingsList>
@@ -249,7 +313,7 @@ export default function Settings() {
           {/* 共有モーダル */}
           <ShareModal
             isOpen={showShareModal}
-            onClose={() => setShowShareModal(false)}
+            onClose={handleCloseShareModal}
             bestDango={
               bestDango
                 ? (({ id: _id, ...rest }) => rest)(bestDango) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -260,7 +324,7 @@ export default function Settings() {
           {/* ベスト団子変更モーダル */}
           <UpdateUserModal
             isOpen={showUpdateBestDangoModal}
-            onClose={() => setShowUpdateBestDangoModal(false)}
+            onClose={handleCloseUpdateBestDangoModal}
             title="どの団子にする"
           >
             {dangos && dangos.length === 0 ? (
@@ -328,7 +392,7 @@ export default function Settings() {
                   }
             }
             isOpen={showLogoutModal}
-            onClose={() => setShowLogoutModal(false)}
+            onClose={handleCloseLogoutModal}
             onConfirm={handleLogout}
             title={<span>本当にログアウトするの？</span>}
             message={
@@ -365,7 +429,7 @@ export default function Settings() {
                   }
             }
             isOpen={showDeleteAccountModal}
-            onClose={() => setShowDeleteAccountModal(false)}
+            onClose={handleCloseDeleteAccountModal}
             onConfirm={handleDeleteAccount}
             title={
               <span>
@@ -382,7 +446,7 @@ export default function Settings() {
           {/* ユーザー情報変更モーダル */}
           <UpdateUserModal
             isOpen={showUpdateUserModal}
-            onClose={() => setShowUpdateUserModal(false)}
+            onClose={handleCloseUpdateUserModal}
             title="ユーザー情報変更"
           >
             <UpdateUserForm
@@ -394,7 +458,7 @@ export default function Settings() {
           {/* エリア変更モーダル */}
           <SelectModal
             isOpen={showAreaModal}
-            onClose={() => setShowAreaModal(false)}
+            onClose={handleCloseAreaModal}
             title="地域設定"
             buttonProps={{
               label: "地域を設定する",

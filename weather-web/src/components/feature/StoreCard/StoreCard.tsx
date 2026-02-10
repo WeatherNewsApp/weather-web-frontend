@@ -56,12 +56,12 @@ export const StoreCard = ({
           icon={
             isOwned ? undefined : (
               <div className="h-4 w-[15px] relative">
-                <div className="bg-points rounded-full flex items-center justify-center p-1 h-[15px] w-full relative z-10">
+                <div className="bg-points rounded-full flex items-center justify-center p-[1.5px] h-[15px] w-full relative z-10">
                   <Image
-                    src="/images/dummy-image.png"
-                    alt="dummy"
-                    width={8}
-                    height={8}
+                    src="/images/coin.svg"
+                    alt="coin"
+                    width={12}
+                    height={12}
                   />
                 </div>
                 <span className="bg-points-dark rounded-full absolute bottom-0 right-0 h-[15px] w-full z-0" />
@@ -92,12 +92,7 @@ export const StoreCard = ({
         <div className="bg-white rounded-sm py-10 px-11 flex items-center gap-6">
           <div className="h-19 w-18 relative">
             <div className="bg-points rounded-full flex items-center justify-items-center p-[10px] h-18 w-full relative z-10">
-              <Image
-                src="/images/dummy-image.png"
-                alt="dummy"
-                width={52}
-                height={52}
-              />
+              <Image src="/images/coin.svg" alt="coin" width={52} height={52} />
             </div>
             <span className="bg-points-dark rounded-full absolute bottom-0 right-0 h-18 w-full z-0" />
             <p className="text-lg translate-x-1/2 text-black absolute bottom-0 right-0 font-sen z-20">
@@ -107,12 +102,7 @@ export const StoreCard = ({
           <Icons.ArrowRight className="w-10 text-2xl" />
           <div className="h-19 w-18 relative">
             <div className="bg-points rounded-full flex items-center justify-items-center p-[10px] h-18 w-full relative z-10">
-              <Image
-                src="/images/dummy-image.png"
-                alt="dummy"
-                width={52}
-                height={52}
-              />
+              <Image src="/images/coin.svg" alt="coin" width={52} height={52} />
             </div>
             <span className="bg-points-dark rounded-full absolute bottom-0 right-0 h-18 w-full z-0" />
             <p className="text-lg translate-x-1/2 text-black absolute bottom-0 right-0 font-sen z-20">
