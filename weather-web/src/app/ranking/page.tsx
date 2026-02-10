@@ -14,6 +14,7 @@ export default function Ranking() {
 
   const { user } = useUserStore();
   const { rankings, myRanking, isLoading } = useRankings(activeTabId);
+  console.log(rankings);
 
   const currentTimeSlot = useMemo(() => {
     const hour = new Date().getHours();
@@ -61,7 +62,7 @@ export default function Ranking() {
                   days={ranking.rankingTotalDaysAlive}
                   dango={ranking.dango}
                   prediction={
-                    currentTimeSlot === "morning"
+                    currentTimeSlot === "evening"
                       ? ranking.user.morningPrediction
                       : ranking.user.eveningPrediction
                   }
