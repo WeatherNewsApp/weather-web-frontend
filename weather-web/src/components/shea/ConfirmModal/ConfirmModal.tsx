@@ -6,7 +6,7 @@ import type { Dango } from "@/types/dango";
 import { Muddy } from "@/components/shea/Muddy/Muddy";
 
 interface ConfirmModalProps {
-  dango: Omit<Dango, "id">;
+  dango: Omit<Dango, "id" | "createdAt">;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;

@@ -21,7 +21,7 @@ export const useDangos = () => {
 };
 
 export const useBestDango = () => {
-  const { data, isLoading, mutate } = useSWR<Dango, "id">(
+  const { data, isLoading, mutate } = useSWR<Dango>(
     "/api/v1/dangos/me/best",
     dangoRepository.getBestDango,
     {

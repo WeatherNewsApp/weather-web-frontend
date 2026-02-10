@@ -21,7 +21,6 @@ import { Muddy } from "@/components/shea/Muddy/Muddy";
 import { userRepository } from "@/repositories/user.repository";
 import { UpdateUserForm } from "@/components/feature/UpdateUserForm/UpdateUserForm";
 import { AreaComboBox } from "@/components/shea/AreaComboBox/AreaComboBox";
-import { Dango } from "@/types/dango";
 
 // モーダルを動的インポート
 const ConfirmModal = dynamic(
@@ -374,10 +373,7 @@ export default function Settings() {
             dango={
               bestDango
                 ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  ((({ id: _id, ...rest }) => rest)(bestDango) as Omit<
-                    Dango,
-                    "id"
-                  >)
+                  ((({ id, createdAt, ...rest }) => rest)(bestDango))
                 : {
                     headSkin: "",
                     bodySkin: "",
@@ -411,10 +407,7 @@ export default function Settings() {
             dango={
               bestDango
                 ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  ((({ id: _id, ...rest }) => rest)(bestDango) as Omit<
-                    Dango,
-                    "id"
-                  >)
+                  ((({ id, createdAt, ...rest }) => rest)(bestDango))
                 : {
                     headSkin: "",
                     bodySkin: "",
