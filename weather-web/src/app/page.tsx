@@ -374,12 +374,10 @@ export default function Home() {
   const weatherType = (weather as { weather?: "sunny" | "cloudy" | "rainy" })
     ?.weather;
 
-  // 初回データ取得中はスケルトンを表示
   if (isLoadingDango || weatherLoading) {
     return <SkeletonHome />;
   }
 
-  // 団子がない場合
   if (!dango) {
     return <CreateDangoScreen onCreateDango={handleNewDango} />;
   }

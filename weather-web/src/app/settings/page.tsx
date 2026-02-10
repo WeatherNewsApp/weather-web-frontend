@@ -79,6 +79,7 @@ export default function Settings() {
   const refreshUser = useUserStore((state) => state.refreshUser);
 
   const { bestDango, isLoadingBestDango, mutateBestDango } = useBestDango();
+  console.log("bestDango", bestDango);
   const { dangos, isLoadingDangos } = useDangos();
 
   const { register, handleSubmit } = useForm<UpdateUserSchema>({

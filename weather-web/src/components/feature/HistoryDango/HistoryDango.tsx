@@ -4,6 +4,9 @@ import { Muddy } from "@/components/shea/Muddy/Muddy";
 type HistoryDangoProps = Omit<Dango, "id">;
 
 export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
+  // デバッグ用ログ
+  console.log("HistoryDango - totalDaysAlive:", dango.totalDaysAlive, typeof dango.totalDaysAlive);
+  
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
