@@ -23,7 +23,7 @@ export const HistoryDango = ({ ...dango }: HistoryDangoProps) => {
           <div className="flex items-center justify-between">
             <p>生存日数</p>
             <div className="flex items-end gap-1">
-              <p className="font-sen text-lg">{dango.createdAt}</p>
+              <p className="font-sen text-lg">{formatDate(dango.createdAt)}</p>
               <p className="text-sm">日</p>
             </div>
           </div>
