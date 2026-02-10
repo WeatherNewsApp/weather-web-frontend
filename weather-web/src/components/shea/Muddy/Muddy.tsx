@@ -311,6 +311,7 @@ export const Muddy = ({
               className="object-contain"
               unoptimized
               draggable={false}
+              priority
             />
           </div>
         )}
@@ -325,12 +326,13 @@ export const Muddy = ({
               className="object-contain"
               unoptimized
               draggable={false}
+              priority
             />
           </div>
         )}
 
         {baseSkin && (
-          <div className="absolute inset-0 flex item-center justify-center z-5 "> 
+          <div className="absolute inset-0 flex item-center justify-center z-5 ">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 flex items-center justify-center w-[300px] h-[300px]">
               <Image
                 src={getSkinImagePath(baseSkin)}
@@ -340,6 +342,7 @@ export const Muddy = ({
                 className="object-contain"
                 unoptimized
                 draggable={false}
+                priority
               />
             </div>
           </div>

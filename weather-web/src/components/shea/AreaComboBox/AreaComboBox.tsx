@@ -24,11 +24,11 @@ export const AreaComboBox = ({
     if (selectedAreaId && areas && areas.length > 0) {
       const selectedArea = areas.find((area) => area.id === selectedAreaId);
       if (selectedArea && query !== selectedArea.name) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setQuery(selectedArea.name);
       }
     }
-  }, [selectedAreaId, areas, query]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAreaId, areas]);
 
   const filteredAreas =
     areas?.filter((area) =>

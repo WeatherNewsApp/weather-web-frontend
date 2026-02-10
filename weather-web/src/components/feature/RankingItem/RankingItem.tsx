@@ -26,7 +26,6 @@ export const RankingItem = ({
 }: RankingUser) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // ケアアイコンのマッピング
   const getCareIcon = (prediction: string | null) => {
     if (!prediction) return null;
 

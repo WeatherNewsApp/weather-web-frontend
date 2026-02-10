@@ -2,17 +2,22 @@
 
 import { Muddy } from "../Muddy/Muddy";
 import { Icons } from "../icon";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const Loading = () => {
   return (
     <main className="bg-radial-close flex flex-col items-center justify-center h-screen w-full mx-auto ">
       <div className="relative flex items-center justify-center w-30 h-30">
-        <div
-          className="absolute inset-0 animate-spin"
-          style={{ animationDuration: "3s" }}
-        >
-          <Icons.loader />
-        </div>
+        <AnimatePresence>
+          <motion.div
+            className="absolute inset-0 animate-spin"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, ease: "linear", repeat: Infinity }}
+          >
+            <Icons.loader />
+          </motion.div>
+        </AnimatePresence>
         <Muddy
           face="happy"
           scale="scale-[0.4]"

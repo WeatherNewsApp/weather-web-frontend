@@ -9,7 +9,7 @@ export const useDangos = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -27,7 +27,7 @@ export const useBestDango = () => {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      dedupingInterval: 300000,
     }
   );
 
@@ -39,7 +39,7 @@ export const useBestDango = () => {
 };
 
 export const useDango = () => {
-  const { data, mutate } = useSWR<
+  const { data, isLoading, mutate } = useSWR<
     Pick<
       Dango,
       | "id"
@@ -52,11 +52,12 @@ export const useDango = () => {
   >("/api/v1/dangos/me/now", dangoRepository.getNowDango, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    dedupingInterval: 60000,
+    dedupingInterval: 300000,
   });
 
   return {
     dango: data,
+    isLoadingDango: isLoading,
     mutateDango: mutate,
   };
 };
