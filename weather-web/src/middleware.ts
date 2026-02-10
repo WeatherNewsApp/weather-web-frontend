@@ -27,6 +27,15 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|apple-icon.png|icon.png).*)",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - *.png, *.jpg, *.jpeg, *.gif, *.svg, *.ico (image files)
+     * - *.json (JSON files like animations)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|json)).*)",
   ],
 };
