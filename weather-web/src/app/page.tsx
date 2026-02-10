@@ -327,12 +327,9 @@ export default function Home() {
   }, []);
 
   // CustomModalのハンドラーをメモ化
-  const handleTabChange = useCallback(
-    (tabId: "normal" | "favorite") => {
-      setCustomModalTabId(tabId);
-    },
-    []
-  );
+  const handleTabChange = useCallback((tabId: "normal" | "favorite") => {
+    setCustomModalTabId(tabId);
+  }, []);
 
   const handleSkinSelectHead = useCallback((skinId: number | null) => {
     setSelectedSkinHeadId(skinId);
@@ -468,7 +465,6 @@ export default function Home() {
           <CareResultContent currentResult={currentResult} dango={dango} />
         )}
       </SelectModal>
-
 
       {/* 団子死亡モーダル */}
       {showDangoDeathModal && deadDangoData && (
