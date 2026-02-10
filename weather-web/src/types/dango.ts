@@ -11,4 +11,5 @@ export interface Dango {
   successCareCount: number;
   point: number;
   maxConsecutive: number;
+  createdAt: string;
 }
