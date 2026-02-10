@@ -81,12 +81,11 @@ export const useUserStore = create<UserState>()(
           set({ user, isInitialized: true, isLoading: false });
         } catch (error) {
           console.error("Failed to login:", error);
-          cookieManager.removeToken();
           set({
-            error: error instanceof Error ? error.message : "Unknown error",
-            isInitialized: true,
+            error: error instanceof Error ? error.message : "ログインに失敗しました",
             isLoading: false,
           });
+          throw error;
         }
       },
 
@@ -101,12 +100,11 @@ export const useUserStore = create<UserState>()(
           set({ user, isInitialized: true, isLoading: false });
         } catch (error) {
           console.error("Failed to sign in:", error);
-          cookieManager.removeToken();
           set({
-            error: error instanceof Error ? error.message : "Unknown error",
-            isInitialized: true,
+            error: error instanceof Error ? error.message : "新規登録に失敗しました",
             isLoading: false,
           });
+          throw error;
         }
       },
 

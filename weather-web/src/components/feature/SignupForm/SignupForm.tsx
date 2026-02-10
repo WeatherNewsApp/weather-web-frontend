@@ -34,6 +34,7 @@ export const SignupForm = ({
   handleSubmit,
   control,
   isValid,
+  apiError,
 }: SignupFormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
@@ -91,14 +92,17 @@ export const SignupForm = ({
         register={register("isTermsAccepted")}
         error={errors.isTermsAccepted?.message}
       />
-      <PrimaryButton
-        variant="accent"
-        label="新規登録"
-        type="submit"
-        isLoading={isLoading}
-        disabled={!isValid}
-        py="py-[18px]"
-      />
+      <div>
+        {apiError && <p className="text-error text-sm mb-2">{apiError}</p>}
+        <PrimaryButton
+          variant="accent"
+          label="新規登録"
+          type="submit"
+          isLoading={isLoading}
+          disabled={!isValid}
+          py="py-[18px]"
+        />
+      </div>
     </form>
   );
 };
