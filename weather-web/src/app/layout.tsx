@@ -20,6 +20,18 @@ const sen = Sen({
 export const metadata: Metadata = {
   title: "Muddy",
   description: "自分だけのオリジナルMuddyを育てよう!",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Muddy",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({
