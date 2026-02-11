@@ -14,7 +14,6 @@ export default function Ranking() {
 
   const { user } = useUserStore();
   const { rankings, myRanking, isLoading } = useRankings(activeTabId);
-  console.log(rankings);
 
   const currentTimeSlot = useMemo(() => {
     const hour = new Date().getHours();
